@@ -80,8 +80,23 @@ clean.o:
 clean.a:
 	rm -rf tests/*.a
 	rm -rf *.a
+# ======================================= Clean =======================================================================
+clean.o:
+	rm -rf *.o
+clean.a:
+	rm -rf *.a
+clean.gcno:
+	rm -rf *.gcno
+clean.gcda:
+	rm -rf *.gcda
 clean:
 	rm -rf *.o
 	rm -rf *.a
-	rm -rf tests/*.a
 	rm -rf run_test
+	rm -rf *.gcno
+	rm -rf *.gcda
+	rm -rf *.gcov
+	rm -rf *.txt
+	rm -rf *.html
+	rm -rf *.css
+	rm -rf report
