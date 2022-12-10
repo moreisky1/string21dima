@@ -1,7 +1,7 @@
 #
 USERNAME_1= barbreye
 
-BRANCH= master
+BRANCH= develop
 
 #
 GCC= gcc
