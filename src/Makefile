@@ -9,6 +9,7 @@ GCC_C= gcc -c
 GCC_G= gcc -g
 FLAGS= -Wall -Werror -Wextra
 TESTS_UBUNTU= -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
+GCOV_FLAGS= -fprofile-arcs -ftest-coverage -fPIC
 #
 F_H= s21_string.h
 F_C_1= common/s21_insert.c common/s21_memcmp.c common/s21_memcpy.c
@@ -33,7 +34,7 @@ F_C_T_6= tests/s21_strncmp_test/s21_strncmp_test.c tests/s21_strncpy_test/s21_st
 F_C_T_7= tests/s21_strrchr_test/s21_strrchr_test.c tests/s21_strspn_test/s21_strspn_test.c tests/s21_strstr_test/s21_strstr_test.c
 F_C_T_8= tests/s21_strtok_test/s21_strtok_test.c tests/s21_to_lower_test/s21_to_lower_test.c tests/s21_to_upper_test/s21_to_upper_test.c
 F_C_T_9= tests/s21_trim_test/s21_trim_test.c tests/s21_strcspn_test/s21_strcspn_test.c
-
+SOURCE_TESTS= -o test
 #======================================== ALL =========================================================================
 all: clean s21_string.a
 #======================================== STATIC LIB ==================================================================
@@ -52,7 +53,15 @@ test.a:
 	ranlib tests/s21_string_tests.a
 	make clean.o
 #======================================== GCOV ========================================================================
-gcov_report:
+gcov_report: clean s21_string.a
+	${GCC_G} ${FLAGS} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a ${SOURCE_TESTS} ${TESTS_UBUNTU} ${GCOV_FLAGS}
+	./test
+	gcov test_s21_*.gcda
+	gcovr -b
+	gcovr
+	mkdir report
+	gcovr --html-details -o report/report.html
+	rm -rf *.gcda *gcno
 
 #======================================== GIT =========================================================================
 git:

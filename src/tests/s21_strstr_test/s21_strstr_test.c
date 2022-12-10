@@ -5,7 +5,7 @@ START_TEST(s21_strstr_1) {
         char str2[] = "Hello";
         //char* s21 = s21_strstr(str,str2);
         char* or = strstr(str,str2);
-        printf("|%c| / ||\n",or);
+        printf("|%s| / ||\n",or);
         ck_assert_int_eq(1,1);
 
 } END_TEST
