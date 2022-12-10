@@ -93,6 +93,7 @@ clean:
 	rm -rf *.o
 	rm -rf *.a
 	rm -rf run_test
+
 	rm -rf *.gcno
 	rm -rf *.gcda
 	rm -rf *.gcov
