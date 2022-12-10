@@ -1,6 +1,16 @@
 #include "../s21_string_tests.h"
 
 START_TEST(s21_strstr_1) {
+        char str[] = "HHello";
+        char str2[] = "Hello";
+        //char* s21 = s21_strstr(str,str2);
+        char* or = strstr(str,str2);
+        printf("|%c| / ||\n",or);
+        ck_assert_int_eq(1,1);
+
+} END_TEST
+
+START_TEST(s21_strstr_2) {
         ck_assert_int_eq(1,1);
 } END_TEST
 
@@ -9,7 +19,7 @@ START_TEST(s21_strstr_1) {
     TCase* tc = tcase_create("Core of s21_strstr");
     /*Tests*/
     tcase_add_test(tc,s21_strstr_1);
-
+    tcase_add_test(tc,s21_strstr_2);
     suite_add_tcase(s,tc);
     return s;
 }
