@@ -85,8 +85,8 @@ START_TEST(s21_strstr_9) {
 } END_TEST
 
 START_TEST(s21_strstr_10) {
-    char str[] = "nulllll";
-    char str2[] = "u";
+    char str[] = "fdkglks";
+    char str2[] = "s";
     char* s21 = s21_strstr(str,str2);
     char* or = strstr(str,str2);
     ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
