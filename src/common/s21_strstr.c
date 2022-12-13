@@ -4,7 +4,8 @@ char* s21_strstr(const char *haystack, const char *needle) {
     char* result = NULL;
     int i = 0, j = 0;
     int marker = 0;
-    while (haystack[i]!='\0') {
+    if(haystack != NULL && needle != NULL){
+        while (haystack[i]!='\0') {
         j = 0;
         while (needle[j] != '\0') {
             if(needle[j] != haystack[i + j]) {
@@ -21,8 +22,9 @@ char* s21_strstr(const char *haystack, const char *needle) {
         }
         i++;
     }
-    if (marker != 0) {
-        result = (char *)haystack + i;
+        if (marker != 0) {
+            result = (char *)haystack + i;
+        }
     }
     return result;
 }
