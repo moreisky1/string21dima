@@ -314,7 +314,7 @@ void* s21_trim(const char *src, const char *trim_chars);
  * const char* format --->
  * return --->
  * */
-int s21_sscanf(const char *str, const char *format);
+int s21_sscanf(const char *str, const char *format,...);
 
 /*#26
  * tests ---> NON
