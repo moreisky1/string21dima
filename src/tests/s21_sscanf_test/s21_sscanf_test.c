@@ -9,7 +9,7 @@ START_TEST(s21_sscanf_1) {
 
     int t = sscanf("123","%d",&res_or);
     int q;
-    int f = s21_sscanf("123","%d",&q, &t, &res_or);
+    int f = s21_sscanf("123","%d%d%d",&q, &t, &res_or);
     //printf("----> |%d|\n",q);
         ck_assert_int_eq(1,1);
 } END_TEST
