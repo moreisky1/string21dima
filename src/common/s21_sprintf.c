@@ -6,17 +6,19 @@
 typedef struct specif {
   char spec;
   char mod;
+  int countMod;
   char flag;
   int width;
   int precision;
 }Specif;
 
-int getCifra(int a);
-int printNumber(char * str, int a, Specif sp);
+int longDefine (int a);
+int getCifra(long long int a);
+int printNumber(char * str, long long int a, Specif sp);
 int getValue (char * str, Specif sp, va_list ptr);
 int initStruct (char * str, Specif * sp);
 int parseToInt(char * str, int * val);
-int getCifra1(int a, int b);
+long long int getCifra1(long long int a, int b);
 
 int s21_sprintf(char *str, const char *format, ...) {
   Specif sp = {0};
@@ -28,8 +30,10 @@ int s21_sprintf(char *str, const char *format, ...) {
   while (*format) {
     if (*format == '%') {
       format++;
-      char * buf = strndup(format, (int)(format - strpbrk(format, spec)) + 1);
+      int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
+      char * buf = strndup(format, a);
       initStruct(buf, &sp);
+      format += a;
       str += getValue(str, sp, ptr);      
     } else {    
       *str = *format;
@@ -64,6 +68,8 @@ int getValue (char * str, Specif sp, va_list ptr) {
       buf++;
     }      
   }
+  
+  
   if (sp.spec == 'i' || sp.spec == 'd') {
     int a = va_arg(ptr, int);
     count = printNumber(str, a, sp);
@@ -78,9 +84,7 @@ int getValue (char * str, Specif sp, va_list ptr) {
   }
   if (sp.spec == 'p') {
     sp.spec = 'x';
-    int a = va_arg(ptr, int);
-    // long long int q = (long long int)&a;
-    printf("<%p | %x >", a, a);
+    long long int a = (long long int)va_arg(ptr, int *);    
     strcat(str, "0x10");
     str += 4;    
     count = printNumber(str, a, sp);
@@ -98,15 +102,24 @@ int initStruct (char * str, Specif * sp) {
       sp->flag = *(strchr(flag, *str));
       str++;
     }
-    if (*str >= '0' && *str <= '9') {        // если цифра 
-      str += parseToInt(str, &(sp->width));  //то забираю все цифры в число width
+    if ((*str >= '0' && *str <= '9') || *str == '*') {  // если цифра 
+      if (*str == '*') {
+        /* todo code */
+      } else {
+        str += parseToInt(str, &(sp->width));             //то забираю все цифры в число width
+      }
     }
-    if (*str == '.') {                       // если точка то после число точности 
+    if (*str == '.') {                                  // если точка то после число точности 
       str++;
-      str += parseToInt(str, &(sp->precision));  //то забираю все цифры в число precision
+      if (*str == '*') {
+        /* todo code */
+      } else {
+        str += parseToInt(str, &(sp->precision));         //то забираю все цифры в число precision
+      }
     }
-    if (strchr(modif, *str)) {
-      sp->mod = *(strchr(flag, *str));
+    while (strchr(modif, *str)) {
+      sp->mod = *str;
+      sp->countMod++;
       str++;
     }
     sp->spec = *str;
@@ -139,7 +152,7 @@ int printNumber(char * str, int a, Specif sp) {
     step = 87;
   }
   while (1) {
-    int b = getCifra1(a, notation);
+    int b = (int)getCifra1(a, notation);
     if (b > 9 && notation == 16) {
       *str = b + step;
     } else {
@@ -156,7 +169,7 @@ int printNumber(char * str, int a, Specif sp) {
   return count;
 }
 
-int getCifra(int a) {
+int getCifra(long long int a) {
   int result = a;
   if (a > 9) {
     result = getCifra(a / 10);
@@ -164,10 +177,14 @@ int getCifra(int a) {
   return result;  
 }
 
-int getCifra1(int a, int b) {
-  int result = a;
+long long int getCifra1(long long int a, int b) {
+  long long int result = a;
   if (a > b) {
     result = getCifra1(a / b, b);
   }
   return result;  
+}
+
+int longDefine (int a) {
+  
 }
