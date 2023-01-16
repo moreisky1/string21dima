@@ -134,6 +134,7 @@ int main(/*int argc, char *argv[]*/) {
   sprintf(str1, "<%%-20p>\t\t\t|%-20p|", p);
   printf("%s\n", str1);
   sprintf(str1, "<%%*p>\t\t\t|%*p|", -20, p);
+
   printf("%s\n", str1);
   sprintf(str1, "<%%#20p>\t\t\t|'#' flag used with '%%p' gnu_printf format|");
   printf("%s\n", str1);  // # с адресом не используется
