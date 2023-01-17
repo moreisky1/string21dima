@@ -37,12 +37,20 @@ int s21_sprintf(char *str, const char *format, ...) {
   while (*format) {
     if (*format == '%') {
       format++;
+      {
       int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
       char * buf = strndup(format, a);
       initStruct(buf, &sp, ptr);
+      free(buf);
       format += a;
-      str += getValue(str, sp, ptr);  
-      free(buf);    
+      }
+      {
+      char buf[4096] = "";
+      int a = getValue(buf, sp, ptr);
+      // function for format input
+      strcat(str, buf);
+      }
+          
     } else {
       if (*format != '\0'){
         *str = *format;
@@ -55,6 +63,33 @@ int s21_sprintf(char *str, const char *format, ...) {
   *str = '\0';
   str = start;
 
+  return 0;
+}
+
+int formatForInput (Specif sp, char str) {
+  char buf[4096] = "";
+  int size = strlen(str);
+  if (sp.width > size) {
+    if (sp.flag.min){
+      strcat(buf, str);
+      fullingBuffer(sp, buf + size, sp.width - size);
+    } else
+    {
+      fullingBuffer(sp, buf, sp.width - size);
+      strcat(buf, str);
+    }   
+  }
+  
+  return 0;
+}
+
+int fullingBuffer(Specif sp, char buf, int n) {
+  if (sp.flag.zero) {
+    memset(buf, '0', n);
+  } else {
+    memset(buf, ' ', n);
+  }
+  //maybe need '\0'
   return 0;
 }
 
