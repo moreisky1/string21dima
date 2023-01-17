@@ -1,7 +1,8 @@
-#include "../s21_string.h"
+// #include "../s21_string.h"
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct flags {
   int min;
@@ -20,20 +21,30 @@ typedef struct specif {
   int precision;
 }Specif;
 
+int getCifer(char * str, long long int a);
 int longDefine (int a);
-int getCifra(char * str, long long unsigned a, Specif sp);
+long long getValueModInt(Specif sp, va_list ptr);
+int formatForInput (Specif sp, char * str);
+int fullingBuffer(Specif sp, char * buf, int n);
+
 int getValue (char * str, Specif sp, va_list ptr);
 int initStruct (char * str, Specif * sp, va_list ptr);
 int parseToInt(char * str, int * val);
-int getCifra1(char * str, double a, Specif sp);
+
+int doubleToString(char * str, double a, Specif sp);
+int signedToString(char * str, long long int a, Specif sp);
+int unsignedToString(char * str, long long unsigned a, Specif sp);
+
+int s21_sprintf(char *str, const char *format, ...);
 
 int s21_sprintf(char *str, const char *format, ...) {
+  int count = 0;
   Specif sp = {0};
   char * spec = "cdieEfgGosuxXpn%";  
   char * start = str;
   va_list ptr;
   va_start(ptr, format);
-  int j = 0;
+  // int j = 0;
   while (*format) {
     if (*format == '%') {
       format++;
@@ -41,20 +52,26 @@ int s21_sprintf(char *str, const char *format, ...) {
       int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
       char * buf = strndup(format, a);
       initStruct(buf, &sp, ptr);
-      free(buf);
+      // free(buf);
       format += a;
       }
       {
       char buf[4096] = "";
-      int a = getValue(buf, sp, ptr);
+      getValue(buf, sp, ptr);
       // function for format input
+      
+      
+      formatForInput(sp, buf);
       strcat(str, buf);
+      str += strlen(buf);
+      count += strlen(buf);
       }
           
     } else {
       if (*format != '\0'){
         *str = *format;
         str++;
+        count++;
       }
       format++;
     }    
@@ -63,27 +80,43 @@ int s21_sprintf(char *str, const char *format, ...) {
   *str = '\0';
   str = start;
 
-  return 0;
+  return count;
 }
 
-int formatForInput (Specif sp, char str) {
+int formatForInput (Specif sp, char * str) {
   char buf[4096] = "";
   int size = strlen(str);
+  int step = 0;
+  int flag = 0;
+  if ('-' == *str || '+' == *str) {
+    *buf = *str;
+    str++;
+    flag++;
+    if (sp.flag.zero) {
+      size--;
+      step++;
+    }
+    
+  }
+  
+  
   if (sp.width > size) {
     if (sp.flag.min){
       strcat(buf, str);
-      fullingBuffer(sp, buf + size, sp.width - size);
+      fullingBuffer(sp, buf + step + size, sp.width - size);
     } else
     {
-      fullingBuffer(sp, buf, sp.width - size);
+      fullingBuffer(sp, buf + step, sp.width - size);
       strcat(buf, str);
-    }   
+    }
+    strcpy(str - flag, buf);
   }
+  
   
   return 0;
 }
 
-int fullingBuffer(Specif sp, char buf, int n) {
+int fullingBuffer(Specif sp, char * buf, int n) {
   if (sp.flag.zero) {
     memset(buf, '0', n);
   } else {
@@ -115,94 +148,112 @@ int getValue (char * str, Specif sp, va_list ptr) {
     }      
   }  
   if (sp.spec == 'i' || sp.spec == 'd') {
-    long long int a = va_arg(ptr, long long int);
-    count = getCifra(str, a, sp);
+    long long int a = getValueModInt(sp, ptr);
+    count = signedToString(str, a, sp);
   }
-  if (sp.spec == 'o' || sp.spec == 'u') {
-    long long int a = va_arg(ptr, long long int);
-    count = getCifra(str, a, sp);
-  }
-  if (sp.spec == 'x' || sp.spec == 'X') {
-    long long int a = va_arg(ptr, long long int);
-    count = getCifra(str, a, sp);
-  }
-  if (sp.spec == 'p') {
-    sp.spec = 'x';
-    long long int a = (long long int)va_arg(ptr, int *);    
-    strcat(str, "0x");
-    str += 2;    
-    count = getCifra(str, a, sp);
-    count += 2;
-  }
-  if (sp.spec == 'f') {
-    double a = va_arg(ptr, double);
-    count = getCifra1(str, a, sp);
-  }
-  if (sp.spec == 'e' || sp.spec == 'E') {
-    int po = 0;
-    double a = va_arg(ptr, double);
-    int64_t b = (int64_t)a;
-    int mark = 1;
-    if (b == 0) {
-      mark = 0;
-      while (b == 0) {
-        a *= 10;
-        po++;
-        b = (int64_t)a;
-      }
-    } else {
-      while (b > 9) {
-        a /= 10;
-        po++;
-        b = (int64_t)a;
-      }
-    }    
-    count += getCifra1(str, a, sp);
-    str += count;
-    if (po < 10) {
-      *str = sp.spec;
-      str++;
-      if (mark) {
-        *str = '+';
-      } else {
-        *str = '-';
-      }
-      str++;
-      *str = '0';
-      str++;
-      count += 3;
-      count += getCifra(str, po, sp);
-    } else {
-      *str = sp.spec;
-      str++;
-      if (mark) {
-        *str = '+';
-      } else {
-        *str = '-';
-      }
-      str++;
-      count += 2;
-      count += getCifra(str, po, sp);
-    }
-  }
+  // if (sp.spec == 'o' || sp.spec == 'u') {
+  //   long long int a = va_arg(ptr, long long int);
+  //   count = unsignedToString(str, a, sp);
+  // }
+  // if (sp.spec == 'x' || sp.spec == 'X') {
+  //   long long int a = va_arg(ptr, long long int);
+  //   count = unsignedToString(str, a, sp);
+  // }
+  // if (sp.spec == 'p') {
+  //   sp.spec = 'x';
+  //   long long int a = (long long int)va_arg(ptr, int *);    
+  //   strcat(str, "0x");
+  //   str += 2;    
+  //   count = getCifra(str, a, sp);
+  //   count += 2;
+  // }
+  // if (sp.spec == 'f') {
+  //   double a = va_arg(ptr, double);
+  //   count = getCifra1(str, a, sp);
+  // }
+  // if (sp.spec == 'e' || sp.spec == 'E') {
+  //   int po = 0;
+  //   double a = va_arg(ptr, double);
+  //   int64_t b = (int64_t)a;
+  //   int mark = 1;
+  //   if (b == 0) {
+  //     mark = 0;
+  //     while (b == 0) {
+  //       a *= 10;
+  //       po++;
+  //       b = (int64_t)a;
+  //     }
+  //   } else {
+  //     while (b > 9) {
+  //       a /= 10;
+  //       po++;
+  //       b = (int64_t)a;
+  //     }
+  //   }    
+  //   count += getCifra1(str, a, sp);
+  //   str += count;
+  //   if (po < 10) {
+  //     *str = sp.spec;
+  //     str++;
+  //     if (mark) {
+  //       *str = '+';
+  //     } else {
+  //       *str = '-';
+  //     }
+  //     str++;
+  //     *str = '0';
+  //     str++;
+  //     count += 3;
+  //     count += getCifra(str, po, sp);
+  //   } else {
+  //     *str = sp.spec;
+  //     str++;
+  //     if (mark) {
+  //       *str = '+';
+  //     } else {
+  //       *str = '-';
+  //     }
+  //     str++;
+  //     count += 2;
+  //     count += getCifra(str, po, sp);
+  //   }
+  // }
   
-  if (sp.spec == 'g' || sp.spec == 'G') {
-    double a = va_arg(ptr, double);
-    count = getCifra1(str, a, sp);
-  }
+  // if (sp.spec == 'g' || sp.spec == 'G') {
+  //   double a = va_arg(ptr, double);
+  //   count = getCifra1(str, a, sp);
+  // }
   return count;
 } 
 
+long long getValueModInt(Specif sp, va_list ptr) {
+  long long result = 0;
+  if (sp.mod == 'h') {
+    result = (short int)va_arg(ptr, int);
+  }
+  if (sp.mod == 'l') {
+    if (1 < sp.countMod) {
+      result = va_arg(ptr, long long int);
+    } else {
+      result = va_arg(ptr, long int);
+    }    
+  }
+  if (sp.mod == '\0') {
+    result = va_arg(ptr, int);
+  }
+  return result;
+}
+
 
 int initStruct (char * str, Specif * sp, va_list ptr) {
+  int fl = 0;
   char * flag = "-+ #0";
   char * modif = "hlL";
-  char * spec = "cdieEfgGosuxXpn%";
+  // char * spec = "cdieEfgGosuxXpn%";
   Specif qwer = {0};
-  qwer.precision = 6;
   *sp = qwer;
   while (*str != '\0') {
-    if (strchr(flag, *str)) {      
+    while (strchr(flag, *str)) {      
       int * p = (int *)&(sp->flag);
       *(p + (strchr(flag, *str) - flag)) = 1;
       str++;
@@ -216,6 +267,7 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
     }
     if (*str == '.') {                                  // если точка то после число точности 
       str++;
+      fl = 1;
       if (*str == '*') {
         sp->precision = va_arg(ptr, int);
       } else {
@@ -229,6 +281,13 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
     }
     sp->spec = *str;
     str++;
+  }
+  if (fl && strchr("idouxX", sp->spec)) {
+    sp->width = sp->precision;
+    sp->flag.zero = 1;
+  }
+  if (strchr("eEfgG", sp->spec) && !sp->precision) {
+    sp->precision = 6;
   }  
   return 0;
 }
@@ -239,53 +298,70 @@ int parseToInt(char * str, int * val) {
   while (*str >= '0' && *str <= '9') {
     *val *= 10;
     *val += *str - '0';
+    str++;
     count++;
   }  
   return count;
 }
 
-
-
-int getCifra(char * str, long long unsigned a, Specif sp) {
+int getCifer(char * str, long long int a) {
   int count = 0;
-  int notation = 10; // i u d по стандарту
-  int step = 55;
-  if (sp.spec == 'o') {
-    notation = 8;
-  } else if (sp.spec == 'x' || sp.spec == 'X') {
-    notation = 16;
-    if (sp.spec == 'x') {
-      step = 87;
-    }
-  }  
-  // а как же ноль?
-  if (a == 0) {
-    *str = '0';
-    count++;
-  }
-  while (a > 0) {
-    count += getCifra(str, a / notation , sp);    
+  if(9 < a) {
+    count += getCifer(str, a / 10);
     str += count;
-    int buf = a % notation;
-    if ( buf > 9 && notation == 16) {
-      *str = buf + step;
-    } else {
-      *str = buf + '0';
-    }
-    str++;
-    count++;
-    a /= notation;
-  }   
-  return count;  
+  }
+  *str = a % 10 + '0';
+  count++;
+  return count;
 }
 
-int getCifra1(char * str, double a, Specif sp) {
+int signedToString(char * str, long long int a, Specif sp) {
+  int count = 0;
+  // int negative = 0;
+  if (sp.flag.pl && 0 <= a) {
+    *str = '+';
+    str++;
+    count++;
+  }
+  if (0 > a) {
+    *str = '-';
+    str++;
+    count++;
+    a = -a;
+  } else {
+    if (!sp.flag.pl) {
+      *str = ' ';
+      str++;
+      count++;
+    }    
+  }
+  if (0 == a) {
+    *str = '0';
+    count++;
+  } else {
+    // while (a > 0) {
+    int step = getCifer(str, a);    
+    str += step;
+    count += step;
+    // int buf = a % 10;
+    // *str = buf + '0';
+    // str++;
+    // count++;
+    // a /= 10;
+    // }
+  }
+  return count;
+}
+
+
+
+int doubleToString(char * str, double a, Specif sp) {
   int count = 0;
   int64_t whole = (int64_t)a;
   double fractional = a - whole;
   sp.spec = 'd';
   // if (whole != 0) {
-    count += getCifra(str, whole / 10 , sp);    
+    count += signedToString(str, whole / 10 , sp);    
     str += count;
     int buf = whole % 10;
     *str = buf + '0';    
@@ -321,3 +397,36 @@ int getCifra1(char * str, double a, Specif sp) {
 //   free(buf);
 //   return result;  
 // }
+
+
+int unsignedToString(char * str, long long unsigned a, Specif sp) {
+  int count = 0;
+  int notation = 10;
+  int step = 55;
+  if (sp.spec == 'o') {
+    notation = 8;
+  } else if (sp.spec == 'x' || sp.spec == 'X') {
+    notation = 16;
+    if (sp.spec == 'x') {
+      step = 87;
+    }
+  }
+  if (a == 0) {
+    *str = '0';
+    count++;
+  }
+  while (a > 0) {
+    count += unsignedToString(str, a / notation , sp);
+    str += count;
+    int buf = a % notation;
+    if ( buf > 9 && notation == 16) {
+      *str = buf + step;
+    } else {
+      *str = buf + '0';
+    }
+    str++;
+    count++;
+    a /= notation;
+  }
+  return count;
+}
