@@ -21,11 +21,14 @@ typedef struct specif {
   int precision;
 }Specif;
 
+int insertMy(char * str, char c, int n);
+
 int getCifer(char * str, long long int a);
 int longDefine (int a);
 long long getValueModInt(Specif sp, va_list ptr);
 int formatForInput (Specif sp, char * str);
-int fullingBuffer(Specif sp, char * buf, int n);
+int fillingInWidthBuffer(Specif sp, char * buf, int n);
+int fillingInPrecisionBuffer(char * buf, int n);
 
 int getValue (char * str, Specif sp, va_list ptr);
 int initStruct (char * str, Specif * sp, va_list ptr);
@@ -84,44 +87,55 @@ int s21_sprintf(char *str, const char *format, ...) {
 }
 
 int formatForInput (Specif sp, char * str) {
-  char buf[4096] = "";
-  int size = strlen(str);
-  int step = 0;
-  int flag = 0;
-  if ('-' == *str || '+' == *str) {
-    *buf = *str;
-    str++;
-    flag++;
-    if (sp.flag.zero) {
-      size--;
-      step++;
-    }
-    
+  // char buf[4096] = "";
+  if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
+    *(strchr(str, '0')) = ' ';
   }
-  
-  
-  if (sp.width > size) {
-    if (sp.flag.min){
-      strcat(buf, str);
-      fullingBuffer(sp, buf + step + size, sp.width - size);
-    } else
-    {
-      fullingBuffer(sp, buf + step, sp.width - size);
-      strcat(buf, str);
+  if ('+' == *str || '-' == *str || ' ' == *str) {
+    //  i = 1 && size - 1
+    if ((int)(strlen(str) - 1) < sp.precision) {
+      insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
     }
-    strcpy(str - flag, buf);
+  } else {
+    // i = 0
+    if ((int)strlen(str) < sp.precision) {
+      insertMy(str, '0', sp.precision - strlen(str));
+    }
   }
-  
-  
+  if ((int)strlen(str) < sp.width) {
+    if (sp.flag.min) {
+      //  |<-
+      fillingInWidthBuffer(sp, str + strlen(str), sp.width - strlen(str));      
+    } else {
+      //  ->|
+      int n = sp.width - strlen(str);
+      memmove(str + n, str, strlen(str));
+      fillingInWidthBuffer(sp, str, n); 
+    }
+  }
   return 0;
 }
 
-int fullingBuffer(Specif sp, char * buf, int n) {
+int insertMy(char * str, char c, int n) {
+  memmove(str + n, str, strlen(str));
+  for (int i = 0; i < n; i++) {
+    str[i] = c;
+  }
+  return 0;
+}
+
+int fillingInWidthBuffer(Specif sp, char * buf, int n) {
   if (sp.flag.zero) {
     memset(buf, '0', n);
   } else {
     memset(buf, ' ', n);
   }
+  //maybe need '\0'
+  return 0;
+}
+
+int fillingInPercisionBuffer(char * buf, int n) {  
+    memset(buf, '0', n);
   //maybe need '\0'
   return 0;
 }
@@ -218,7 +232,6 @@ int getValue (char * str, Specif sp, va_list ptr) {
   //     count += getCifra(str, po, sp);
   //   }
   // }
-  
   // if (sp.spec == 'g' || sp.spec == 'G') {
   //   double a = va_arg(ptr, double);
   //   count = getCifra1(str, a, sp);
@@ -251,6 +264,7 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
   char * modif = "hlL";
   // char * spec = "cdieEfgGosuxXpn%";
   Specif qwer = {0};
+  qwer.precision = 1;
   *sp = qwer;
   while (*str != '\0') {
     while (strchr(flag, *str)) {      
@@ -271,7 +285,11 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
       if (*str == '*') {
         sp->precision = va_arg(ptr, int);
       } else {
+        if ('9' >= *str && '0' <= *str) {
         str += parseToInt(str, &(sp->precision));         //то забираю все цифры в число precision
+        } else {
+          sp->precision = 0;
+        }
       }
     }
     while (strchr(modif, *str)) {
@@ -282,9 +300,11 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
     sp->spec = *str;
     str++;
   }
-  if (fl && strchr("idouxX", sp->spec)) {
-    sp->width = sp->precision;
-    sp->flag.zero = 1;
+  if (!fl && strchr("eEfgG", sp->spec)) {
+    sp->precision = 6;
+  }
+  if (!fl && !(strchr("eEfgG", sp->spec))) {
+    sp->precision = 1;
   }
   if (strchr("eEfgG", sp->spec) && !sp->precision) {
     sp->precision = 6;
@@ -300,7 +320,8 @@ int parseToInt(char * str, int * val) {
     *val += *str - '0';
     str++;
     count++;
-  }  
+  }
+  
   return count;
 }
 
@@ -329,7 +350,7 @@ int signedToString(char * str, long long int a, Specif sp) {
     count++;
     a = -a;
   } else {
-    if (!sp.flag.pl) {
+    if (!sp.flag.pl && !sp.flag.zero && sp.flag.spase) {
       *str = ' ';
       str++;
       count++;
