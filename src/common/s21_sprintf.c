@@ -23,9 +23,11 @@ typedef struct specif {
 
 int insertMy(char * str, char c, int n);
 
-int getCifer(char * str, long long int a);
+int getCifer(char * str, long long int a, int notation);
+int getCiferU(char * str, long long unsigned a, int notation);
 int longDefine (int a);
 long long getValueModInt(Specif sp, va_list ptr);
+long long unsigned getValueModUInt(Specif sp, va_list ptr);
 int formatForInput (Specif sp, char * str);
 int fillingInWidthBuffer(Specif sp, char * buf, int n);
 int fillingInPrecisionBuffer(char * buf, int n);
@@ -55,15 +57,12 @@ int s21_sprintf(char *str, const char *format, ...) {
       int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
       char * buf = strndup(format, a);
       initStruct(buf, &sp, ptr);
-      // free(buf);
+      free(buf);
       format += a;
       }
       {
       char buf[4096] = "";
-      getValue(buf, sp, ptr);
-      // function for format input
-      
-      
+      getValue(buf, sp, ptr);     
       formatForInput(sp, buf);
       strcat(str, buf);
       str += strlen(buf);
@@ -82,14 +81,27 @@ int s21_sprintf(char *str, const char *format, ...) {
   va_end(ptr);
   *str = '\0';
   str = start;
-
   return count;
 }
 
 int formatForInput (Specif sp, char * str) {
   // char buf[4096] = "";
+
+  
+
   if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
-    *(strchr(str, '0')) = ' ';
+    *(strchr(str, '0')) = '\0';
+  }
+  if (sp.flag.grid) {
+    if ('o' == sp.spec) {
+      if (strcmp(str, " 0") && strcmp(str, "0")) {
+        insertMy(str, '0', 1);
+      }
+    }
+    if ('x' == sp.spec || 'X' == sp.spec) {
+      insertMy(str, '0', 1);
+      insertMy(str, 'x', 1);
+    }
   }
   if ('+' == *str || '-' == *str || ' ' == *str) {
     //  i = 1 && size - 1
@@ -165,10 +177,10 @@ int getValue (char * str, Specif sp, va_list ptr) {
     long long int a = getValueModInt(sp, ptr);
     count = signedToString(str, a, sp);
   }
-  // if (sp.spec == 'o' || sp.spec == 'u') {
-  //   long long int a = va_arg(ptr, long long int);
-  //   count = unsignedToString(str, a, sp);
-  // }
+  if (sp.spec == 'o' || sp.spec == 'u') {
+    long long unsigned int a = getValueModUInt(sp, ptr);
+    count = unsignedToString(str, a, sp);
+  }
   // if (sp.spec == 'x' || sp.spec == 'X') {
   //   long long int a = va_arg(ptr, long long int);
   //   count = unsignedToString(str, a, sp);
@@ -239,23 +251,7 @@ int getValue (char * str, Specif sp, va_list ptr) {
   return count;
 } 
 
-long long getValueModInt(Specif sp, va_list ptr) {
-  long long result = 0;
-  if (sp.mod == 'h') {
-    result = (short int)va_arg(ptr, int);
-  }
-  if (sp.mod == 'l') {
-    if (1 < sp.countMod) {
-      result = va_arg(ptr, long long int);
-    } else {
-      result = va_arg(ptr, long int);
-    }    
-  }
-  if (sp.mod == '\0') {
-    result = va_arg(ptr, int);
-  }
-  return result;
-}
+
 
 
 int initStruct (char * str, Specif * sp, va_list ptr) {
@@ -325,56 +321,45 @@ int parseToInt(char * str, int * val) {
   return count;
 }
 
-int getCifer(char * str, long long int a) {
+
+
+
+
+////////////////////// Number to String///////////////////////////
+
+int getCifer(char * str, long long int a, int notation) {
   int count = 0;
+  // int step = 55;
   if(9 < a) {
-    count += getCifer(str, a / 10);
+    count += getCifer(str, a / notation, notation);
     str += count;
   }
-  *str = a % 10 + '0';
+  int buf = a % notation;
+  // if ( buf > 9 && notation == 16) {
+  //   *str = buf + step;
+  // } else {
+    *str = buf + '0';
+  // }
   count++;
   return count;
 }
 
-int signedToString(char * str, long long int a, Specif sp) {
+int getCiferU(char * str, long long unsigned a, int notation) {
   int count = 0;
-  // int negative = 0;
-  if (sp.flag.pl && 0 <= a) {
-    *str = '+';
-    str++;
-    count++;
+  int step = 55;
+  if(9 < a) {
+    count += getCifer(str, a / notation, notation);
+    str += count;
   }
-  if (0 > a) {
-    *str = '-';
-    str++;
-    count++;
-    a = -a;
+  int buf = a % notation;
+  if ( buf > 9 && notation == 16) {
+    *str = buf + step;
   } else {
-    if (!sp.flag.pl && !sp.flag.zero && sp.flag.spase) {
-      *str = ' ';
-      str++;
-      count++;
-    }    
+    *str = buf + '0';
   }
-  if (0 == a) {
-    *str = '0';
-    count++;
-  } else {
-    // while (a > 0) {
-    int step = getCifer(str, a);    
-    str += step;
-    count += step;
-    // int buf = a % 10;
-    // *str = buf + '0';
-    // str++;
-    // count++;
-    // a /= 10;
-    // }
-  }
+  count++;
   return count;
 }
-
-
 
 int doubleToString(char * str, double a, Specif sp) {
   int count = 0;
@@ -402,6 +387,97 @@ int doubleToString(char * str, double a, Specif sp) {
   count += sp.precision;
   return count;  
 }
+//18446744073709551491
+int unsignedToString(char * str, long long unsigned a, Specif sp) {
+  int count = 0;
+  int notation = 10;
+  if (sp.spec == 'o') {
+    notation = 8;
+  } else if (sp.spec == 'x' || sp.spec == 'X') {
+    notation = 16;
+  }
+  if (0 == a) {
+    *str = '0';
+    count++;
+  } else {
+    int step = getCiferU(str, a, notation);    
+    str += step;
+    count += step;
+  }
+  return count;
+}
+
+int signedToString(char * str, long long int a, Specif sp) {
+  int count = 0;
+  if (sp.flag.pl && 0 <= a) {
+    *str = '+';
+    str++;
+    count++;
+  }
+  if (0 > a) {
+    *str = '-';
+    str++;
+    count++;
+    a = -a;
+  } else {
+    if (!sp.flag.pl && !sp.flag.zero && sp.flag.spase) {
+      *str = ' ';
+      str++;
+      count++;
+    }    
+  }
+  if (0 == a) {
+    *str = '0';
+    count++;
+  } else {
+    int step = getCifer(str, a, 10);    
+    str += step;
+    count += step;
+  }
+  return count;
+}
+
+/////////////////////////////////////////////////
+
+/////////////////////modificator l L ll h///////////////////////////
+
+long long getValueModInt(Specif sp, va_list ptr) {
+  long long result = 0;  
+  if (sp.mod == 'h') {
+    result = (short int)va_arg(ptr, int);
+  }
+  if (sp.mod == 'l') {
+    if (1 < sp.countMod) {
+      result = va_arg(ptr, long long int);
+    } else {
+      result = va_arg(ptr, long int);
+    }    
+  }
+  if (sp.mod == '\0') {
+    result = va_arg(ptr, int);
+  }  
+  return result;
+}
+
+long long unsigned getValueModUInt(Specif sp, va_list ptr) {
+  long long unsigned result = 0;
+  if (sp.mod == 'h') {
+    result = (short int)va_arg(ptr, unsigned int);
+  }
+  if (sp.mod == 'l') {
+    if (1 < sp.countMod) {
+      result = va_arg(ptr, long long unsigned int);
+    } else {
+      result = va_arg(ptr, long unsigned int);
+    }    
+  }
+  if (sp.mod == '\0') {
+    result = va_arg(ptr, unsigned int);
+  }
+  return result;
+}
+
+///////////////////////////////////////////////
 
 // int isNanInf(const char * str) {
 //   int result = 0;
@@ -418,36 +494,3 @@ int doubleToString(char * str, double a, Specif sp) {
 //   free(buf);
 //   return result;  
 // }
-
-
-int unsignedToString(char * str, long long unsigned a, Specif sp) {
-  int count = 0;
-  int notation = 10;
-  int step = 55;
-  if (sp.spec == 'o') {
-    notation = 8;
-  } else if (sp.spec == 'x' || sp.spec == 'X') {
-    notation = 16;
-    if (sp.spec == 'x') {
-      step = 87;
-    }
-  }
-  if (a == 0) {
-    *str = '0';
-    count++;
-  }
-  while (a > 0) {
-    count += unsignedToString(str, a / notation , sp);
-    str += count;
-    int buf = a % notation;
-    if ( buf > 9 && notation == 16) {
-      *str = buf + step;
-    } else {
-      *str = buf + '0';
-    }
-    str++;
-    count++;
-    a /= notation;
-  }
-  return count;
-}

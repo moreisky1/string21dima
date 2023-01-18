@@ -252,7 +252,7 @@ char* s21_strstr(const char *haystack, const char *needle);
 char* s21_strtok(char *str, const char *delim);
 
 /*#21
- * tests ---> NON
+ * tests ---> NON   char * str = "Hellow"
  * realise ----> NON
  *
  * Возвращает копию строки (str), преобразованной в верхний регистр.
