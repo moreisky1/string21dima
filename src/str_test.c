@@ -9,7 +9,7 @@ int main(/*int argc, char *argv[]*/) {
   // double x, r;
   // size_t bytes;
   char str1[2042] = "";
-  int i = 123456;
+  int i = 12354145;
   int* p = &i;
   double ii = 123456;
   wchar_t g = 300;
@@ -17,12 +17,33 @@ int main(/*int argc, char *argv[]*/) {
   // printf("\t==========marker================\n");
   sprintf(str1, "<%%c>\t\t\t|%c|", i);
   printf("%s\n", str1);
+  sprintf(str1, "<%%6c>\t\t\t|%6c|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%-6c>\t\t\t|%-6c|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%+6c>\t\t\t|'+' flag used with '%%c' gnu_printf format|");
+  printf("%s\n", str1);  // + с символами не используется
+  sprintf(str1,
+          "<%%6hc>\t\t\t|use of 'h' length modifier with 'c' type character "
+          "has either no effect or undefined behavior|");
+  printf("%s\n", str1);  // h с символами не используется
+  sprintf(str1, "<%%lc>\t\t\t|%lc|", i);
+  printf("%s\n", str1);  // происходит нечто непонятное
+  sprintf(str1, "<%%lc>\t\t\t|%lc|", g);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%lc>\t\t\t|%lc|", t);
+  printf("%s\n", str1);
   sprintf(str1, "<%%c>\t\t\t|%c|", g);
   printf("%s\n", str1);
   sprintf(str1, "<%%c>\t\t\t|%c|", t);
   printf("%s\n", str1);
   // d - целые
+  printf("спецификатор d\n");
   sprintf(str1, "<%%d>\t\t\t|%d|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%hd>\t\t\t|%hd|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%ld>\t\t\t|%ld|", (long int)i);
   printf("%s\n", str1);
   sprintf(str1, "<%%8d>\t\t\t|%8d|", i);
   printf("%s\n", str1);
@@ -32,22 +53,28 @@ int main(/*int argc, char *argv[]*/) {
   printf("%s\n", str1);
   sprintf(str1, "<%%11d>\t\t\t|%11d|", i);
   printf("%s\n", str1);
+  sprintf(str1, "<%%-11d>\t\t\t|%-11d|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%+11d>\t\t\t|%+11d|", i);
+  printf("%s\n", str1);
   sprintf(str1, "<%%.5d>\t\t\t|%.5d|", i);
   printf("%s\n", str1);
+  sprintf(str1, "<%%.*d>\t\t\t|%.*d|", 5, i);
+  printf("%s\n", str1);
   // printf("\n");
-  // sprintf(str1, "<%%i>\t\t\t|%i|", i);
-  // printf("%s\n", str1);
-  // sprintf(str1, "<%%8i>\t\t\t|%8i|", i);
-  // printf("%s\n", str1);
-  // sprintf(str1, "<%%08i>\t\t\t|%08i|", i);
-  // printf("%s\n", str1);
-  // sprintf(str1, "<%% 11i>\t\t\t|% 11i|", i);
-  // printf("%s\n", str1);
-  // sprintf(str1, "<%%11i>\t\t\t|%11i|", i);
-  // printf("%s\n", str1);
-  // sprintf(str1, "<%%.5i>\t\t\t|%.5i|", i);
-  // printf("%s\n", str1);
-  // printf("\n");
+  sprintf(str1, "<%%i>\t\t\t|%i|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%8i>\t\t\t|%8i|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%08i>\t\t\t|%08i|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%% 11i>\t\t\t|% 11i|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%11i>\t\t\t|%11i|", i);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%.5i>\t\t\t|%.5i|", i);
+  printf("%s\n", str1);
+  printf("\n");
   // e - научная нотация
   printf("спецификатор e\n");
   sprintf(str1, "<%%.5e>\t\t\t|%.5e|", ii);
@@ -61,6 +88,10 @@ int main(/*int argc, char *argv[]*/) {
   sprintf(str1, "<%%11e>\t\t\t|%11e|", ii);
   printf("%s\n", str1);
   sprintf(str1, "<%%15e>\t\t\t|%15e|", ii);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%+15e>\t\t\t|%+15e|", ii);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%-15e>\t\t\t|%-15e|", ii);
   printf("%s\n", str1);
   sprintf(str1, "<%%015e>\t\t\t|%015e|", ii);
   printf("%s\n", str1);
@@ -86,6 +117,8 @@ int main(/*int argc, char *argv[]*/) {
   printf("%s\n", str1);
   sprintf(str1, "<%%-#15x>\t\t|%-#15x|", i);
   printf("%s\n", str1);
+  sprintf(str1, "<%%+#15x>\t\t|'+' flag used with '%%x' gnu_printf format|");
+  printf("%s\n", str1);  // + не работает у шестнадцатеричных
   {
     sprintf(str1, "<%% #15x>\t\t|' ' flag used with '%%x' gnu_printf format|");
     printf("%s\n", str1);  // пробел не работает с шириной у шестнадцатеричных
@@ -108,6 +141,8 @@ int main(/*int argc, char *argv[]*/) {
   printf("%s\n", str1);
   sprintf(str1, "<%%-15o>\t\t\t|%-15o|", i);
   printf("%s\n", str1);
+  sprintf(str1, "<%%+15o>\t\t\t|'+' flag used with '%%o' gnu_printf format|");
+  printf("%s\n", str1);  // + не работает у восьмеричных
   sprintf(str1, "<%%15.2o>\t\t|%15.2o|", i);
   printf("%s\n", str1);
   sprintf(str1, "<%%015o>\t\t\t|%015o|", i);
@@ -133,8 +168,9 @@ int main(/*int argc, char *argv[]*/) {
   printf("%s\n", str1);
   sprintf(str1, "<%%-20p>\t\t\t|%-20p|", p);
   printf("%s\n", str1);
+  sprintf(str1, "<%%+20p>\t\t\t|'+' flag used with '%%p' gnu_printf format|");
+  printf("%s\n", str1);  // '+' с адресом не используется
   sprintf(str1, "<%%*p>\t\t\t|%*p|", -20, p);
-
   printf("%s\n", str1);
   sprintf(str1, "<%%#20p>\t\t\t|'#' flag used with '%%p' gnu_printf format|");
   printf("%s\n", str1);  // # с адресом не используется
