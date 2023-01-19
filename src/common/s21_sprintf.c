@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct flags {
   int min;
@@ -21,22 +22,26 @@ typedef struct specif {
   int precision;
 }Specif;
 
-int insertMy(char * str, char c, int n);
+
 
 int getCifer(char * str, long long int a, int notation);
 int getCiferU(char * str, long long unsigned a, int notation);
 int longDefine (int a);
+
+long double getValueModDoub(Specif sp, va_list ptr);
 long long getValueModInt(Specif sp, va_list ptr);
 long long unsigned getValueModUInt(Specif sp, va_list ptr);
-int formatForInput (Specif sp, char * str);
-int fillingInWidthBuffer(Specif sp, char * buf, int n);
-int fillingInPrecisionBuffer(char * buf, int n);
 
-int getValue (char * str, Specif sp, va_list ptr);
+int formatForInputFl (Specif sp, char * str);
+int formatForInputInt(Specif sp, char * str);
+int fillingInWidthBuffer(Specif sp, char * buf, int n);
+int insertMy(char * str, char c, int n);
+
+int getValue (char * str, Specif * sp, va_list ptr);
 int initStruct (char * str, Specif * sp, va_list ptr);
 int parseToInt(char * str, int * val);
 
-int doubleToString(char * str, double a, Specif sp);
+int doubleToString(char * str, long double a, Specif sp);
 int signedToString(char * str, long long int a, Specif sp);
 int unsignedToString(char * str, long long unsigned a, Specif sp);
 
@@ -62,8 +67,18 @@ int s21_sprintf(char *str, const char *format, ...) {
       }
       {
       char buf[4096] = "";
-      getValue(buf, sp, ptr);     
-      formatForInput(sp, buf);
+      getValue(buf, &sp, ptr);
+      if (strchr("feEgG", sp.spec)){
+        formatForInputInt(sp, buf);
+      }
+      if (strchr("iduoxXp", sp.spec)){
+        formatForInputInt(sp, buf);
+      }
+      if (strchr("cs", sp.spec)){
+        ;
+      }
+      
+      // todo  lowercase
       strcat(str, buf);
       str += strlen(buf);
       count += strlen(buf);
@@ -84,87 +99,21 @@ int s21_sprintf(char *str, const char *format, ...) {
   return count;
 }
 
-int formatForInput (Specif sp, char * str) {
-  // char buf[4096] = "";
 
-  
 
-  if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
-    *(strchr(str, '0')) = '\0';
-  }
-  if (sp.flag.grid) {
-    if ('o' == sp.spec) {
-      if (strcmp(str, " 0") && strcmp(str, "0")) {
-        insertMy(str, '0', 1);
-      }
-    }
-    if ('x' == sp.spec || 'X' == sp.spec) {
-      insertMy(str, '0', 1);
-      insertMy(str, 'x', 1);
-    }
-  }
-  if ('+' == *str || '-' == *str || ' ' == *str) {
-    //  i = 1 && size - 1
-    if ((int)(strlen(str) - 1) < sp.precision) {
-      insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
-    }
-  } else {
-    // i = 0
-    if ((int)strlen(str) < sp.precision) {
-      insertMy(str, '0', sp.precision - strlen(str));
-    }
-  }
-  if ((int)strlen(str) < sp.width) {
-    if (sp.flag.min) {
-      //  |<-
-      fillingInWidthBuffer(sp, str + strlen(str), sp.width - strlen(str));      
-    } else {
-      //  ->|
-      int n = sp.width - strlen(str);
-      memmove(str + n, str, strlen(str));
-      fillingInWidthBuffer(sp, str, n); 
-    }
-  }
-  return 0;
-}
-
-int insertMy(char * str, char c, int n) {
-  memmove(str + n, str, strlen(str));
-  for (int i = 0; i < n; i++) {
-    str[i] = c;
-  }
-  return 0;
-}
-
-int fillingInWidthBuffer(Specif sp, char * buf, int n) {
-  if (sp.flag.zero) {
-    memset(buf, '0', n);
-  } else {
-    memset(buf, ' ', n);
-  }
-  //maybe need '\0'
-  return 0;
-}
-
-int fillingInPercisionBuffer(char * buf, int n) {  
-    memset(buf, '0', n);
-  //maybe need '\0'
-  return 0;
-}
-
-int getValue (char * str, Specif sp, va_list ptr) {
+int getValue (char * str, Specif * sp, va_list ptr) {
   int count = 0;
-  if (sp.spec == 'c') {
+  if (sp->spec == 'c') {
     *str = (char)va_arg(ptr, int);
     str++;
     count++;
   }
-  if (sp.spec == '%') {
+  if (sp->spec == '%') {
     *str = '%';
     str++;
     count++;
   }
-  if (sp.spec == 's') {
+  if (sp->spec == 's') {
     char * buf = va_arg(ptr, char *);
     while (*buf){
       *str = *buf;
@@ -173,77 +122,33 @@ int getValue (char * str, Specif sp, va_list ptr) {
       buf++;
     }      
   }  
-  if (sp.spec == 'i' || sp.spec == 'd') {
-    long long int a = getValueModInt(sp, ptr);
-    count = signedToString(str, a, sp);
+  if (sp->spec == 'i' || sp->spec == 'd') {
+    long long int a = getValueModInt(*sp, ptr);
+    count = signedToString(str, a, *sp);
   }
-  if (sp.spec == 'o' || sp.spec == 'u') {
-    long long unsigned int a = getValueModUInt(sp, ptr);
-    count = unsignedToString(str, a, sp);
+  if (sp->spec == 'o' || sp->spec == 'u') {
+    long long unsigned int a = getValueModUInt(*sp, ptr);
+    count = unsignedToString(str, a, *sp);
   }
-  // if (sp.spec == 'x' || sp.spec == 'X') {
-  //   long long int a = va_arg(ptr, long long int);
-  //   count = unsignedToString(str, a, sp);
-  // }
-  // if (sp.spec == 'p') {
-  //   sp.spec = 'x';
-  //   long long int a = (long long int)va_arg(ptr, int *);    
-  //   strcat(str, "0x");
-  //   str += 2;    
-  //   count = getCifra(str, a, sp);
-  //   count += 2;
-  // }
-  // if (sp.spec == 'f') {
-  //   double a = va_arg(ptr, double);
-  //   count = getCifra1(str, a, sp);
-  // }
-  // if (sp.spec == 'e' || sp.spec == 'E') {
-  //   int po = 0;
-  //   double a = va_arg(ptr, double);
-  //   int64_t b = (int64_t)a;
-  //   int mark = 1;
-  //   if (b == 0) {
-  //     mark = 0;
-  //     while (b == 0) {
-  //       a *= 10;
-  //       po++;
-  //       b = (int64_t)a;
-  //     }
-  //   } else {
-  //     while (b > 9) {
-  //       a /= 10;
-  //       po++;
-  //       b = (int64_t)a;
-  //     }
-  //   }    
-  //   count += getCifra1(str, a, sp);
-  //   str += count;
-  //   if (po < 10) {
-  //     *str = sp.spec;
-  //     str++;
-  //     if (mark) {
-  //       *str = '+';
-  //     } else {
-  //       *str = '-';
-  //     }
-  //     str++;
-  //     *str = '0';
-  //     str++;
-  //     count += 3;
-  //     count += getCifra(str, po, sp);
-  //   } else {
-  //     *str = sp.spec;
-  //     str++;
-  //     if (mark) {
-  //       *str = '+';
-  //     } else {
-  //       *str = '-';
-  //     }
-  //     str++;
-  //     count += 2;
-  //     count += getCifra(str, po, sp);
-  //   }
-  // }
+  if (sp->spec == 'x' || sp->spec == 'X') {
+    long long unsigned int a = getValueModUInt(*sp, ptr);
+    count = unsignedToString(str, a, *sp);
+  }
+  if (sp->spec == 'p') {
+    // sp->spec = 'x';
+    sp->flag.grid = 1;
+    long long unsigned int a = getValueModUInt(*sp, ptr);
+    count = unsignedToString(str, a, *sp);
+    // count += 2;
+  }
+  if (sp->spec == 'f') {
+    long double a = getValueModDoub(*sp, ptr);
+    count = doubleToString(str, a, *sp);
+  }
+  if (sp->spec == 'e' || sp->spec == 'E') {
+    long double a = getValueModDoub(*sp, ptr);
+    count = doubleToString(str, a, *sp);
+  }
   // if (sp.spec == 'g' || sp.spec == 'G') {
   //   double a = va_arg(ptr, double);
   //   count = getCifra1(str, a, sp);
@@ -302,9 +207,6 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
   if (!fl && !(strchr("eEfgG", sp->spec))) {
     sp->precision = 1;
   }
-  if (strchr("eEfgG", sp->spec) && !sp->precision) {
-    sp->precision = 6;
-  }  
   return 0;
 }
 
@@ -346,14 +248,13 @@ int getCifer(char * str, long long int a, int notation) {
 
 int getCiferU(char * str, long long unsigned a, int notation) {
   int count = 0;
-  int step = 55;
-  if(9 < a) {
-    count += getCifer(str, a / notation, notation);
+  if((long long unsigned)(notation - 1) < a) {
+    count += getCiferU(str, a / notation, notation);
     str += count;
   }
   int buf = a % notation;
   if ( buf > 9 && notation == 16) {
-    *str = buf + step;
+    *str = buf + 55;
   } else {
     *str = buf + '0';
   }
@@ -361,39 +262,103 @@ int getCiferU(char * str, long long unsigned a, int notation) {
   return count;
 }
 
-int doubleToString(char * str, double a, Specif sp) {
+int doubleToString(char * str, long double a, Specif sp) {
   int count = 0;
+  char mark = '+';
+  int man = 0;
+  int round = 5;
+  if (0 > a) {
+    round *= -1;
+  }
+  if (strchr("eE",sp.spec)) {
+    if (a < 1e-30 && a > -1e-30) {
+      *str = '0';
+      *(str + 1) = '.';
+      *(str + 2) = '0';
+    } else {
+      if ((long long int)(a) == 0) {
+        while ((long long int)a == 0) {
+          a *= 10;
+          man--;
+        }
+      } else {
+        while (9 < (long long int)a || -9 > (long long int)a ) {
+          a /= 10;
+          man++;
+        }
+      } 
+    }
+    if (strcmp(str, "0.0")) {
+      double vr = pow(0.1, sp.precision + 1);
+      a += round * vr;
+    }
+    if (a < 1e-30 && a > -1e-30) {
+      *str = '0';
+      *(str + 1) = '.';
+      *(str + 2) = '0';
+    } else {
+      if ((long long int)(a + 0.1) == 0) {
+        while ((long long int)a == 0) {
+          a *= 10;
+          man--;
+        }
+      } else {
+        while (9 < (long long int)a || -9 > (long long int)a ) {
+          a /= 10;
+          man++;
+        }
+      } 
+    }
+  }
   int64_t whole = (int64_t)a;
   double fractional = a - whole;
-  sp.spec = 'd';
-  // if (whole != 0) {
-    count += signedToString(str, whole / 10 , sp);    
-    str += count;
-    int buf = whole % 10;
-    *str = buf + '0';    
-    count++;
-  // }
-  str++;
-  *str = '.';
-  str++;
-  count++;
-  
-  for (int i = 0; i < sp.precision ; i++) {
-    fractional *= 10;
-    int buf = (int)fractional;
-    *str = buf % 10 + '0';
-    str++;
+  if (0 > a) {
+    fractional = whole - a;
   }
-  count += sp.precision;
+    count += signedToString(str, whole, sp);    
+    str += count;
+  if (sp.precision || sp.flag.grid) {
+    *str = '.';
+    str++;
+    count++;
+    
+    for (int i = 0; i < sp.precision ; i++) {
+      fractional = (fractional - (int)fractional) * 10;
+      int buf = (int)fractional;
+      *str = buf % 10 + '0';
+      str++;
+    }
+    count += sp.precision;
+  }
+  if ('e' == sp.spec || 'E' == sp.spec) {
+    if (man < 0) {
+      man *= -1;
+      mark = '-';
+    }
+    *str = sp.spec;
+    *(str + 1) = mark;
+    if (man < 10) {
+      *(str + 2) = '0';
+      *(str + 3) = '0' + man;
+      count += 2;
+    } else {
+      count += getCifer(str + 2, man, 10);
+    }
+    count += 2;
+  }
+
+
   return count;  
 }
-//18446744073709551491
+
+
+
 int unsignedToString(char * str, long long unsigned a, Specif sp) {
   int count = 0;
   int notation = 10;
   if (sp.spec == 'o') {
     notation = 8;
-  } else if (sp.spec == 'x' || sp.spec == 'X') {
+  } else if ('x' == sp.spec|| 'X' == sp.spec || 'p' == sp.spec ) {
     notation = 16;
   }
   if (0 == a) {
@@ -441,6 +406,17 @@ int signedToString(char * str, long long int a, Specif sp) {
 
 /////////////////////modificator l L ll h///////////////////////////
 
+long double getValueModDoub(Specif sp, va_list ptr) {
+  long double result = 0;
+  if (sp.mod == '\0') {
+    result = va_arg(ptr, double);
+  } 
+  if (sp.mod == 'L') {
+    result = va_arg(ptr, long double);
+  } 
+  return result;
+}
+
 long long getValueModInt(Specif sp, va_list ptr) {
   long long result = 0;  
   if (sp.mod == 'h') {
@@ -478,6 +454,131 @@ long long unsigned getValueModUInt(Specif sp, va_list ptr) {
 }
 
 ///////////////////////////////////////////////
+
+//////////////////////// format for input ///////////////
+
+int formatForInputFl (Specif sp, char * str) {
+  if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
+    *(strchr(str, '0')) = '\0';
+  }
+  if (sp.flag.grid && 'o' == sp.spec) {
+    if (strcmp(str, " 0") && strcmp(str, "0")) {
+      insertMy(str, '0', 1);
+    }
+  }
+  if ('+' == *str || '-' == *str || ' ' == *str) {
+    //  i = 1 && size - 1
+    if ((int)(strlen(str) - 1) < sp.precision) {
+      insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
+    }
+    if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
+      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
+        insertMy(str, 'x', 1);
+        insertMy(str, '0', 1);
+      }
+    }
+  } else {
+    // i = 0
+    if ((int)strlen(str) < sp.precision) {
+      insertMy(str, '0', sp.precision - strlen(str));
+    }
+    if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
+      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
+        insertMy(str, 'x', 1);
+        insertMy(str, '0', 1);
+      }
+    }
+  }
+  if ((int)strlen(str) < sp.width) {
+    if (sp.flag.min) {
+      //  |<-
+      fillingInWidthBuffer(sp, str + strlen(str), sp.width - strlen(str));      
+    } else {
+      //  ->|
+      int n = sp.width - strlen(str);
+      memmove(str + n, str, strlen(str));
+      fillingInWidthBuffer(sp, str, n); 
+    }
+  }
+  return 0;
+}
+
+int formatForInputInt(Specif sp, char * str) {
+  if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
+    *(strchr(str, '0')) = '\0';
+  }
+  if (sp.flag.grid && 'o' == sp.spec) {
+    if (strcmp(str, " 0") && strcmp(str, "0")) {
+      insertMy(str, '0', 1);
+    }
+  }
+  if ('+' == *str || '-' == *str || ' ' == *str) {
+    //  i = 1 && size - 1
+    if ((int)(strlen(str) - 1) < sp.precision) {
+      insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
+    }
+    if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
+      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
+        insertMy(str, 'x', 1);
+        insertMy(str, '0', 1);
+      }
+    }
+  } else {
+    // i = 0
+    if ((int)strlen(str) < sp.precision) {
+      insertMy(str, '0', sp.precision - strlen(str));
+    }
+    if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
+      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
+        insertMy(str, 'x', 1);
+        insertMy(str, '0', 1);
+      }
+    }
+  }
+  if ((int)strlen(str) < sp.width) {
+    if (sp.flag.min) {
+      //  |<-      
+      // fillingInWidthBuffer(sp, str + strlen(str), sp.width - strlen(str)); 
+      memset(str + strlen(str), ' ', sp.width - strlen(str));     
+    } else {
+      //  ->|
+      if (strchr("eEf", sp.spec)){
+        int n = sp.width - strlen(str);
+        if (('+' == *str || '-' == *str || ' ' == *str) && sp.flag.zero) {
+          memmove(str + n + 1, str + 1, strlen(str));
+          fillingInWidthBuffer(sp, str + 1, n); 
+        } else {
+          memmove(str + n, str, strlen(str));
+          fillingInWidthBuffer(sp, str, n); 
+        }
+      } else {
+        int n = sp.width - strlen(str);
+        memmove(str + n, str, strlen(str));
+        fillingInWidthBuffer(sp, str, n);
+      }
+    }
+  }
+  return 0;
+}
+
+int insertMy(char * str, char c, int n) {
+  memmove(str + n, str, strlen(str));
+  for (int i = 0; i < n; i++) {
+    str[i] = c;
+  }
+  return 0;
+}
+
+int fillingInWidthBuffer(Specif sp, char * buf, int n) {
+  if (sp.flag.zero) {
+    memset(buf, '0', n);
+  } else {
+    memset(buf, ' ', n);
+  }
+  return 0;
+}
+
+//////////////////////////////////////////
 
 // int isNanInf(const char * str) {
 //   int result = 0;
