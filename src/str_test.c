@@ -12,6 +12,8 @@ int main(/*int argc, char *argv[]*/) {
   int i = 12354145;
   int* p = &i;
   double ii = 123456;
+  double zero = 0;
+  double m_zero = -0;
   wchar_t g = 300;
   char t = (char)300;
   // printf("\t==========marker================\n");
@@ -101,6 +103,35 @@ int main(/*int argc, char *argv[]*/) {
   printf("%s\n", str1);
   sprintf(str1, "<%%.015E>\t\t|%.015E|", ii);
   printf("%s\n", str1);
+  sprintf(str1, "<%%e>\t\t\t|%e|", zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%.5e>\t\t\t|%.5e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%.4e>\t\t\t|%.4e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%011.4e>\t\t|%011.4e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%11.4e>\t\t|%11.4e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%11e>\t\t\t|%11e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%15e>\t\t\t|%15e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%+15e>\t\t\t|%+15e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%-15e>\t\t\t|%-15e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%015e>\t\t\t|%015e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%% 15e>\t\t\t|% 15e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%.015e>\t\t|%.015e|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%.015E>\t\t|%.015E|", m_zero);
+  printf("%s\n", str1);
+  sprintf(str1, "<%%#.015E>\t\t|%#.015E|", m_zero);
+  printf("%s\n", str1);
+
   // x - беззнаковое  шестнадцатеричное
   printf("спецификатор x\n");
   sprintf(str1, "<%%x>\t\t\t|%x|", i);
