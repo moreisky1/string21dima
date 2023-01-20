@@ -23,8 +23,7 @@ typedef struct specif {
 }Specif;
 
 
-
-int getCifer(char * str, long long int a, int notation);
+int getCifer(char * str, __int128_t a, int notation);
 int getCiferU(char * str, long long unsigned a, int notation);
 int longDefine (int a);
 
@@ -41,8 +40,9 @@ int getValue (char * str, Specif * sp, va_list ptr);
 int initStruct (char * str, Specif * sp, va_list ptr);
 int parseToInt(char * str, int * val);
 
+int doubleToStringG(char * str, long double a, Specif sp);
 int doubleToString(char * str, long double a, Specif sp);
-int signedToString(char * str, long long int a, Specif sp);
+int signedToString(char * str, __int128_t a, Specif sp);
 int unsignedToString(char * str, long long unsigned a, Specif sp);
 
 int s21_sprintf(char *str, const char *format, ...);
@@ -149,15 +149,15 @@ int getValue (char * str, Specif * sp, va_list ptr) {
     long double a = getValueModDoub(*sp, ptr);
     count = doubleToString(str, a, *sp);
   }
-  // if (sp.spec == 'g' || sp.spec == 'G') {
-  //   double a = va_arg(ptr, double);
-  //   count = getCifra1(str, a, sp);
-  // }
+  if (sp->spec == 'g' || sp->spec == 'G') {
+    long double a = getValueModDoub(*sp, ptr);
+    count = doubleToStringG(str, a, *sp);
+  }
   return count;
 } 
 
 
-
+//////////////////// init my struct /////////////
 
 int initStruct (char * str, Specif * sp, va_list ptr) {
   int fl = 0;
@@ -223,25 +223,18 @@ int parseToInt(char * str, int * val) {
   return count;
 }
 
-
-
-
+//////////////////////////////////////////////////////
 
 ////////////////////// Number to String///////////////////////////
 
-int getCifer(char * str, long long int a, int notation) {
+int getCifer(char * str, __int128_t a, int notation) {
   int count = 0;
-  // int step = 55;
   if(9 < a) {
     count += getCifer(str, a / notation, notation);
     str += count;
   }
   int buf = a % notation;
-  // if ( buf > 9 && notation == 16) {
-  //   *str = buf + step;
-  // } else {
-    *str = buf + '0';
-  // }
+  *str = buf + '0';
   count++;
   return count;
 }
@@ -263,6 +256,14 @@ int getCiferU(char * str, long long unsigned a, int notation) {
 }
 
 int doubleToString(char * str, long double a, Specif sp) {
+  if (sp.flag.min) {
+    sp.flag.zero = 0;
+  }
+  if (sp.flag.pl) {
+    sp.flag.spase = 0;
+  }
+  
+  
   int count = 0;
   char mark = '+';
   int man = 0;
@@ -288,10 +289,12 @@ int doubleToString(char * str, long double a, Specif sp) {
         }
       } 
     }
+  }
     if (strcmp(str, "0.0")) {
       double vr = pow(0.1, sp.precision + 1);
       a += round * vr;
     }
+  if (strchr("eE",sp.spec)) {
     if (a < 1e-30 && a > -1e-30) {
       *str = '0';
       *(str + 1) = '.';
@@ -310,11 +313,19 @@ int doubleToString(char * str, long double a, Specif sp) {
       } 
     }
   }
-  int64_t whole = (int64_t)a;
-  double fractional = a - whole;
+  __int128_t whole = (__int128_t)a;
+  long double fractional;
   if (0 > a) {
     fractional = whole - a;
+  } else {
+    fractional = a - whole;
   }
+  // if (reRound) {
+  //   double vr = pow(0.1, sp.precision + 1);
+  //   fractional += round * vr;
+  //   whole += (int)fractional;
+  //           0.649563312530517578125
+  // }-236310753.649563312530517
     count += signedToString(str, whole, sp);    
     str += count;
   if (sp.precision || sp.flag.grid) {
@@ -351,8 +362,6 @@ int doubleToString(char * str, long double a, Specif sp) {
   return count;  
 }
 
-
-
 int unsignedToString(char * str, long long unsigned a, Specif sp) {
   int count = 0;
   int notation = 10;
@@ -372,7 +381,7 @@ int unsignedToString(char * str, long long unsigned a, Specif sp) {
   return count;
 }
 
-int signedToString(char * str, long long int a, Specif sp) {
+int signedToString(char * str, __int128_t a, Specif sp) {
   int count = 0;
   if (sp.flag.pl && 0 <= a) {
     *str = '+';
@@ -383,7 +392,7 @@ int signedToString(char * str, long long int a, Specif sp) {
     *str = '-';
     str++;
     count++;
-    a = -a;
+    a *= -1;
   } else {
     if (!sp.flag.pl && !sp.flag.zero && sp.flag.spase) {
       *str = ' ';
@@ -505,7 +514,9 @@ int formatForInputFl (Specif sp, char * str) {
 
 int formatForInputInt(Specif sp, char * str) {
   if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
-    *(strchr(str, '0')) = '\0';
+    if ('f' != sp.spec) {
+      *(strchr(str, '0')) = '\0';
+    }    
   }
   if (sp.flag.grid && 'o' == sp.spec) {
     if (strcmp(str, " 0") && strcmp(str, "0")) {
