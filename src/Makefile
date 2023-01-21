@@ -47,6 +47,10 @@ s21_string.a:
 test: clean s21_string.a
 	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${TESTS_UBUNTU}
 
+te: clean s21_string.a
+	${GCC_G} test_case.c s21_string.a  -o test 
+	./test
+
 test.a:
 	${GCC_C} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9}
 	ar rc tests/s21_string_tests.a *.o
@@ -68,6 +72,11 @@ git:
 	git add .
 	git commit -m "${BRANCH} ---> ${USERNAME_1} ---> developing"
 	git push origin master
+
+gi:
+	git commit --all -m "${BRANCH_NAME} --> ${USERNAME1} --> developing"
+	git push origin ${BRANCH_NAME}
+
 #======================================== VALGRIND ====================================================================
 valgrind_test:
 
