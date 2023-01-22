@@ -20,9 +20,10 @@ typedef struct specif {
   Flags flag;
   int width;
   int precision;
+  char pod;
 }Specif;
 
-
+int stringDuble(Specif sp, char *str, long double a);
 int getCifer(char * str, __int128_t a, int notation);
 int getCiferU(char * str, long long unsigned a, int notation);
 int longDefine (int a);
@@ -31,7 +32,7 @@ long double getValueModDoub(Specif sp, va_list ptr);
 long long getValueModInt(Specif sp, va_list ptr);
 long long unsigned getValueModUInt(Specif sp, va_list ptr);
 
-int formatForInputFl (Specif sp, char * str);
+int formatForInputFl (char * str, Specif sp);
 int formatForInputInt(Specif sp, char * str);
 int fillingInWidthBuffer(Specif sp, char * buf, int n);
 int insertMy(char * str, char c, int n);
@@ -40,7 +41,8 @@ int getValue (char * str, Specif * sp, va_list ptr);
 int initStruct (char * str, Specif * sp, va_list ptr);
 int parseToInt(char * str, int * val);
 
-int doubleToStringG(char * str, long double a, Specif sp);
+long double myRound(Specif sp, char * str, long double a, int * man);
+int doubleToStringG(char * str, long double a, Specif * sp);
 int doubleToString(char * str, long double a, Specif sp);
 int signedToString(char * str, __int128_t a, Specif sp);
 int unsignedToString(char * str, long long unsigned a, Specif sp);
@@ -71,6 +73,7 @@ int s21_sprintf(char *str, const char *format, ...) {
       if (strchr("feEgG", sp.spec)){
         formatForInputInt(sp, buf);
       }
+      
       if (strchr("iduoxXp", sp.spec)){
         formatForInputInt(sp, buf);
       }
@@ -151,7 +154,9 @@ int getValue (char * str, Specif * sp, va_list ptr) {
   }
   if (sp->spec == 'g' || sp->spec == 'G') {
     long double a = getValueModDoub(*sp, ptr);
-    count = doubleToStringG(str, a, *sp);
+    // sp->spec = 'e';
+    count = doubleToStringG(str, a, sp);
+    // sp->spec = 'g';
   }
   return count;
 } 
@@ -199,6 +204,7 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
       str++;
     }
     sp->spec = *str;
+    sp->pod = *str;
     str++;
   }
   if (!fl && strchr("eEfgG", sp->spec)) {
@@ -226,6 +232,87 @@ int parseToInt(char * str, int * val) {
 //////////////////////////////////////////////////////
 
 ////////////////////// Number to String///////////////////////////
+
+int doubleToStringG(char * str, long double a, Specif * sp) {
+  char bufE[4096] = "";
+  if (!sp->precision) {
+    sp->precision = 1;
+  }
+  int man = 0;
+  sp->spec = 'e';
+  myRound(*sp, bufE, a, &man);
+  sp->spec = 'g';
+  if(-4 <= man && man < sp->precision) {
+    sp->spec = 'f';
+    sp->precision = sp->precision - (man + 1);
+  } else {
+    sp->spec = 'e';
+    sp->precision = sp->precision - 1;
+  }
+  doubleToString(str, a, *sp);
+  sp->spec = 'g';
+
+  if (strchr("gG", sp->pod) && strcmp(str, "0")){
+    formatForInputFl(str, *sp);
+  }
+  return 0;
+}
+
+long double myRound(Specif sp, char * str, long double a, int * man) {
+  int round = 5;
+  if (0 > a) {
+    round *= -1;
+  }
+  
+  if (strchr("eE",sp.spec)) {
+    if (/*a < 1e-30 && a > -1e-30*/ a == 0) {
+      *str = '0';
+      *(str + 1) = '.';
+      *(str + 2) = '0';
+    } else {
+      if ((long long int)(a) == 0) {
+        while ((long long int)a == 0) {
+          a *= 10;
+          (*man)--;
+        }
+      } else {
+        while (9 < (long long int)a || -9 > (long long int)a ) {
+          a /= 10;
+          (*man)++;
+        }
+      } 
+    }
+  }
+    if (strcmp(str, "0.0")) {
+      double vr = pow(0.1, sp.precision + 1);
+      a += round * vr;
+    }
+  // if (0 > a) {
+  //   a = floorl(a * pow(10, sp.precision)) / pow(10, sp.precision);
+  // } else {
+  //   a = floorl(a * pow(10, sp.precision )) / pow(10, sp.precision);
+  // }
+  if (strchr("eE",sp.spec)) {
+    if (a < 1e-30 && a > -1e-30) {
+      *str = '0';
+      *(str + 1) = '.';
+      *(str + 2) = '0';
+    } else {
+      if ((long long int)(a + 0.1) == 0) {
+        while ((long long int)a == 0) {
+          a *= 10;
+          (*man)--;
+        }
+      } else {
+        while (9 < (long long int)a || -9 > (long long int)a ) {
+          a /= 10;
+          (*man)++;
+        }
+      } 
+    }
+  }
+  return a;
+}
 
 int getCifer(char * str, __int128_t a, int notation) {
   int count = 0;
@@ -262,90 +349,23 @@ int doubleToString(char * str, long double a, Specif sp) {
   if (sp.flag.pl) {
     sp.flag.spase = 0;
   }
-  
-  
   int count = 0;
   char mark = '+';
   int man = 0;
-  int round = 5;
-  if (0 > a) {
-    round *= -1;
-  }
-  if (strchr("eE",sp.spec)) {
-    if (a < 1e-30 && a > -1e-30) {
-      *str = '0';
-      *(str + 1) = '.';
-      *(str + 2) = '0';
-    } else {
-      if ((long long int)(a) == 0) {
-        while ((long long int)a == 0) {
-          a *= 10;
-          man--;
-        }
-      } else {
-        while (9 < (long long int)a || -9 > (long long int)a ) {
-          a /= 10;
-          man++;
-        }
-      } 
-    }
-  }
-    if (strcmp(str, "0.0")) {
-      double vr = pow(0.1, sp.precision + 1);
-      a += round * vr;
-    }
-  if (strchr("eE",sp.spec)) {
-    if (a < 1e-30 && a > -1e-30) {
-      *str = '0';
-      *(str + 1) = '.';
-      *(str + 2) = '0';
-    } else {
-      if ((long long int)(a + 0.1) == 0) {
-        while ((long long int)a == 0) {
-          a *= 10;
-          man--;
-        }
-      } else {
-        while (9 < (long long int)a || -9 > (long long int)a ) {
-          a /= 10;
-          man++;
-        }
-      } 
-    }
-  }
-  __int128_t whole = (__int128_t)a;
-  long double fractional;
-  if (0 > a) {
-    fractional = whole - a;
-  } else {
-    fractional = a - whole;
-  }
-  // if (reRound) {
-  //   double vr = pow(0.1, sp.precision + 1);
-  //   fractional += round * vr;
-  //   whole += (int)fractional;
-  //           0.649563312530517578125
-  // }-236310753.649563312530517
-    count += signedToString(str, whole, sp);    
-    str += count;
-  if (sp.precision || sp.flag.grid) {
-    *str = '.';
-    str++;
-    count++;
-    
-    for (int i = 0; i < sp.precision ; i++) {
-      fractional = (fractional - (int)fractional) * 10;
-      int buf = (int)fractional;
-      *str = buf % 10 + '0';
-      str++;
-    }
-    count += sp.precision;
-  }
+  a = myRound(sp, str, a, &man);
+  stringDuble(sp, str, a);
+  
   if ('e' == sp.spec || 'E' == sp.spec) {
     if (man < 0) {
       man *= -1;
       mark = '-';
     }
+    if (strcmp(str, "0")){
+      if (strchr("gG", sp.pod)) {
+        formatForInputFl(str, sp);
+      }
+    }
+    str += strlen(str);
     *str = sp.spec;
     *(str + 1) = mark;
     if (man < 10) {
@@ -358,8 +378,30 @@ int doubleToString(char * str, long double a, Specif sp) {
     count += 2;
   }
 
-
   return count;  
+}
+
+int stringDuble(Specif sp, char *str, long double a) {
+  __int128_t whole = (__int128_t)a;
+  long double fractional;
+  if (0 > a) {
+    fractional = whole - a;
+  } else {
+    fractional = a - whole;
+  }      
+  str += signedToString(str, whole, sp);
+  if (sp.precision || sp.flag.grid) {
+    *str = '.';
+    str++;
+    
+    for (int i = 0; i < sp.precision ; i++) {
+      fractional = (fractional - (int)fractional) * 10;
+      int buf = (int)fractional;
+      *str = buf % 10 + '0';
+      str++;
+    }
+  }
+  return 0;
 }
 
 int unsignedToString(char * str, long long unsigned a, Specif sp) {
@@ -466,55 +508,19 @@ long long unsigned getValueModUInt(Specif sp, va_list ptr) {
 
 //////////////////////// format for input ///////////////
 
-int formatForInputFl (Specif sp, char * str) {
-  if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
-    *(strchr(str, '0')) = '\0';
+int formatForInputFl (char * str, Specif sp) {
+  for (int i = strlen(str) - 1; str[i] == '0'; i--){
+    str[i] = '\0';
   }
-  if (sp.flag.grid && 'o' == sp.spec) {
-    if (strcmp(str, " 0") && strcmp(str, "0")) {
-      insertMy(str, '0', 1);
-    }
-  }
-  if ('+' == *str || '-' == *str || ' ' == *str) {
-    //  i = 1 && size - 1
-    if ((int)(strlen(str) - 1) < sp.precision) {
-      insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
-    }
-    if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
-      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
-        insertMy(str, 'x', 1);
-        insertMy(str, '0', 1);
-      }
-    }
-  } else {
-    // i = 0
-    if ((int)strlen(str) < sp.precision) {
-      insertMy(str, '0', sp.precision - strlen(str));
-    }
-    if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
-      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
-        insertMy(str, 'x', 1);
-        insertMy(str, '0', 1);
-      }
-    }
-  }
-  if ((int)strlen(str) < sp.width) {
-    if (sp.flag.min) {
-      //  |<-
-      fillingInWidthBuffer(sp, str + strlen(str), sp.width - strlen(str));      
-    } else {
-      //  ->|
-      int n = sp.width - strlen(str);
-      memmove(str + n, str, strlen(str));
-      fillingInWidthBuffer(sp, str, n); 
-    }
-  }
+  if (str[strlen(str) - 1] == '.' && !sp.flag.grid) {
+    str[strlen(str) - 1] = '\0';
+  } 
   return 0;
 }
 
 int formatForInputInt(Specif sp, char * str) {
   if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
-    if ('f' != sp.spec) {
+    if (!strchr("fgG", sp.spec)) {
       *(strchr(str, '0')) = '\0';
     }    
   }
@@ -526,7 +532,9 @@ int formatForInputInt(Specif sp, char * str) {
   if ('+' == *str || '-' == *str || ' ' == *str) {
     //  i = 1 && size - 1
     if ((int)(strlen(str) - 1) < sp.precision) {
-      insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
+      if(!strchr("gG", sp.spec)) {
+        insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
+      }
     }
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
       if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
@@ -536,7 +544,7 @@ int formatForInputInt(Specif sp, char * str) {
     }
   } else {
     // i = 0
-    if ((int)strlen(str) < sp.precision) {
+    if ((int)strlen(str) < sp.precision && strcmp(str, "0")) {
       insertMy(str, '0', sp.precision - strlen(str));
     }
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
@@ -553,7 +561,7 @@ int formatForInputInt(Specif sp, char * str) {
       memset(str + strlen(str), ' ', sp.width - strlen(str));     
     } else {
       //  ->|
-      if (strchr("eEf", sp.spec)){
+      if (strchr("eEfgG", sp.spec)){
         int n = sp.width - strlen(str);
         if (('+' == *str || '-' == *str || ' ' == *str) && sp.flag.zero) {
           memmove(str + n + 1, str + 1, strlen(str));
@@ -574,9 +582,10 @@ int formatForInputInt(Specif sp, char * str) {
 
 int insertMy(char * str, char c, int n) {
   memmove(str + n, str, strlen(str));
-  for (int i = 0; i < n; i++) {
-    str[i] = c;
-  }
+  memset(str, c, n);
+  // for (int i = 0; i < n; i++) {
+  //   str[i] = c;
+  // }
   return 0;
 }
 
