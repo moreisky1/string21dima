@@ -104,7 +104,7 @@ git:
 	git push origin master
 
 gi:
-	git commit -m "${BRANCH_NAME} --> ${USERNAME1} --> developing"
+	git commit --all -m "${BRANCH_NAME} --> ${USERNAME1} --> developing"
 	git push origin ${BRANCH_NAME}
 
 #======================================== VALGRIND ====================================================================
