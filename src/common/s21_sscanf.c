@@ -17,20 +17,10 @@
  *
  * s21_scanf(строка_из_которой_происходит_ввод, "строка_формат(спецификаторы)", &переременные, ...)
  * */
-/*============================= Структра списка  ==========================================*/
-typedef struct Node {
-    void* info;
-    struct Node *next;
-    struct Node *last;
-} Node;
+/*============================= Считыва ==========================================*/
 /*============================= Прототипы функций ==========================================*/
-/*+++++ LinkedList ++++*/
-/*add*/
-void add_list(Node* node, void* val);
-/*get*/
-void* get_list(Node* node, int index);
-/*size*/
-int size_list(Node* node);
+/*++++++ Запись в %c +++++++*/
+void save_c(char* spec_c, const char* src, int* index);
 
 /*++++++ Common +++++++*/
 /*сравнивает две строки, возвращает 0 если равны и 1 если нет*/
@@ -39,112 +29,71 @@ int equal(const char* s1, const char* s2);
 int to_int(const char* str);
 
 char* my_strtok(char *str, const char *delim);
+
+int contains_spec(char sp, char* str);
 /*============================= Реализация Основной функции ================================*/
 int s21_sscanf(
         const char *str,
         const char *format,...) {
-    //Node head;
     va_list args;
     va_start(args, format);
-    char f[1024];
-    strcpy(f,format);
-    char* temp = my_strtok(f," %");
+    char* temp = " ";
+    char cf[1024];
+    int i = 0;
+    int index = 0;
+    while (format[i] != '\0') {
+        cf[i] = format[i];
+        i++;
+    }
+    cf [i] = '\0';
+    printf("---> %s\n", cf);
+    temp = my_strtok(cf," %");
     while(temp != NULL) {
 
-            printf("---> %s\n",temp);
 
-        temp = my_strtok(NULL," %");
+        // если токен не нулл, вызываю функцию обработчик указателя
+        if(temp !=NULL) {
+            // если спецификатор содержит %d
+            if(contains_spec('d',temp) == 0) {
+                printf("Spec action d ---> %s\n", temp);
+            } else
+            // если спецификатор содержит %c
+            if(contains_spec('c',temp) == 0) {
+                printf("Spec action c ---> %s\n", temp);
+                save_c(va_arg(args,char*),str,&index);
+            } else
+            // если спецификатор содержит %i
+            if(contains_spec('i',temp) == 0) {
+                printf("Spec action i ---> %s\n", temp);
+            } else
+            // если спецификатор содержит %f
+            if(contains_spec('f',temp) == 0) {
+                printf("Spec action f ---> %s\n", temp);
+            } else
+            // если спецификатор содержит %s
+            if(contains_spec('s',temp) == 0) {
+                printf("Spec action s ---> %s\n", temp);
+            } else
+            // если спецификатор содержит %u
+            if(contains_spec('u',temp) == 0) {
+                printf("Spec action u ---> %s\n", temp);
+            }
+            //получаю при каждой итерации цикла следующий токен из форматной строки
+            temp = my_strtok(NULL," %");
+        }
     }
 
     va_end(args);
-
-    //printf("---> %d\n", size_list(&head));
-//    add_list(&head,"Hello ");
-//    add_list(&head,"World");
-//    printf("%s %s --> %d", get_list(&head,0), get_list(&head,1), size_list(&head));
-
-
-//    s_f head;
-//    head.index = 0;
-//    head.last = NULL;
-//    va_list ap;
-//    va_start(ap, format);
-//    head.info = va_arg(ap,void*);
-//    head.next = NULL;
-//
-//
-//
-//    printf("--index->%d\n",head.index);
-//    add(&head,va_arg(ap,void*));
-//    printf("--index->%d\n",head.index);
-//    add(&head,va_arg(ap,void*));
-//    printf("--index->%d\n",head.index);
-
-//        /*считывание целого числа*/
-//        if (!equal(format, "%d")) {
-//            int *z = va_arg(ap, int*);
-//            int x = to_int(str);
-//            *z = x;
-//            counter++;
-//        }
-        /*считывание вещественного числа*/
-//
-//    va_end(ap);
-
+    printf("---> %s\n", str);
     return 0;
 }
-/*============================= методы списка ===========================================================*/
-/*добавить*/
-void add_list(Node* node, void* val) {
-    if (node->info == NULL) {
-
-        node->info = val;
-
-//        printf("----> %p\n",node->info);
-//        printf("----> %p\n",val);
-    } else if(node->info != NULL && node->next == NULL) {
-        Node* elem = (Node*) malloc(sizeof (Node));
-        elem->info = val;
-        elem->last = node;
-        node->next = elem;
-
-//        printf("----> %p\n",node->info);
-//        printf("----> %p\n",val);
-    } else if(node->info != NULL && node->next != NULL) {
-        Node* temp = node;
-        while(temp->next != NULL) {
-            temp = temp->next;
-        }
-        Node* elem = (Node* )malloc(sizeof (Node));
-        elem->info = val;
-        elem->last = temp;
-        temp->next = elem;
-
-//        printf("----> %p\n",node->info);
-//        printf("----> %p\n",val);
-    }
-
-}
-
-/*вернуть элемент по индексу*/
-void* get_list(Node* node, int index) {
-    Node* temp = node;
-    for(int i = 0; i < index; i++) {
-        temp = temp->next;
-    }
-    return temp->info;
-}
-
-/*длинна списка*/
-int size_list(Node* node) {
-    if(node->info == NULL) return 0;
-    Node* temp = node;
-    int len = 1;
-    while(temp->next != NULL) {
-        temp = temp->next;
-        len++;
-    }
-    return len;
+/*============================= Saver  ================================================================*/
+void save_c(char* spec_c, const char* src, int* index) {
+    int i = *index;
+    char temp = src[i];
+    *spec_c = temp;
+    i++;
+    *index = i;
 }
 
 /*============================= Проверки ================================================================*/
@@ -155,20 +104,33 @@ int size_list(Node* node) {
 /*++++++ Это символ +++++++++++++++++++++++*/
 /*Это символ алфавита*/
 /*Это не буква и не символ*/
-/*============================= Целые числа (%d) ========================================================*/
+/*содержит спецификатор*/
+int contains_spec(char sp, char* str) {
+    int i = 0;
+    while (str[i] != '\0') {
+        if (str[i] == sp) {
+            return (0);
+        }
+        i++;
+    }
+    return (1);
+}
+/*============================= Обработчик Целые числа (%d) ========================================================*/
 
-/*============================= Вещественные числа (%f) =================================================*/
+/*============================= Обработчик Вещественные числа (%f) =================================================*/
 
-/*============================= Строка (%s) =============================================================*/
+/*============================= Обработчик Строка (%s) =============================================================*/
 
-/*============================= Hex, Oct целое число (%i) ===============================================*/
+/*============================= Обработчик Hex, Oct целое число (%i) ===============================================*/
 
-/*============================= Символ (%с) =============================================================*/
+/*============================= Обработчик Символ (%с) =============================================================*/
 
-/*============================= Беззнаковое десятичное целое число (%u) =================================*/
+/*============================= Обработчик Беззнаковое десятичное целое число (%u) =================================*/
 
 /*============================= Вспомогательные функции =================================================*/
-/*++++++ сравнение двух строк Ok+++++++++*/
+/*++++++ Одна строка содержит вторую +++++*/
+
+/*++++++ сравнение двух строк Ok +++++++++*/
 int equal(const char* s1, const char* s2) {
     int i = 0;
     while(s1[i] != '\0') {
@@ -192,40 +154,76 @@ int to_int(const char* str) {
 }
 
 /*my_strtok*/
-char* my_strtok(char *str, const char *delim) {
+static char* zero_p = NULL;
+static char* buf = NULL;
+static size_t length = 0;
+static size_t current = 0;
 
-    static char* buf_str = NULL;
-    static int token_counter = 0;
-    /*Cash*/
-    if(str) {
-        int i = 0;
-        int j = 0;
-        /*Разбиение на токены */
-        while(str[i] != '\0') {
-            while(delim[j] != '\0') {
-                if(str[i] == delim[j]) break;
+char* my_strtok(char *str, const char *delim) {
+    /*разбиваем исходную строку на токены и кэшируем ее*/
+    if (str != NULL) {
+        size_t len = s21_strlen(str);
+        buf = (char*)(malloc(sizeof (char) * (len + 1)));
+        size_t i = 0;
+        while (str[i] != '\0') {
+            buf[i] = str[i];
+            i++;
+        }
+        buf[i] = '\0';
+        length = i;
+        length++;
+        i = 0;
+        size_t j = 0;
+        while (buf[i] != '\0') {
+            while (delim[j] != '\0') {
+                if(buf[i] == delim[j]) {
+
+                    buf[i] = '\0';
+                    break;
+                }
                 j++;
             }
-            if(str[i] == delim[j]) {buf_str = '\0'; token_counter++;}
-            i++;
+            // printf("--- BUF ---->%c\n",buf[i]);
             j = 0;
+            i++;
         }
-        buf_str = str;
+    } else {
+        /*Получаем очередной токен*/
+        if (current == length) {
+            if(zero_p != NULL)
+                free(zero_p);
+            buf = NULL;
+            return NULL;
+        }
+        size_t i = 0;
+        if(current == 0) {
+            while (buf[current] != '\0') {
+                current++;
+            }
+        }
+
+        while (buf[i] != '\0') {
+            i++;
+            current++;
+        }
+        i++;
+        if(current != length)
+            current++;
+        buf += i;
+
     }
-    /*Следующий токен*/
-    if(!str) {
-        int g = 0;
-        while (buf_str[g] != '\0')
-            g++;
-        g++;
+    if(buf != NULL && current != length) {
+        while (s21_strlen(buf) == 0 ) {
+            buf++;
+            current++;
 
-        str = buf_str + g;
-        buf_str = str;
+        }
+
     }
-    if(!str) str = NULL;
-
-
-    if(token_counter >= 0) token_counter--; else str =NULL;
-
-    return str;
+    if(buf == NULL && zero_p != NULL) {
+        free(zero_p);
+        zero_p = NULL;
+    }
+    return buf;
 }
+

@@ -9,6 +9,7 @@ GCC_C= gcc -c
 GCC_G= gcc -g
 FLAGS= -Wall -Werror -Wextra
 TESTS_UBUNTU= -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
+TESTS_MAC= -lcheck
 GCOV_FLAGS= -fprofile-arcs -ftest-coverage -fPIC
 #
 F_H= s21_string.h
@@ -45,7 +46,7 @@ s21_string.a:
 	make clean.o
 #======================================== TEST ========================================================================
 test: clean s21_string.a
-	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${TESTS_UBUNTU}
+	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${TESTS_MAC}
 
 test.a:
 	${GCC_C} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9}

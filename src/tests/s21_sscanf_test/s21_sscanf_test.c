@@ -5,11 +5,12 @@
 /* ======================= Тесты %с ======================== */
 START_TEST(s21_sscanf_1) {
     char* dest = "Hello, bro 31 31.56";
-    int res_or;
-
-    int t = sscanf("123","%d",&res_or);
-    int q;
-    int f = s21_sscanf("123","%d%d%d",&q, &t, &res_or);
+    int res_or = 1;
+    char test = '*';
+    int t = s21_sscanf(dest,"%c %123d123 %123d123 %123123s123123 %123123 %123123 %123123i123123",&test);
+    printf("\n\n----> %c\n\n",test);
+    //int q;
+    //int f = s21_sscanf("123","%d%d%d",&q, &t, &res_or);
     //printf("----> |%d|\n",q);
         ck_assert_int_eq(1,1);
 } END_TEST
