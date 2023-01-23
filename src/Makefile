@@ -1,7 +1,5 @@
 #
 USERNAME_1= barbreye
-USERNAME1=$(shell users)
-BRANCH_NAME=$(shell git branch | grep "*" | sed "s/^.//" | sed "s/^.//")
 BRANCH= develop
 
 #

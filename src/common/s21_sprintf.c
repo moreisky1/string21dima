@@ -20,8 +20,17 @@ typedef struct specif {
   Flags flag;
   int width;
   int precision;
+  int prec;
   char pod;
 }Specif;
+
+int getChar(Specif sp, char * str, char c);
+int getWchar(Specif sp, char * str, wchar_t c);
+
+int stringWcpy(char * str, wchar_t * buf, Specif sp);
+int stringCpy(char * str, char * buf, Specif sp);
+int formatWcharString(Specif sp, char * str, wchar_t * buf);
+int formatCharString(Specif sp, char * str, char * buf);
 
 int stringDuble(Specif sp, char *str, long double a);
 int getCifer(char * str, __int128_t a, int notation);
@@ -116,6 +125,9 @@ int getValue (char * str, Specif * sp, va_list ptr) {
     str++;
     count++;
   }
+  if (sp->spec == 'n') {
+    ;
+  }
   if (sp->spec == 's') {
     char * buf = va_arg(ptr, char *);
     while (*buf){
@@ -138,11 +150,9 @@ int getValue (char * str, Specif * sp, va_list ptr) {
     count = unsignedToString(str, a, *sp);
   }
   if (sp->spec == 'p') {
-    // sp->spec = 'x';
     sp->flag.grid = 1;
     long long unsigned int a = getValueModUInt(*sp, ptr);
     count = unsignedToString(str, a, *sp);
-    // count += 2;
   }
   if (sp->spec == 'f') {
     long double a = getValueModDoub(*sp, ptr);
@@ -154,18 +164,167 @@ int getValue (char * str, Specif * sp, va_list ptr) {
   }
   if (sp->spec == 'g' || sp->spec == 'G') {
     long double a = getValueModDoub(*sp, ptr);
-    // sp->spec = 'e';
     count = doubleToStringG(str, a, sp);
-    // sp->spec = 'g';
   }
   return count;
 } 
 
+int charToString(Specif sp, char * str, va_list ptr) {
+  if ('l' == sp.mod) {
+    wchar_t buf = va_arg(ptr, wchar_t);
+    getWchar(sp, str, buf);
+  }
+  else {
+    char buf = va_arg(ptr, char);
+    getChar(sp, str, buf);
+  }
+  return 0;
+}
+
+int getWchar(Specif sp, char * str, wchar_t c) {
+  char buf[256] = {'\0'};
+  wcstombs(buf, c, 256);
+  if (strlen(buf) < sp.width) {
+    if (sp.flag.min) {
+      // |<-
+        strcpy(str, buf);
+        for (int i = (int)strlen(buf); i < sp.width; i++) {
+          str[i] = ' ';
+        }
+        str[sp.width] = '\0';
+      } else {
+      // ->|
+      for (int i = 0; i < sp.width - (int)strlen(buf); i++) {
+        str[i] = ' ';
+      }
+      strcpy(str + (sp.width - (int)strlen(buf)), buf);
+    }
+  } else {
+    strcpy(str, buf);
+  }
+  return 0;
+}
+
+int getChar(Specif sp, char * str, char c) {
+  if (1 < sp.width) {
+    if (sp.flag.min) {
+      // |<-
+        *str = c;
+        for (int i = 1; i < sp.width; i++) {
+          str[i] = ' ';
+        }
+        str[sp.width] = '\0';
+      } else {
+      // ->|
+      for (int i = 0; i < sp.width - 1; i++) {
+        str[i] = ' ';
+      }
+      str[sp.width - 1] = c;
+    }
+  } else {
+    *str = c;
+  }
+  return 0;
+}
+
+int stringToString(Specif sp, char * str, va_list ptr) {
+  if ('l' == sp.mod) {
+    wchar_t * buf = va_arg(ptr, wchar_t *);
+    formatWcharString(sp, str, buf);
+  }
+  else {
+    char * buf = va_arg(ptr, char *);
+    formatCharString(sp, str, buf);
+  }
+  return 0;
+}
+
+int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
+  int size = (sp.precision && sp.prec) ? sp.precision : strlen(buf);
+  if (size < sp.width) {
+    if (sp.flag.min) {
+      // |<-
+        strcpy(str, buf);
+        stringCpy(str, buf, sp);
+        for (int i = size; i < sp.width; i++) {
+          str[i] = ' ';
+        }
+        str[sp.width] = '\0';
+      } else {
+      // ->|
+      for (int i = 0; i < sp.width - size; i++) {
+        str[i] = ' ';
+      }
+      strcpy(str + (sp.width - size), buf);
+      stringCpy(str, buf, sp);
+    }
+  } else {
+    stringCpy(str, buf, sp);
+  }
+  return 0;
+}
+
+int formatCharString(Specif sp, char * str, char * buf) {
+  int size = (sp.precision && sp.prec) ? sp.precision : strlen(buf);
+  if (size < sp.width) {
+    if (sp.flag.min) {
+      // |<-
+        strcpy(str, buf);
+        stringCpy(str, buf, sp);
+        for (int i = size; i < sp.width; i++) {
+          str[i] = ' ';
+        }
+        str[sp.width] = '\0';
+      } else {
+      // ->|
+      for (int i = 0; i < sp.width - size; i++) {
+        str[i] = ' ';
+      }
+      strcpy(str + (sp.width - size), buf);
+      stringCpy(str, buf, sp);
+    }
+  } else {
+    stringCpy(str, buf, sp);
+  }
+  return 0;
+}
+
+int stringCpy(char * str, char * buf, Specif sp) {
+  if (sp.precision && sp.prec) {
+    strncpy(str, buf, sp.precision);
+  } else {
+    strcpy(str, buf);
+  }
+  return 0;
+}
+
+int stringWcpy(char * str, wchar_t * buf, Specif sp) { 
+  if (sp.precision && sp.prec) {
+    for (int i = 0; i < sp.precision; i++) {
+      /* code */
+      char bus[256] = {'\0'};
+      wcstombs(bus, buf[i], 256);
+      strcpy(str,bus);
+      str += strlen(bus);
+    }
+    strncpy(str, buf, sp.precision);
+  } else {
+    for (int i = 0; buf[i] != '\0'; i++) {
+      /* code */
+      char bus[256] = {'\0'};
+      wcstombs(bus, buf[i], 256);
+      strcpy(str,bus);
+      str += strlen(bus);
+    }
+    strcpy(str, buf);
+  }
+  return 0;
+}
 
 //////////////////// init my struct /////////////
 
 int initStruct (char * str, Specif * sp, va_list ptr) {
-  int fl = 0;
+  
   char * flag = "-+ #0";
   char * modif = "hlL";
   // char * spec = "cdieEfgGosuxXpn%";
@@ -187,7 +346,7 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
     }
     if (*str == '.') {                                  // если точка то после число точности 
       str++;
-      fl = 1;
+      sp->prec = 1;
       if (*str == '*') {
         sp->precision = va_arg(ptr, int);
       } else {
@@ -207,10 +366,10 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
     sp->pod = *str;
     str++;
   }
-  if (!fl && strchr("eEfgG", sp->spec)) {
+  if (!sp->prec && strchr("eEfgG", sp->spec)) {
     sp->precision = 6;
   }
-  if (!fl && !(strchr("eEfgG", sp->spec))) {
+  if (!sp->prec && !(strchr("eEfgG", sp->spec))) {
     sp->precision = 1;
   }
   return 0;
@@ -456,6 +615,8 @@ int signedToString(char * str, __int128_t a, Specif sp) {
 /////////////////////////////////////////////////
 
 /////////////////////modificator l L ll h///////////////////////////
+
+
 
 long double getValueModDoub(Specif sp, va_list ptr) {
   long double result = 0;
