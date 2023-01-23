@@ -21,16 +21,27 @@
 /*============================= Прототипы функций ==========================================*/
 /*++++++ Запись в %c +++++++*/
 void save_c(char* spec_c, const char* src, int* index);
-
+/*++++++ Запись в %d +++++++*/
+void save_d(int* spec_d, const char* src, int* index);
+/*++++++ Запись в %i +++++++*/
+void save_i(int* spec_i, const char* src, int* index);
+/*++++++ Запись в %f +++++++*/
+void save_f(double* spec_f, const char* src, int* index);
+/*++++++ Запись в %s +++++++*/
+void save_c(char* spec_s, const char* src, int* index);
+/*++++++ Запись в %u +++++++*/
+void save_u(char* spec_u, const char* src, int* index);
 /*++++++ Common +++++++*/
 /*сравнивает две строки, возвращает 0 если равны и 1 если нет*/
 int equal(const char* s1, const char* s2);
 /*переводит строку в целое число*/
-int to_int(const char* str);
+void to_int(char* str,int* res);
 
 char* my_strtok(char *str, const char *delim);
 
 int contains_spec(char sp, char* str);
+
+int iterator(char sym, int* i);
 /*============================= Реализация Основной функции ================================*/
 int s21_sscanf(
         const char *str,
@@ -46,25 +57,23 @@ int s21_sscanf(
         i++;
     }
     cf [i] = '\0';
-    printf("---> %s\n", cf);
-    temp = my_strtok(cf," %");
+    temp = my_strtok(cf,"%");
     while(temp != NULL) {
-
 
         // если токен не нулл, вызываю функцию обработчик указателя
         if(temp !=NULL) {
             // если спецификатор содержит %d
             if(contains_spec('d',temp) == 0) {
-                printf("Spec action d ---> %s\n", temp);
+                save_d(va_arg(args,int*),str, &index);
             } else
             // если спецификатор содержит %c
             if(contains_spec('c',temp) == 0) {
-                printf("Spec action c ---> %s\n", temp);
                 save_c(va_arg(args,char*),str,&index);
             } else
             // если спецификатор содержит %i
             if(contains_spec('i',temp) == 0) {
                 printf("Spec action i ---> %s\n", temp);
+                save_i(va_arg(args,int*),str,&index);
             } else
             // если спецификатор содержит %f
             if(contains_spec('f',temp) == 0) {
@@ -84,18 +93,9 @@ int s21_sscanf(
     }
 
     va_end(args);
-    printf("---> %s\n", str);
+
     return 0;
 }
-/*============================= Saver  ================================================================*/
-void save_c(char* spec_c, const char* src, int* index) {
-    int i = *index;
-    char temp = src[i];
-    *spec_c = temp;
-    i++;
-    *index = i;
-}
-
 /*============================= Проверки ================================================================*/
 /*++++++ Это целое десятичное число +++++++*/
 /*++++++ Это целое восьмеричное число +++++*/
@@ -104,7 +104,7 @@ void save_c(char* spec_c, const char* src, int* index) {
 /*++++++ Это символ +++++++++++++++++++++++*/
 /*Это символ алфавита*/
 /*Это не буква и не символ*/
-/*содержит спецификатор*/
+/* токен содержит спецификатор?*/
 int contains_spec(char sp, char* str) {
     int i = 0;
     while (str[i] != '\0') {
@@ -116,17 +116,68 @@ int contains_spec(char sp, char* str) {
     return (1);
 }
 /*============================= Обработчик Целые числа (%d) ========================================================*/
+int iterator(char sym, int* i) {
+    if (sym < '0') {
+        *i += 1;
+        return 1;
+    }
+    else if (sym > '9') {
+        *i += 1;
+        return 1;
+    }
+    else {
+        *i += 1;
+        return 0;
+    }
+}
 
+void save_d(int* spec_d, const char* src, int* index) {
+    int i = *index;
+    int j = 0;
+    char temp[32];
+        while (iterator(src[i],&i) == 1) {
+            if (src[i] == '\0') break;
+        }
+        i--;
+        char t;
+    while(iterator(src[i],&i) != 1) {
+        if(src[i - 1] =='\0') {
+            break;
+        }
+        t = src[i - 1];
+        temp[j] = t;
+        j++;
+    }
+    temp[j] = '\0';
+    int l;
+    to_int(temp,&l);
+    *spec_d = l;
+    *index = i;
+}
 /*============================= Обработчик Вещественные числа (%f) =================================================*/
+void save_f(double* spec_f, const char* src, int* index) {
 
+}
 /*============================= Обработчик Строка (%s) =============================================================*/
+void save_s(char* spec_s, const char* src, int* index) {
 
+}
 /*============================= Обработчик Hex, Oct целое число (%i) ===============================================*/
+void save_i(int* spec_i, const char* src, int* index) {
 
+}
 /*============================= Обработчик Символ (%с) =============================================================*/
-
+void save_c(char* spec_c, const char* src, int* index) {
+    int i = *index;
+    char temp = src[i];
+    *spec_c = temp;
+    i++;
+    *index = i;
+}
 /*============================= Обработчик Беззнаковое десятичное целое число (%u) =================================*/
+void save_u(char* spec_u, const char* src, int* index) {
 
+}
 /*============================= Вспомогательные функции =================================================*/
 /*++++++ Одна строка содержит вторую +++++*/
 
@@ -143,14 +194,17 @@ int equal(const char* s1, const char* s2) {
 }
 
 /*++++++++ строка в число OK +++++++++++*/
-int to_int(const char* str) {
-    int temp = str[0] - '0';
-    int i = 1;
-
-    while (str[i] != '\0') {
-        temp = temp * 10 + str[i] -'0';
+void to_int(char* str, int* res) {
+    int temp ;
+    temp = str[0] - '0';
+    int i = 0;
+    while (iterator(str[i],&i) == 0)  {
+        if (str[i] == '\0') break;
+        temp = temp * 10 + (str[i] -'0');
     }
-    return temp;
+
+    *res = temp;
+
 }
 
 /*my_strtok*/
@@ -183,7 +237,6 @@ char* my_strtok(char *str, const char *delim) {
                 }
                 j++;
             }
-            // printf("--- BUF ---->%c\n",buf[i]);
             j = 0;
             i++;
         }
@@ -201,7 +254,6 @@ char* my_strtok(char *str, const char *delim) {
                 current++;
             }
         }
-
         while (buf[i] != '\0') {
             i++;
             current++;
@@ -210,15 +262,12 @@ char* my_strtok(char *str, const char *delim) {
         if(current != length)
             current++;
         buf += i;
-
     }
     if(buf != NULL && current != length) {
         while (s21_strlen(buf) == 0 ) {
             buf++;
             current++;
-
         }
-
     }
     if(buf == NULL && zero_p != NULL) {
         free(zero_p);
