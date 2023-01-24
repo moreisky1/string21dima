@@ -69,6 +69,10 @@ gs21_string.a: clean
 test: clean s21_string.a
 	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${LDFLAGS}
 
+test1: clean s21_string.a
+	${GCC_G}  OpsTests/*sprin*.c OpsTests/test_me.c s21_string.a  -o st ${LDFLAGS}
+	./st
+
 test.a:
 	${GCC_C} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9}
 	ar rc tests/s21_string_tests.a *.o
