@@ -1,30 +1,35 @@
 #include "../s21_string.h"
+#include <string.h>
 
 char* s21_strstr(const char *haystack, const char *needle) {
   char* result = NULL;
   int i = 0, j = 0;
   int marker = 0;
   if(haystack != NULL && needle != NULL){
-    while (haystack[i]!='\0') {
-      j = 0;
-      while (needle[j] != '\0') {
-        if(needle[j] != haystack[i + j]) {
+    if (!strcmp(needle, "")) {
+      result = haystack;
+    } else {
+      while (haystack[i]!='\0') {
+        j = 0;
+        while (needle[j] != '\0') {
+          if(needle[j] != haystack[i + j]) {
+            break;
+          }
+          if(haystack[i + j] == '\0') {
+            break;
+          }
+            j++;
+        }
+        if(needle[j] == '\0') {
+          marker += 1;
           break;
         }
-        if(haystack[i + j] == '\0') {
-          break;
-        }
-          j++;
+        i++;
       }
-      if(needle[j] == '\0') {
-        marker = 1;
-        break;
+      if (marker != 0) {
+        result = (char *)haystack + i;
       }
-      i++;
-    }
-    if (marker != 0) {
-      result = (char *)haystack + i;
-    }
+    }    
   }
   return result;
 }

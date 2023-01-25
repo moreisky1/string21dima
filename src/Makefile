@@ -8,7 +8,7 @@ BRANCH= develop
 GCC= gcc
 GCC_C= gcc -c
 GCC_G= gcc -g
-FLAGS= -Wall -Werror -Wextra
+FLAGS= -Wall -Werror -Wextra -std=c11
 TESTS_UBUNTU= -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 GCOV_FLAGS= -fprofile-arcs -ftest-coverage -fPIC
 #======================================== 
@@ -54,15 +54,19 @@ te: clean s21_string.a
 	${GCC_G} ${FLAGS} me.c s21_string.a -o me -lm
 	./me
 
+t: clean s21_string.a
+	${GCC_G} ${FLAGS} sprintfT.c s21_string.a -o me -lm
+	./me 
+
 #======================================== STATIC LIB ==================================================================
 s21_string.a: clean
-	${GCC_C} common/*.c
+	${GCC_C} -g common/*.c
 	ar rc s21_string.a *.o
 	ranlib s21_string.a
 	make clean.o
 
 gs21_string.a: clean
-	${GCC_C} common/*.c ${GCOV_FLAGS}
+	${GCC_C} -g common/*.c ${GCOV_FLAGS}
 	ar rc s21_string.a *.o
 	ranlib s21_string.a
 	make clean.o
@@ -70,6 +74,10 @@ gs21_string.a: clean
 #======================================== TEST ========================================================================
 test: clean s21_string.a
 	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${LDFLAGS}
+
+test1: clean s21_string.a
+	${GCC_G} ${FLAGS} OpsTests/*strstr.c OpsTests/test_me.c s21_string.a  -o st ${LDFLAGS}
+	./st
 
 test.a:
 	${GCC_C} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9}
@@ -104,7 +112,7 @@ git:
 	git push origin master
 
 gi:
-	git commit -m "${BRANCH_NAME} --> ${USERNAME1} --> developing"
+	git commit --all -m "${BRANCH_NAME} --> ${USERNAME1} --> developing"
 	git push origin ${BRANCH_NAME}
 
 #======================================== VALGRIND ====================================================================
