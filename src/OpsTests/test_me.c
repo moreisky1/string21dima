@@ -3,7 +3,7 @@
 int main(void) {
   int failed = 0;
   Suite *s21_string_test[] = {
-                              /*test_sprintf_c(),
+                              test_sprintf_c(),
                               test_sprintf_e(),
                               test_sprintf_f(),
                               test_sprintf_octal(),
@@ -13,9 +13,9 @@ int main(void) {
                               test_sprintf_unsigned(),
                               test_sprintf_HEX(),
                               test_sprintf_hex(),
-                              test_sprintf_pointer(),
                               test_sprintf_signed(),
-                              test_sprintf_signed_i(),*/
+                              test_sprintf_signed_i(),
+                              test_sprintf_pointer(),
                               test_sprintf_g(),
                               NULL};
 

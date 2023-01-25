@@ -7,6 +7,14 @@
 #include <wchar.h>
 #include "../s21_string.h"
 
+#if defined (__APPLE__)
+  #define STR_NULL "(null)"
+#endif
+#if defined (__linux__)
+  #define STR_NULL "(nil)"
+#endif
+
+
 typedef struct flags {
   int min;
   int pl;
@@ -71,7 +79,6 @@ int s21_sprintf(char *str, const char *format, ...) {
   char * start = str;
   va_list ptr;
   va_start(ptr, format);
-  // int j = 0;
   while (*format) {
     if (*format == '%') {
       format++;
@@ -112,7 +119,7 @@ int s21_sprintf(char *str, const char *format, ...) {
         }        
       }
       if (strchr("p", sp.spec)) {
-
+        #if defined (__linux__)
         if (sp.flag.pl) {
           memmove(buf + 1, buf, strlen(buf));
           *buf = '+';
@@ -120,7 +127,7 @@ int s21_sprintf(char *str, const char *format, ...) {
           memmove(buf + 1, buf, strlen(buf));
           *buf = ' ';
         }
-        
+        #endif
         for (size_t i = 0; buf[i]; i++) {
           if (64 < buf[i] && 71 > buf[i]) {
             buf[i] += 32;
@@ -162,7 +169,6 @@ int getValue (char * str, Specif * sp, va_list ptr) {
     count++;
   }
   if (sp->spec == 'n') {
-    // int *sum = va_arg(ptr, int *);
     *(va_arg(ptr, int *)) = sp->count;
   }
   if (sp->spec == 's') {
@@ -183,12 +189,16 @@ int getValue (char * str, Specif * sp, va_list ptr) {
   if (sp->spec == 'p') {
     sp->flag.grid = 1;
     long long unsigned int a = (long long unsigned)va_arg(ptr, void *);
+    #if defined (__linux__)
     if (0 == a) {      
       sp->spec = 's';
-      count = formatCharString(*sp, str, "(nil)");
+      count = formatCharString(*sp, str, STR_NULL);
     } else {
+    #endif
       count = unsignedToString(str, a, *sp);
+    #if defined (__linux__)
     }
+    #endif
   }
   if (sp->spec == 'f') {
     long double a = getValueModDoub(*sp, ptr);
@@ -252,9 +262,11 @@ int getWchar(Specif sp, char * str, wchar_t c) {
 int getChar(Specif sp, char * str, char c) {
   int count = 0;
   char dop = ' ';
-  // if (sp.flag.zero && !sp.flag.min) {
-  //   dop = '0';
-  // }
+  #if defined (__APPLE__)
+  if (sp.flag.zero && !sp.flag.min) {
+    dop = '0';
+  }
+  #endif
   if (1 < sp.width) {
     if (sp.flag.min) {
       // |<-
@@ -280,7 +292,7 @@ int getChar(Specif sp, char * str, char c) {
 
 int stringToString(Specif sp, char * str, va_list ptr) {
   int count = 0;
-  char * null = strdup("(null)");
+  char * null = strdup(STR_NULL);
   if ('l' == sp.mod) {
     wchar_t * buf = va_arg(ptr, wchar_t *);
     if (buf == S21_NULL) {      
@@ -313,7 +325,6 @@ int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
     if (sp.flag.min) {
       // |<-
         strcpy(str, bus);
-        // stringWcpy(str, buf, sp);
         for (int i = size; i < sp.width; i++) {
           str[i] = dop;
         }
@@ -324,7 +335,6 @@ int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
         str[i] = dop;
       }
       strcpy(str + (sp.width - size), bus);
-      // stringWcpy(str + (sp.width - size), buf, sp);
     }
     count = sp.width;
   } else {
@@ -336,16 +346,16 @@ int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
 
 int formatCharString(Specif sp, char * str, char * buf) {
   int count = 0;
-  // char bus[4096] = "";
   int size = (sp.prec) ? (sp.precision > (int)strlen(buf) ? (int)strlen(buf) : sp.precision) : (int)strlen(buf);
   char dop = ' ';
-  // if (sp.flag.zero && !sp.flag.min) {
-  //   dop = '0';
-  // }
+  #if defined (__APPLE__)
+  if (sp.flag.zero && !sp.flag.min) {
+    dop = '0';
+  }
+  #endif
   if (size < sp.width) {
     if (sp.flag.min) {
       // |<-
-        // strcpy(str, buf);
         stringCpy(str, buf, sp);
         for (int i = size; i < sp.width; i++) {
           str[i] = dop;
@@ -356,7 +366,6 @@ int formatCharString(Specif sp, char * str, char * buf) {
       for (int i = 0; i < sp.width - size; i++) {
         str[i] = dop;
       }
-      // strcpy(str + (sp.width - size), buf);
       stringCpy(str + (sp.width - size), buf, sp);
     }
     count = sp.width;
@@ -385,7 +394,6 @@ int stringWcpy(char * str, wchar_t * buf, Specif sp) {
       strcpy(str,bus);
       str += strlen(bus);
     }
-    // strncpy(str, buf, sp.precision);
   } else {
     for (int i = 0; buf[i] != '\0'; i++) {
       /* code */
@@ -394,7 +402,6 @@ int stringWcpy(char * str, wchar_t * buf, Specif sp) {
       strcpy(str,bus);
       str += strlen(bus);
     }
-    // strcpy(str, bus);
   }
   return 0;
 }
@@ -405,7 +412,6 @@ int initStruct (char * str, Specif * sp, va_list ptr) {
   
   char * flag = "-+ #0";
   char * modif = "hlL";
-  // char * spec = "cdieEfgGosuxXpn%";
   Specif qwer = {0};
   qwer.precision = 1;
   *sp = qwer;
@@ -489,9 +495,9 @@ int doubleToStringG(char * str, long double a, Specif * sp) {
   doubleToString(str, a, *sp);
   sp->spec = 'g';
 
-  if (strchr("gG", sp->pod) && strcmp(str, "0")){
-    formatForInputFl(str, *sp);
-  }
+  // if (strchr("gG", sp->pod) && strcmp(str, "0")){
+  //   formatForInputFl(str, *sp);
+  // }
   return 0;
 }
 
@@ -601,11 +607,7 @@ int doubleToString(char * str, long double a, Specif sp) {
       man *= -1;
       mark = '-';
     }
-    if (strcmp(str, "0")){
-      if (strchr("gG", sp.pod)) {
-        formatForInputFl(str, sp);
-      }
-    }
+    
     str += strlen(str);
     *str = sp.spec;
     *(str + 1) = mark;
@@ -624,6 +626,7 @@ int doubleToString(char * str, long double a, Specif sp) {
 
 int stringDuble(Specif sp, char *str, long double a) {
   __int128_t whole = (__int128_t)a;
+  char * buf = str;
   long double fractional;
   if (0 > a) {
     fractional = whole - a;
@@ -640,6 +643,12 @@ int stringDuble(Specif sp, char *str, long double a) {
       int buf = (int)fractional;
       *str = buf % 10 + '0';
       str++;
+    }
+    if (strcmp(str, "0")){
+      if (strchr("gG", sp.pod) && !sp.flag.grid) {
+        formatForInputFl(buf, sp);
+      }
+      ;
     }
   }
   return 0;
@@ -791,9 +800,16 @@ int formatForInputInt(Specif sp, char * str) {
     }
   } else {
     // i = 0
+    #if defined (__linux__)
     if ((int)strlen(str) < sp.precision && (strcmp(str, "0") || strchr("ouxXid", sp.spec))) {// зануление перед нулём
       insertMy(str, '0', sp.precision - strlen(str));
     }
+    #endif
+    #if defined (__APPLE__)
+    if ((int)strlen(str) < sp.precision && (strcmp(str, "0") || strchr("ouxXidp", sp.spec))) {// зануление перед нулём
+      insertMy(str, '0', sp.precision - strlen(str));
+    }
+    #endif
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
       if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
         insertMy(str, 'x', 1);
