@@ -6,7 +6,7 @@ BRANCH= develop
 GCC= gcc
 GCC_C= gcc -c
 GCC_G= gcc -g
-FLAGS= -Wall -Werror -Wextra
+FLAGS= -Wall -Werror -Wextra -std=c11
 TESTS_UBUNTU= -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 GCOV_FLAGS= -fprofile-arcs -ftest-coverage -fPIC
 #======================================== 
@@ -50,6 +50,10 @@ all: clean s21_string.a
 
 te: clean s21_string.a
 	${GCC_G} ${FLAGS} me.c s21_string.a -o me -lm
+	./me
+
+t: clean s21_string.a
+	${GCC_G} ${FLAGS} sprintfT.c s21_string.a -o me -lm
 	./me 
 
 #======================================== STATIC LIB ==================================================================

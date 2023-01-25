@@ -104,6 +104,29 @@ int s21_sprintf(char *str, const char *format, ...) {
           }          
         }        
       }
+      if (strchr("XGE", sp.spec)) {
+        for (size_t i = 0; buf[i]; i++) {
+          if (96 < buf[i] && 123 > buf[i]) {
+            buf[i] -= 32;
+          }          
+        }        
+      }
+      if (strchr("p", sp.spec)) {
+
+        if (sp.flag.pl) {
+          memmove(buf + 1, buf, strlen(buf));
+          *buf = '+';
+        } else if (sp.flag.spase) {
+          memmove(buf + 1, buf, strlen(buf));
+          *buf = ' ';
+        }
+        
+        for (size_t i = 0; buf[i]; i++) {
+          if (64 < buf[i] && 71 > buf[i]) {
+            buf[i] += 32;
+          }          
+        }        
+      }
       // todo  lowercase +32
       size = (size > (int)strlen(buf))? size : (int)strlen(buf);
       strcat(str, buf);
@@ -159,8 +182,13 @@ int getValue (char * str, Specif * sp, va_list ptr) {
   }
   if (sp->spec == 'p') {
     sp->flag.grid = 1;
-    long long unsigned int a = getValueModUInt(*sp, ptr);
-    count = unsignedToString(str, a, *sp);
+    long long unsigned int a = (long long unsigned)va_arg(ptr, void *);
+    if (0 == a) {      
+      sp->spec = 's';
+      count = formatCharString(*sp, str, "(nil)");
+    } else {
+      count = unsignedToString(str, a, *sp);
+    }
   }
   if (sp->spec == 'f') {
     long double a = getValueModDoub(*sp, ptr);
@@ -224,9 +252,9 @@ int getWchar(Specif sp, char * str, wchar_t c) {
 int getChar(Specif sp, char * str, char c) {
   int count = 0;
   char dop = ' ';
-  if (sp.flag.zero && !sp.flag.min) {
-    dop = '0';
-  }
+  // if (sp.flag.zero && !sp.flag.min) {
+  //   dop = '0';
+  // }
   if (1 < sp.width) {
     if (sp.flag.min) {
       // |<-
@@ -268,6 +296,7 @@ int stringToString(Specif sp, char * str, va_list ptr) {
     }
     count = formatCharString(sp, str, buf);    
   }
+  free(null);
   return count;
 }
 
@@ -310,9 +339,9 @@ int formatCharString(Specif sp, char * str, char * buf) {
   // char bus[4096] = "";
   int size = (sp.prec) ? (sp.precision > (int)strlen(buf) ? (int)strlen(buf) : sp.precision) : (int)strlen(buf);
   char dop = ' ';
-  if (sp.flag.zero && !sp.flag.min) {
-    dop = '0';
-  }
+  // if (sp.flag.zero && !sp.flag.min) {
+  //   dop = '0';
+  // }
   if (size < sp.width) {
     if (sp.flag.min) {
       // |<-
@@ -762,7 +791,7 @@ int formatForInputInt(Specif sp, char * str) {
     }
   } else {
     // i = 0
-    if ((int)strlen(str) < sp.precision && (strcmp(str, "0") || 'o' == sp.spec)) {
+    if ((int)strlen(str) < sp.precision && (strcmp(str, "0") || strchr("ouxXid", sp.spec))) {// зануление перед нулём
       insertMy(str, '0', sp.precision - strlen(str));
     }
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
@@ -779,7 +808,7 @@ int formatForInputInt(Specif sp, char * str) {
       memset(str + strlen(str), ' ', sp.width - strlen(str));     
     } else {
       //  ->|
-      if (strchr("eEfgG", sp.spec)){
+      if (strchr("eEfdgG", sp.spec)){
         int n = sp.width - strlen(str);
         if (('+' == *str || '-' == *str || ' ' == *str) && sp.flag.zero) {
           memmove(str + n + 1, str + 1, strlen(str));
