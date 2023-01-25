@@ -1,15 +1,27 @@
 #
 USERNAME_1= barbreye
-
+USERNAME1=$(shell users)
+BRANCH_NAME=$(shell git branch | grep "*" | sed "s/^.//" | sed "s/^.//")
 BRANCH= develop
 
 #
 GCC= gcc
 GCC_C= gcc -c
 GCC_G= gcc -g
-FLAGS= -Wall -Werror -Wextra
+FLAGS= -Wall -Werror -Wextra -std=c11
 TESTS_UBUNTU= -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 GCOV_FLAGS= -fprofile-arcs -ftest-coverage -fPIC
+#======================================== 
+UNAME:=$(shell uname -s)
+ifeq ($(UNAME),Linux)
+	LDFLAGS=-lcheck_pic -lsubunit -lm -lrt -lpthread
+	OPEN_CM=xdg-open
+endif
+ifeq ($(UNAME),Darwin)
+	LDFLAGS=-lcheck -lm
+	OPEN_CM=open
+endif
+#======================================== 
 #
 F_H= s21_string.h
 F_C_1= common/s21_insert.c common/s21_memcmp.c common/s21_memcpy.c
@@ -37,15 +49,35 @@ F_C_T_9= tests/s21_trim_test/s21_trim_test.c tests/s21_strcspn_test/s21_strcspn_
 SOURCE_TESTS= -o test
 #======================================== ALL =========================================================================
 all: clean s21_string.a
+
+te: clean s21_string.a
+	${GCC_G} ${FLAGS} me.c s21_string.a -o me -lm
+	./me
+
+t: clean s21_string.a
+	${GCC_G} ${FLAGS} sprintfT.c s21_string.a -o me -lm
+	./me 
+
 #======================================== STATIC LIB ==================================================================
-s21_string.a:
-	${GCC_C} ${F_C_1} ${F_C_2} ${F_C_3} ${F_C_4} ${F_C_5} ${F_C_6} ${F_C_7} ${F_C_8} ${F_C_9}
+s21_string.a: clean
+	${GCC_C} -g common/*.c
 	ar rc s21_string.a *.o
 	ranlib s21_string.a
 	make clean.o
+
+gs21_string.a: clean
+	${GCC_C} -g common/*.c ${GCOV_FLAGS}
+	ar rc s21_string.a *.o
+	ranlib s21_string.a
+	make clean.o
+
 #======================================== TEST ========================================================================
 test: clean s21_string.a
-	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${TESTS_UBUNTU}
+	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${LDFLAGS}
+
+test1: clean s21_string.a
+	${GCC_G} ${FLAGS} OpsTests/*error.c OpsTests/test_me.c s21_string.a  -o st ${LDFLAGS}
+	./st
 
 test.a:
 	${GCC_C} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9}
@@ -63,37 +95,59 @@ gcov_report: clean s21_string.a
 	gcovr --html-details -o report/report.html
 	rm -rf *.gcda *gcno
 
+gcov_repo:  gs21_string.a
+	${GCC_G} ${FLAGS} tests/*/*.c tests/*.c s21_string.a ${SOURCE_TESTS} ${LDFLAGS} ${GCOV_FLAGS}
+	./test
+	rm -rf *_test.gcda *_test.gcno main.gc*
+	gcovr -p
+	mkdir report
+	gcovr -p --html-details -o report/report.html
+	open report/report.html
+	rm -rf *.gcda *gcno
+
 #======================================== GIT =========================================================================
 git:
 	git add .
 	git commit -m "${BRANCH} ---> ${USERNAME_1} ---> developing"
 	git push origin master
+
+gi:
+	git commit --all -m "${BRANCH_NAME} --> ${USERNAME1} --> developing"
+	git push origin ${BRANCH_NAME}
+
 #======================================== VALGRIND ====================================================================
+
 valgrind_test:
 
 valgrind_test_gcov:
+
 #======================================== Style    ====================================================================
 
 #======================================== CLEAN =======================================================================
 clean.o:
 	rm -rf *.o
+
 clean.a:
 	rm -rf tests/*.a
 	rm -rf *.a
 # ======================================= Clean =======================================================================
+
 clean.o:
 	rm -rf *.o
+
 clean.a:
 	rm -rf *.a
+
 clean.gcno:
 	rm -rf *.gcno
+
 clean.gcda:
 	rm -rf *.gcda
+
 clean:
 	rm -rf *.o
 	rm -rf *.a
 	rm -rf run_test
-
 	rm -rf *.gcno
 	rm -rf *.gcda
 	rm -rf *.gcov
