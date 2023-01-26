@@ -3,6 +3,9 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#define S21_NULL ((void *)0x0)
+#define s21_size_t unsigned long int
+
 /*#1
  * tests ---> NON
  * realise ----> NON
