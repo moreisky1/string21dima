@@ -6,14 +6,16 @@
  * len, то буфер добивается до len нуль- символами.
  * */
 char* s21_strncpy(char *dest, const char *src, size_t n) {
-    int i = 0;
-    while (i < n) {
-        dest[i] = src[i];
-        i++;
-        if(src[i] == '\0') {
-            break;
-        }
+  int i = 0, j = 0;
+  while (i < n) {
+    if(src[j] != '\0') {
+      dest[i] = src[j];
+      j++;
+    } else {
+      dest[i] = src[j];
     }
-    //dest[i] = '\0';
-    return dest;
+    i++;
+  }
+  dest[i] = '\0';
+  return dest;
 }

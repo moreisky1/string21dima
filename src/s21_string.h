@@ -2,6 +2,7 @@
 #define _S21_STRING_H_
 #include <stddef.h>
 #include <stdlib.h>
+
 /*#1
  * tests ---> NON
  * realise ----> NON
