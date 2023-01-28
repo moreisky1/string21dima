@@ -4,7 +4,7 @@
 
 #if defined (__linux__)
 #define SYS 0
-#define N 133
+#define N 134
 #define ERRORS { \
     "Success", \
     "Operation not permitted", \
