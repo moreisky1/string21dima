@@ -96,8 +96,8 @@ size_t s21_strespn(const char *str1, const char *str2) {
         buf[i] = str1[size - 1 - i];
     }
     buf[size] = 0;
-    free(buf);
     size = 0;
     size = s21_strspn(buf, str2);
+    free(buf);
     return size;
 }
