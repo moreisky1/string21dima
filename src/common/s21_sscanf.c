@@ -16,6 +16,7 @@
 typedef union {
   int *p;
   long double ld;
+  long long int li;
 } UnionVal;
 
 typedef struct specif {
@@ -140,6 +141,8 @@ int getValue (char * str, Specif * sp) {
 }
 
 int getIntIDU (char * str, Specif * sp) {
+  long long int max = INT64_MAX;
+  long long int result = 0;
   int err = 0;
   int count = 0;
   int notion = 10;
@@ -150,8 +153,15 @@ int getIntIDU (char * str, Specif * sp) {
   if (s21_strchr("o", sp->spec)) {
     notion = 8;
   }
+  if (s21_strchr("i", sp->spec)) {
+    notion = 0;
+  }
+  char spase[7] = {9, 10, 11, 12, 13, 32, 0};
+  while (s21_strchr(spase, *str)) {
+    str++;
+    count++;
+  }
   
-  long long int result = 0;
   int mark = 1;
   if ('+' == *str || '-' == *str) {
     if ('-' == *str) {
@@ -160,51 +170,58 @@ int getIntIDU (char * str, Specif * sp) {
     if (sp->setWidth) {
       sp->width--;
       if (!sp->width) {
-        err = 1;
+        sp->err = 1;
       }
     }
     str++;
     count++;
   }
-  if (!err && s21_strchr("0123456789abcdef", *str)) {  
-    if (10 == notion) {
-      while ((s21_strchr("0123456789", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
-        result = (result * notion) + (*str - '0');
-        sp->width--;
-        count++;
-        str++;
+  // if (!err && s21_strchr("0123456789abcdef", *str)) {  
+    // if (10 == notion) {
+      if (sp->setWidth) {
+        int size = (int)s21_strspn(str, "0123456789abcdef");
+        sp->width = sp->width < size ? size : sp->width;
+        char * buf = (char *)calloc((sp->width + 1), sizeof(char));
+        s21_strncpy(buf, str, sp->width);
+        result = strtoll(buf, NULL, notion);
+        count += sp->width;
+
+        free(buf);
+      } else {
+        char * st = str;
+        result = strtoll(str, &str, notion);
+        count += str - st;
       }
-    }
-    if (8 == notion) {
-      if ('0' == *str) {
-        str++;
-        count++;
-      }
-      while ((s21_strchr("01234567", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
-        result = (result * notion) + (*str - '0');
-        sp->width--;
-        count++;
-        str++;
-      }
-    }
-    if (16 == notion) {
-      if (strncmp("0X", str, 2) || strncmp("0x", str, 2)) {
-        str += 2;
-        count += 2;
-      }
-      while ((s21_strchr("0123456789abcdef", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
-        result = (result * notion) + ('9' < *str ? toUperChar(*str) - 55 : *str - '0');
-        sp->width--;
-        count++;
-        str++;
-      }
-    }
-    // void *pointer = va_arg(ptr, void *); 
+    // }
+    // if (8 == notion) {
+    //   if ('0' == *str) {
+    //     str++;
+    //     count++;
+    //   }
+    //   while ((s21_strchr("01234567", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
+    //     result = (result * notion) + (*str - '0');
+    //     sp->width--;
+    //     count++;
+    //     str++;
+    //   }
+    // }
+    // if (16 == notion) {
+    //   if (strncmp("0X", str, 2) || strncmp("0x", str, 2)) {
+    //     str += 2;
+    //     count += 2;
+    //   }
+    //   while ((s21_strchr("0123456789abcdef", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
+    //     result = (result * notion) + ('9' < *str ? toUperChar(*str) - 55 : *str - '0');
+    //     sp->width--;
+    //     count++;
+    //     str++;
+    //   }
+    // }
     result *= mark;
-    sp->val.ld = result;
-  } else {
-    sp->err = 1;
-  }
+    sp->val.li = result;
+  // } else {
+  //   sp->err = 1;
+  // }
   return count;
 }
 
@@ -217,31 +234,26 @@ char toLowerChar(char c) {
 }
 
 void setValue(va_list ptr, Specif * sp) {
+  // long long unsigned mi = 9223372036854775807;
   if ('*' != sp->pod /*&& '%' == sp->spec*/) {
     void *pointer = va_arg(ptr, void *);
     switch (toLowerChar(sp->spec)) { 
       case 'd':
       case 'i':
       case 'n':
-        if (1 == sp->countMod) {
-          if ('l' == sp->mod) {
-            *(long *)pointer = (long)sp->val.ld;
-          } else if ('h' == sp->mod) {
-            *(short *)pointer = (short)(long int)lroundl(sp->val.ld);
-          } else {
-            *(int *)pointer = (int)sp->val.ld;
-          }
-        }
         if (2 == sp->countMod) {
           if ('l' == sp->mod) {
-            *(long long *)pointer = (long long)sp->val.ld;
+            *(long long *)pointer = (long long)sp->val.li;
           } else if ('h' == sp->mod) {
-            long long unsigned d = llroundl(sp->val.ld);
-            int a = (int)d;
-            if (d > 999999999999999999999 || a > 999999999999999999999) {
-              printf("!!");
-            }
-            *(signed char *)pointer = (signed char)a;
+            *(signed char *)pointer = (signed char)(long int)sp->val.li;
+          }
+        } else {
+          if ('l' == sp->mod) {
+            *(long *)pointer = (long)sp->val.li;
+          } else if ('h' == sp->mod) {
+            *(short *)pointer = (short)(long int)lroundl(sp->val.li);
+          } else {
+            *(int *)pointer = (int)sp->val.li;
           }
         }
         break;
@@ -250,23 +262,23 @@ void setValue(va_list ptr, Specif * sp) {
       case 'o':
         if (1 == sp->countMod) {
           if ('l' == sp->mod) {
-            *(unsigned long *)pointer = (unsigned long)sp->val.ld;
+            *(unsigned long *)pointer = (unsigned long)sp->val.li;
           } else if ('h' == sp->mod) {
-            *(unsigned short *)pointer = (unsigned short)(long int)(double)sp->val.ld;
+            *(unsigned short *)pointer = (unsigned short)(long int)(double)sp->val.li;
           } else {
-            *(unsigned int *)pointer = (unsigned int)sp->val.ld;
+            *(unsigned int *)pointer = (unsigned int)sp->val.li;
           }
         }
         if (2 == sp->countMod) {
           if ('l' == sp->mod) {
-            *(unsigned long long *)pointer = (unsigned long long)sp->val.ld;
+            *(unsigned long long *)pointer = (unsigned long long)sp->val.li;
           } else if ('h' == sp->mod) {
-            *(unsigned char *)pointer = (unsigned char)(long int)(double)sp->val.ld;
+            *(unsigned char *)pointer = (unsigned char)(long int)(double)sp->val.li;
           }
         }
         break;
       case 'p':
-          *(va_arg(ptr, void **)) = (void *)(unsigned long)sp->val.ld;
+          *(va_arg(ptr, void **)) = (void *)(unsigned long)sp->val.li;
         break;
       case 'f':
       case 'e':
