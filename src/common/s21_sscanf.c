@@ -1,347 +1,425 @@
-#include "../s21_string.h"
 #include <stdarg.h>
-#include <stdio.h>
 #include <string.h>
-/*
- * Необходимо реализовать функцию sscanf из библиотеки stdio.h:
- *
- * Функция должна быть размещена в библиотеке s21_string.h.
- * На реализацию функции накладываются все требования, изложенные в первой части.
- * Должно поддерживаться частичное форматирование:
- *
- * Спецификаторы: c, d, i, f, s, u, %
- * Флаги: -, +, (пробел)
- * Ширина: (число)
- * Точность: .(число)
- * Длина: h, l
- *
- * s21_scanf(строка_из_которой_происходит_ввод, "строка_формат(спецификаторы)", &переременные, ...)
- * */
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <wchar.h>
+#include "../s21_string.h"
 
-/*============================= Прототипы функций ==========================================*/
-/*++++++ Запись в %c +++++++*/
-void save_c(char* spec_c, const char* src, int* index);
-/*++++++ Запись в %d +++++++*/
-void save_d(int* spec_d, const char* src, int* index);
-/*++++++ Запись в %i +++++++*/
-void save_i(int* spec_i, const char* src, int* index);
-/*++++++ Запись в %f +++++++*/
-void save_f(double* spec_f, const char* src, int* index);
-/*++++++ Запись в %s +++++++*/
-void save_c(char* spec_s, const char* src, int* index);
-/*++++++ Запись в %u +++++++*/
-void save_u(char* spec_u, const char* src, int* index);
-/*++++++ Common +++++++*/
-/*сравнивает две строки, возвращает 0 если равны и 1 если нет*/
-int equal(const char* s1, const char* s2);
-/*переводит строку в целое число*/
-void to_int(char* str,int* res);
+#if defined (__APPLE__)
+  #define STR_NULL "(null)"
+#endif
+#if defined (__linux__)
+  #define STR_NULL "(nil)"
+#endif
 
-char* my_strtok(char *str, const char *delim);
+typedef union {
+  int *p;
+  long double ld;
+} UnionVal;
 
-int contains_spec(char sp, char* str);
+typedef struct specif {
+  char spec;
+  char mod; 
+  int width;
+  int setWidth;
+  int countMod;
+  char pod;
+  int count;
+  UnionVal val;
+  int err;
+}Specif;
 
-int iterator(char sym, int* i);
-/*Проверки*/
-int is_dec(char* num);
+char toUperChar(char c);
+char toLowerChar(char c);
 
-/*============================= Реализация Основной функции ================================*/
-int s21_sscanf(
-        const char *str,
-        const char *format,...) {
-    int counter = 0;
-    va_list args;
-    va_start(args, format);
-    char* temp = " ";
-    char cf[1024];
-    int i = 0;
-    int index = 0;
-    while (format[i] != '\0') {
-        cf[i] = format[i];
-        i++;
-    }
-    cf [i] = '\0';
-    temp = my_strtok(cf,"%");
-    while(temp != NULL) {
+void setValue(va_list ptr, Specif * sp);
 
-        // если токен не нулл, вызываю функцию обработчик указателя
-        if(temp !=NULL) {
-            // если спецификатор содержит %d
-            if(contains_spec('d',temp) == 0) {
-                save_d(va_arg(args,int*),str, &index);
-                //счетчик считанных спецификаторов
-                counter++;
-            } else
-            // если спецификатор содержит %c
-            if(contains_spec('c',temp) == 0) {
-                save_c(va_arg(args,char*),str,&index);
-                //счетчик считанных спецификаторов
-                counter++;
-            } else
-            // если спецификатор содержит %i
-            if(contains_spec('i',temp) == 0) {
-                save_i(va_arg(args,int*),str,&index);
-                //счетчик считанных спецификаторов
-                counter++;
-            } else
-            // если спецификатор содержит %f
-            if(contains_spec('f',temp) == 0) {
-                save_f(va_arg(args,double *),str, &index);
-                //счетчик считанных спецификаторов
-                counter++;
-            } else
-            // если спецификатор содержит %s
-            if(contains_spec('s',temp) == 0) {
-                save_s(va_arg(args,char *),str, &index);
-                //счетчик считанных спецификаторов
-                counter++;
-            } else
-            // если спецификатор содержит %u
-            if(contains_spec('u',temp) == 0) {
-                printf("Spec action u ---> %s\n", temp);
-                save_u(va_arg(args,char *),str, &index);
-                //счетчик считанных спецификаторов
-                counter++;
-            }
+long long int oxToDec(char * str, int * n, int notion);
+int getIntIDU (char * str, Specif * sp);
+int stringToIntOX(char * str, Specif * sp, va_list ptr);
 
-            //получаю при каждой итерации цикла следующий токен из форматной строки
-            temp = my_strtok(NULL," %");
+long double getValueModDoub(Specif sp, va_list ptr);
+long long getValueModInt(Specif sp, va_list ptr);
+long long unsigned getValueModUInt(Specif sp, va_list ptr);
+
+int getValue (char * str, Specif * sp);
+int initStruct (char * str, Specif * sp);
+int parseToInt(char * str, int * val);
+
+int s21_sscanf(const char *str, const char *format, ...);
+
+int s21_sscanf(const char *str, const char *format, ...) {
+  int count = 0;
+  Specif sp = {0};
+  UnionVal up = {0};
+  sp.val = up; 
+  char * start = (char *)str;
+  char * startf = (char *)format;
+  char * spec = "cdieEfgGosuxXpn%"; 
+  va_list ptr;
+  va_start(ptr, format);
+  while (*format) {
+    if (*format == '%') {
+      format++;
+      {
+        int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
+        char * buf = strndup(format, a);
+        initStruct(buf, &sp);
+        free(buf);
+        if (sp.err) {
+          break;
         }
-    }
-
-    va_end(args);
-
-    return counter;
-}
-/*============================= Проверки ================================================================*/
-/* Это целое число в восьмеричной системе исчисления? */
-int is_oct(char* num) {
-    return 0;
-}
-/* Это целое число в шестнадцатиричной системе ичисления? */
-int is_hex(char* num) {
-    return 0;
-}
-/* Это целое число в десятичной системе исчиления? */
-int is_dec(char* num) {
-    return 0;
-}
-/* токен содержит спецификатор?*/
-int contains_spec(char sp, char* str) {
-    int i = 0;
-    while (str[i] != '\0') {
-        if (str[i] == sp) {
-            return (0);
+        format += a;
+      }
+      {
+        sp.count = count;
+        int size = getValue((char *)str, &sp);
+        if (sp.err) {
+          break;
         }
-        i++;
-    }
-    return (1);
-}
-/*============================= Обработчик Символ (%с) =============================================================*/
-void save_c(char* spec_c, const char* src, int* index) {
-    int i = *index;
-    char temp = src[i];
-    *spec_c = temp;
-    i++;
-    *index = i;
-}
-/*============================= Обработчик Целые числа (%d) ========================================================*/
-int iterator(char sym, int* i) {
-    if (sym < '0') {
-        *i += 1;
-        return 1;
-    }
-    else if (sym > '9') {
-        *i += 1;
-        return 1;
-    }
-    else {
-        *i += 1;
-        return 0;
-    }
-}
-
-void save_d(int* spec_d, const char* src, int* index) {
-    int i = *index;
-    int j = 0;
-    char temp[32];
-        while (iterator(src[i],&i) == 1) {
-            if (src[i] == '\0') break;
+        setValue(ptr, &sp);
+        if (!sp.err) {
+          count = sp.count;
+        } else {
+          count = -1;
         }
-        i--;
-        char t;
-    while(iterator(src[i],&i) != 1) {
-        if(src[i - 1] =='\0') {
-            break;
-        }
-        t = src[i - 1];
-        temp[j] = t;
-        j++;
-    }
-    temp[j] = '\0';
-    int l;
-    to_int(temp,&l);
-    *spec_d = l;
-    *index = i;
-}
-
-/*==================================================================================================================
- * Обработчик Hex, Oct целое число (%i)
- * =================================================================================================================*/
-void save_i(int* spec_i, const char* src, int* index) {
-
-}
-
-/*==================================================================================================================
- * Научная нотация (мантисса/экспонента) с
- * использованием символа e (вывод чисел должен совпадать с точностью до e-6) (%e) (то же самое что и %f)
- * =================================================================================================================*/
-
-/*==================================================================================================================
- * Научная нотация (мантисса/экспонента) с использованием символа Е (%E) (то же самое что и %f)
- * =================================================================================================================*/
-
-/*==================================================================================================================
- * Обработчик Вещественные числа (%f)
- * =================================================================================================================*/
-void save_f(double* spec_f, const char* src, int* index) {
-
-}
-
-/*==================================================================================================================
- * Использует кратчайший из представлений десятичного числа (%g) (то же самое что и %f)
- * =================================================================================================================*/
-
-/*==================================================================================================================
- * Использует кратчайший из представлений десятичного числа (%G) (то же самое что и %f)
- * =================================================================================================================*/
-
-/*==================================================================================================================
- * Обработчик Строка (%s)
- * =================================================================================================================*/
-void save_s(char* spec_s, const char* src, int* index) {
-
-}
-
-/*==================================================================================================================
- * Обработчик Беззнаковое десятичное целое число (%u)
- * =================================================================================================================*/
-void save_u(char* spec_u, const char* src, int* index) {
-
-}
-
-/*==================================================================================================================
- * Беззнаковое десятичное целое число (%u)
- * =================================================================================================================*/
-
-/*==================================================================================================================
- * Беззнаковое шестнадцатеричное целое число (%x)
- * =================================================================================================================*/
-
-/*==================================================================================================================
- * Беззнаковое шестнадцатеричное целое число (заглавные буквы) (%X)
- * =================================================================================================================*/
-/*==================================================================================================================
- * Адрес указателя (%p)
- * =================================================================================================================*/
-
-/*==================================================================================================================
- * Количество символов, напечатанных до появления %n
- * =================================================================================================================*/
-
-/*============================= Вспомогательные функции =================================================*/
-/*++++++ сравнение двух строк Ok +++++++++*/
-int equal(const char* s1, const char* s2) {
-    int i = 0;
-    while(s1[i] != '\0') {
-        if(s1[i] != s2[i]) {
-            return (1);
-        }
-        i++;
-    }
-    return (0);
-}
-
-/*++++++++ строка в число OK +++++++++++*/
-void to_int(char* str, int* res) {
-    int temp ;
-    temp = str[0] - '0';
-    int i = 0;
-    while (iterator(str[i],&i) == 0)  {
-        if (str[i] == '\0') break;
-        temp = temp * 10 + (str[i] -'0');
-    }
-
-    *res = temp;
-
-}
-
-/*my_strtok*/
-static char* zero_p = NULL;
-static char* buf = NULL;
-static size_t length = 0;
-static size_t current = 0;
-
-char* my_strtok(char *str, const char *delim) {
-    /*разбиваем исходную строку на токены и кэшируем ее*/
-    if (str != NULL) {
-        size_t len = s21_strlen(str);
-        buf = (char*)(malloc(sizeof (char) * (len + 1)));
-        size_t i = 0;
-        while (str[i] != '\0') {
-            buf[i] = str[i];
-            i++;
-        }
-        buf[i] = '\0';
-        length = i;
-        length++;
-        i = 0;
-        size_t j = 0;
-        while (buf[i] != '\0') {
-            while (delim[j] != '\0') {
-                if(buf[i] == delim[j]) {
-
-                    buf[i] = '\0';
-                    break;
-                }
-                j++;
-            }
-            j = 0;
-            i++;
-        }
+        str += size;
+      }
+          
     } else {
-        /*Получаем очередной токен*/
-        if (current == length) {
-            if(zero_p != NULL)
-                free(zero_p);
-            buf = NULL;
-            return NULL;
-        }
-        size_t i = 0;
-        if(current == 0) {
-            while (buf[current] != '\0') {
-                current++;
-            }
-        }
-        while (buf[i] != '\0') {
-            i++;
-            current++;
-        }
-        i++;
-        if(current != length)
-            current++;
-        buf += i;
-    }
-    if(buf != NULL && current != length) {
-        while (s21_strlen(buf) == 0 ) {
-            buf++;
-            current++;
-        }
-    }
-    if(buf == NULL && zero_p != NULL) {
-        free(zero_p);
-        zero_p = NULL;
-    }
-    return buf;
+      format++;
+    }    
+  }
+  va_end(ptr);
+  str = start;
+  format = startf;
+  return count;
 }
+
+
+
+int getValue (char * str, Specif * sp) {
+  int count = 0;
+  int step = 0;
+  if (sp->spec == 'c') {
+    ;
+  }
+  if (sp->spec == '%') {
+    ;
+  }
+  if (sp->spec == 'n') {
+    sp->val.ld = sp->count;
+  }
+  if (sp->spec == 's') {
+    ;
+  }  //-9223372036854775808
+     // 9223372036854775808
+  if (sp->spec == 'i' || sp->spec == 'd') {
+    count = getIntIDU(str, sp);
+  }
+  if (sp->spec == 'u') {
+    count = getIntIDU(str, sp);
+  }
+  if (sp->spec == 'o' || sp->spec == 'x' || sp->spec == 'X') {
+    count = getIntIDU(str, sp);
+  }
+  if (sp->spec == 'p') {
+    ;
+  }
+  if (sp->spec == 'f') {
+    ;
+  }
+  if (sp->spec == 'e' || sp->spec == 'E') {
+    ;
+  }
+  if (sp->spec == 'g' || sp->spec == 'G') {
+    ;
+  }
+  return count;
+}
+
+int getIntIDU (char * str, Specif * sp) {
+  int err = 0;
+  int count = 0;
+  int notion = 10;
+  int n = 0;
+  if (s21_strchr("xX", sp->spec)) {
+    notion = 16;
+  }
+  if (s21_strchr("o", sp->spec)) {
+    notion = 8;
+  }
+  
+  long long int result = 0;
+  int mark = 1;
+  if ('+' == *str || '-' == *str) {
+    if ('-' == *str) {
+      mark = -1;     
+    }
+    if (sp->setWidth) {
+      sp->width--;
+      if (!sp->width) {
+        err = 1;
+      }
+    }
+    str++;
+    count++;
+  }
+  if (!err && s21_strchr("0123456789abcdef", *str)) {  
+    if (10 == notion) {
+      while ((s21_strchr("0123456789", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
+        result = (result * notion) + (*str - '0');
+        sp->width--;
+        count++;
+        str++;
+      }
+    }
+    if (8 == notion) {
+      if ('0' == *str) {
+        str++;
+        count++;
+      }
+      while ((s21_strchr("01234567", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
+        result = (result * notion) + (*str - '0');
+        sp->width--;
+        count++;
+        str++;
+      }
+    }
+    if (16 == notion) {
+      if (strncmp("0X", str, 2) || strncmp("0x", str, 2)) {
+        str += 2;
+        count += 2;
+      }
+      while ((s21_strchr("0123456789abcdef", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
+        result = (result * notion) + ('9' < *str ? toUperChar(*str) - 55 : *str - '0');
+        sp->width--;
+        count++;
+        str++;
+      }
+    }
+    // void *pointer = va_arg(ptr, void *); 
+    result *= mark;
+    sp->val.ld = result;
+  } else {
+    sp->err = 1;
+  }
+  return count;
+}
+
+char toUperChar(char c) {
+  return (96 < c && 123 > c) ? c - 32 : c;
+}
+
+char toLowerChar(char c) {
+  return (64 < c && 91 > c) ? c + 32 : c;
+}
+
+void setValue(va_list ptr, Specif * sp) {
+  if ('*' != sp->pod /*&& '%' == sp->spec*/) {
+    void *pointer = va_arg(ptr, void *);
+    switch (toLowerChar(sp->spec)) { 
+      case 'd':
+      case 'i':
+      case 'n':
+        if (1 == sp->countMod) {
+          if ('l' == sp->mod) {
+            *(long *)pointer = (long)sp->val.ld;
+          } else if ('h' == sp->mod) {
+            *(short *)pointer = (short)(long int)lroundl(sp->val.ld);
+          } else {
+            *(int *)pointer = (int)sp->val.ld;
+          }
+        }
+        if (2 == sp->countMod) {
+          if ('l' == sp->mod) {
+            *(long long *)pointer = (long long)sp->val.ld;
+          } else if ('h' == sp->mod) {
+            long long unsigned d = llroundl(sp->val.ld);
+            int a = (int)d;
+            if (d > 999999999999999999999 || a > 999999999999999999999) {
+              printf("!!");
+            }
+            *(signed char *)pointer = (signed char)a;
+          }
+        }
+        break;
+      case 'u':
+      case 'x':
+      case 'o':
+        if (1 == sp->countMod) {
+          if ('l' == sp->mod) {
+            *(unsigned long *)pointer = (unsigned long)sp->val.ld;
+          } else if ('h' == sp->mod) {
+            *(unsigned short *)pointer = (unsigned short)(long int)(double)sp->val.ld;
+          } else {
+            *(unsigned int *)pointer = (unsigned int)sp->val.ld;
+          }
+        }
+        if (2 == sp->countMod) {
+          if ('l' == sp->mod) {
+            *(unsigned long long *)pointer = (unsigned long long)sp->val.ld;
+          } else if ('h' == sp->mod) {
+            *(unsigned char *)pointer = (unsigned char)(long int)(double)sp->val.ld;
+          }
+        }
+        break;
+      case 'p':
+          *(va_arg(ptr, void **)) = (void *)(unsigned long)sp->val.ld;
+        break;
+      case 'f':
+      case 'e':
+      case 'g':
+        if ('l' == sp->mod) {
+          *(va_arg(ptr, double *)) = (double)sp->val.ld;
+        } else if ('L' == sp->mod) {
+          *(va_arg(ptr, long double *)) = sp->val.ld;
+        } else {
+          *(va_arg(ptr, float *)) = (float)sp->val.ld;
+        }
+        break;
+      case 'c':
+        s21_memcpy(va_arg(ptr, void *), sp->val.p, sp->width ? sp->width : 1);
+        break;
+      case 's':
+        s21_strcpy(va_arg(ptr, char *), (char *)(sp->val.p));
+        break;
+    }
+    sp->count += 1;
+  }
+  if ('c' == sp->spec || 's' == sp->spec) {
+    free(sp->val.p);
+  }
+}
+
+int stringToIntOX(char * str, Specif * sp, va_list ptr) {
+  int notion = 8;
+  int n = 0;
+  if (s21_strchr("xX", sp->spec)) {
+    notion = 16;
+  }
+  long long int result = 0;  
+  if (sp->setWidth) {
+    while (s21_strchr("0123456789abcdef", *str)) {
+      result +=  oxToDec(str + 1, &n, notion);
+      if (s21_strchr("abcdef", *str)) {
+        result += (*str - 55) * (long long int)pow(notion, n);
+      } else {
+        result =  (*str - 48) * (long long int)pow(notion, n);
+      }  
+      n += 1;
+    }
+  } else {
+    while (s21_strchr("0123456789abcdef", *str) && sp->width) {
+      result +=  oxToDec(str + 1, &n, notion);
+      if (s21_strchr("abcdef", *str)) {
+        result += (*str - 55) * (long long int)pow(notion, n);
+      } else {
+        result =  (*str - 48) * (long long int)pow(notion, n);
+      }  
+      n += 1;
+    }
+  } 
+  if ('*' != sp->pod) {
+    sp->count += 1;
+    if ('l' == sp->mod) {
+      *(va_arg(ptr, long unsigned *)) = result;
+    } else {
+      *(va_arg(ptr, unsigned *)) = result;
+    }
+  }
+  return n;
+}
+
+long long int oxToDec(char * str, int * n, int notion) {  
+  long long int result = 0;
+  if (s21_strchr("0123456789abcdef", *(str + 1))) {
+    result +=  oxToDec(str + 1, n, notion);
+    if (s21_strchr("abcdef", *str)) {
+        result += (*str - 55) * (long long int)pow(notion, *n);
+      } else {
+        result =  (*str - 48) * (long long int)pow(notion, *n);
+      }  
+    *n += 1;
+  }
+  return result;
+}
+
+int stringToInt(char * str, long long int * res) {
+  long long int result = 0;
+  int mark = 1;
+  if ('+' == *str || '-' == *str) {
+    if ('-' == *str) {
+      mark = -1;
+    }
+    str++;
+  }
+  while (*str) {
+    result = (result * 10) + (*str - 48);
+  }  
+  *res = result;
+  return 0;
+}
+
+//////////////////// init my struct /////////////
+
+int initStruct (char * str, Specif * sp) {  
+  int err = 0;
+  char * modif = "hlL";
+  char * spec = "cdieEfgGosuxXpn%";
+  Specif qwer = {0};
+  *sp = qwer;
+  while (*str != '\0' && !err) {
+    if (*str == '*') {
+      sp->pod = '*';
+      str++;
+    } else if (*str >= '0' && *str <= '9') {
+      str += parseToInt(str, &(sp->width));
+      sp->setWidth = 1;
+    }
+    while (strchr(modif, *str) && !err) {
+      if ('\0' == sp->mod) {
+        sp->mod = *str;
+        sp->countMod = 1;
+        str++;
+      } else if (sp->mod == *str && sp->countMod < 2) {
+        sp->countMod = 2;
+        str++;
+      } else {
+        err = 1;
+      }
+    }
+    if (!sp->spec) {
+      if (strchr(spec, *str) && !err) {
+        sp->spec = *str;
+        str++;
+      }
+    } else {
+      err = 1;
+    }    
+  }
+  return err;
+}
+
+
+
+int parseToInt(char * str, int * val) {
+  int count = 0;
+  *val = 0;
+  while (*str >= '0' && *str <= '9') {
+    *val *= 10;
+    *val += *str - '0';
+    str++;
+    count++;
+  }
+  
+  return count;
+}
+
+
+
+
+
+
 

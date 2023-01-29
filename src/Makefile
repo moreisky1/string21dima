@@ -76,7 +76,7 @@ test: clean s21_string.a
 	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${LDFLAGS}
 
 test1: clean s21_string.a
-	${GCC_G} ${FLAGS} OpsTests/*error.c OpsTests/test_me.c s21_string.a  -o st ${LDFLAGS}
+	${GCC_G} ${FLAGS} OpsTests/*sscanf_d.c OpsTests/*sscanf_i.c OpsTests/*sscanf_o.c OpsTests/*sscanf_x.c OpsTests/test_me.c s21_string.a  -o st ${LDFLAGS}
 	./st
 
 test.a:
