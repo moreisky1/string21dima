@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <wchar.h>
+#include <errno.h>
+
 #include "../s21_string.h"
 
 #if defined (__APPLE__)
@@ -51,6 +53,7 @@ int parseToInt(char * str, int * val);
 int s21_sscanf(const char *str, const char *format, ...);
 
 int s21_sscanf(const char *str, const char *format, ...) {
+  __error();
   int count = 0;
   Specif sp = {0};
   UnionVal up = {0};
@@ -180,16 +183,23 @@ int getIntIDU (char * str, Specif * sp) {
     // if (10 == notion) {
       if (sp->setWidth) {
         int size = (int)s21_strspn(str, "0123456789abcdef");
-        sp->width = sp->width < size ? size : sp->width;
+        sp->width = sp->width > size ? size : sp->width;
         char * buf = (char *)calloc((sp->width + 1), sizeof(char));
         s21_strncpy(buf, str, sp->width);
         result = strtoll(buf, NULL, notion);
+        // if (errno == ERANGE) {
+        //   result = 0;
+        // }
         count += sp->width;
 
         free(buf);
       } else {
         char * st = str;
+        // errno = 0;
         result = strtoll(str, &str, notion);
+        // if (errno == ERANGE) {
+        //   result = 0;
+        // }
         count += str - st;
       }
     // }
@@ -217,7 +227,13 @@ int getIntIDU (char * str, Specif * sp) {
     //     str++;
     //   }
     // }
-    result *= mark;
+    
+    if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
+      result *= mark;
+      result -= 1;
+    } else {
+      result *= mark;
+    }
     sp->val.li = result;
   // } else {
   //   sp->err = 1;
