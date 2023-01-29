@@ -24,6 +24,12 @@ char* s21_strtok(char* str, const char* delim) {
             break;
           }
         }
+        if (s21_strlen(delim) == 0) {
+          mem = str;
+          pointer = str + s21_strlen(str);
+          flag = 1;
+          break;
+        }
         if (flag_break == 1) {
           break;
         }
@@ -31,7 +37,6 @@ char* s21_strtok(char* str, const char* delim) {
     } else if (delim == NULL) {
       mem = NULL;
     }
-    // меняем строку, которую бьём на лексемы
 
   } else if (str == NULL) {  // либо вывод новых лексем, либо выход
     if (flag != 0) {  // новые лексемы
@@ -66,7 +71,7 @@ char* s21_strtok(char* str, const char* delim) {
             }
           }
         }
-      } else if (delim == NULL) {  //
+      } else if (delim == NULL) {
         mem = NULL;
       }
     } else {  // выход
