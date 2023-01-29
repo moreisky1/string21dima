@@ -140,6 +140,9 @@ int getValue (char * str, Specif * sp) {
   if (sp->spec == 'g' || sp->spec == 'G') {
     ;
   }
+  if (!count) {
+    sp->err = 1;
+  }
   return count;
 }
 
@@ -179,10 +182,10 @@ int getIntIDU (char * str, Specif * sp) {
     str++;
     count++;
   }
-  // if (!err && s21_strchr("0123456789abcdef", *str)) {  
+  if (!err && s21_strchr("0123456789abcdef", *str)) {  
     // if (10 == notion) {
       if (sp->setWidth) {
-        int size = (int)s21_strspn(str, "0123456789abcdef");
+        int size = (int)s21_strspn(str, "0123456789abcdefx");
         sp->width = sp->width > size ? size : sp->width;
         char * buf = (char *)calloc((sp->width + 1), sizeof(char));
         s21_strncpy(buf, str, sp->width);
@@ -202,7 +205,16 @@ int getIntIDU (char * str, Specif * sp) {
         // }
         count += str - st;
       }
-    // }
+      if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
+        result *= mark;
+        result -= 1;
+      } else {
+        result *= mark;
+      }
+      sp->val.li = result;
+    } else {
+      sp->err = 1;
+    }
     // if (8 == notion) {
     //   if ('0' == *str) {
     //     str++;
@@ -228,13 +240,7 @@ int getIntIDU (char * str, Specif * sp) {
     //   }
     // }
     
-    if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
-      result *= mark;
-      result -= 1;
-    } else {
-      result *= mark;
-    }
-    sp->val.li = result;
+    
   // } else {
   //   sp->err = 1;
   // }
