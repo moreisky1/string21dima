@@ -2,6 +2,10 @@
 #define _S21_STRING_H_
 #include <stddef.h>
 #include <stdlib.h>
+
+#define s21_size_t unsigned long
+#define S21_NULL ((void *)0x0)
+
 /*#1
  * tests ---> NON
  * realise ----> NON
@@ -314,7 +318,7 @@ void* s21_trim(const char *src, const char *trim_chars);
  * const char* format --->
  * return --->
  * */
-int s21_sscanf(const char *str, const char *format,...);
+int s21_sscanf(const char *str, const char *format, ...);
 
 /*#26
  * tests ---> NON
@@ -326,7 +330,7 @@ int s21_sscanf(const char *str, const char *format,...);
  * const char* format --->
  * return --->
  * */
-int s21_sprintf(char *str, const char *format);
+int s21_sprintf(char *str, const char *format, ...);
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
