@@ -4,7 +4,7 @@ START_TEST(s21_memset_1) {
         ck_assert_int_eq(1,1);
 } END_TEST
 
-        Suite* s21_memset_create_suite(void) {
+Suite* s21_memset_create_suite(void) {
     Suite* s = suite_create("s21_memset");
     TCase* tc = tcase_create("Core of s21_memset");
     /*Tests*/
