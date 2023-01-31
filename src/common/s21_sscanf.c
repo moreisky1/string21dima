@@ -1,5 +1,4 @@
 #include <stdarg.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -42,9 +41,8 @@ int isWhiteSpace(char c);
 void setValue(va_list ptr, Specif * sp);
 int strToStr(char * str, Specif * sp);
 
-long long int oxToDec(char * str, int * n, int notion);
+int getIntFEG (char * str, Specif * sp);
 int getIntIDU (char * str, Specif * sp);
-int stringToIntOX(char * str, Specif * sp, va_list ptr);
 
 long double getValueModDoub(Specif sp, va_list ptr);
 long long getValueModInt(Specif sp, va_list ptr);
@@ -58,12 +56,12 @@ int parseToInt(char * str, int * val);
 
 int s21_sscanf(const char *src, const char *format, ...);
 
-int s21_sscanf(const char *src, const char *format, ...) {
+int s21_sscanf(const char *str, const char *format, ...) {
   __error();
-  char * str = s21_to_lower(src);
+  // char * str = s21_to_lower(src);
   int count = 0;
   int countB = 0;
-  
+  int flags = 1;
   Specif sp = {0};
   // UnionVal up = {0};
   // sp.val = up; 
@@ -74,10 +72,12 @@ int s21_sscanf(const char *src, const char *format, ...) {
   va_start(ptr, format);
   while (*format) {
     if (*format == '%') {
+      flags = 1;
       format++;
       {
-        int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
-        char * buf = strndup(format, a);
+        int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1;
+        char * buf = (char *)calloc(a, sizeof(char));
+        s21_strncpy(buf, format, a);
         initStruct(buf, &sp);
         sp.countB = countB;
         sp.next = *(format + a);
@@ -90,14 +90,20 @@ int s21_sscanf(const char *src, const char *format, ...) {
       {
         sp.count = count;
         int size = getValue((char *)str, &sp);
-        if (sp.err) {
-          count = -1;
+        if ('p' == sp.spec && !size) {
+          sp.spec = '%';
+        } 
+        if (sp.err ) {
+          if ('d' == sp.spec && -1 == sp.err) {
+            count = -1;
+          }
           break;
         }
         str += size;
-        sp.countB += size;
-        countB = sp.countB;
-        setValue(ptr, &sp);
+        countB += size;
+        if ('s' != sp.spec || size) {
+          setValue(ptr, &sp);
+        }
         if (!sp.err) {
           count = sp.count;
         } else {
@@ -107,34 +113,49 @@ int s21_sscanf(const char *src, const char *format, ...) {
       }
           
     } else {
-      format++;
+      if ((isWhiteSpace(*format) || *format == *str) && flags) {
+        if (*format != *str) {
+          format++;
+        } else {
+          format++;
+          str++;
+          countB++;
+        }
+        
+      } else {
+        flags = 0;
+        format++;
+      }
     }    
   }
   va_end(ptr);
   str = start;
   format = startf;
-  free(str);
+  // free(str);
   return count;
 }
 
 int strToStr(char * str, Specif * sp) {
   
   s21_size_t counter = 0;
+  s21_size_t size = 0;
   
   // if (sp->setWidth) {
   //   while (**buffer && config.set[(unsigned char)**buffer])
   //     string[counter++] = *(*buffer)++;
   //   free(config.set);
   // } else {
-    s21_size_t size = sp->setWidth ? (unsigned long)sp->width : s21_strlen(str);
-    char *string = calloc(size + 1, sizeof(char));
+  int len = (int)s21_strlen(str);  
+  size = sp->setWidth ? (unsigned long)sp->width : len;
+  char *string = calloc(size + 1, sizeof(char));
+  if (len) {
     for (s21_size_t i = 0; i < size && *str && !isWhiteSpace(*str); ++i) {
       string[i] = *(str);
       str++;
       counter++;
-    }
-    sp->val.p = string;
-  // }
+    }    
+  }
+  sp->val.p = string;
   return counter < size ? counter : size;
 }
 
@@ -178,58 +199,42 @@ int getValue (char * str, Specif * sp) {
     break;
   case 'n':
     sp->val.li = sp->countB;
-    // sp->err = 1;
     break;
   case 'c':
     count = strToChar(str, sp);
     break;
   case 's':
-    count = strToChar(str, sp);
+    count = strToStr(str, sp);
     break;
   case '%':
-    count = strToChar(str, sp);
+    if ('%' == *str) {
+      count = 1;
+    } else {
+      sp->err = 1;
+    }
     break;
+  case 'f':
+  case 'e':
+  case 'g':
+    count = getIntFEG(str, sp);
+    break;
+  
   default:
     break;
-  }
-  // if (sp->spec == 'c') {
-  //   ;
-  // }
-  // if (sp->spec == '%') {
-  //   ;
-  // }  
-  // if (sp->spec == 's') {
-  //   ;
-  // }
-  // if (sp->spec == 'n') {
-  //   sp->val.ld = sp->count;
-  // } 
-  // if (sp->spec == 'i' || sp->spec == 'd') {
-  //   count = getIntIDU(str, sp);
-  // }
-  // if (sp->spec == 'u') {
-  //   count = getIntIDU(str, sp);
-  // }
-  // if (sp->spec == 'o' || sp->spec == 'x' || sp->spec == 'X') {
-  //   count = getIntIDU(str, sp);
-  // }
-  // if (sp->spec == 'p') {
-  //   ;
-  // }
-  // if (sp->spec == 'f') {
-  //   ;
-  // }
-  // if (sp->spec == 'e' || sp->spec == 'E') {
-  //   ;
-  // }
-  // if (sp->spec == 'g' || sp->spec == 'G') {
-  //   ;
-  // }
-  // if (!count && '') {
-  //   sp->err = 1;
-  // }
+  }  
   return count;
 }
+
+// int isNanInf (char * str) {
+//   int result = 0;
+//   if (!s21_strncmp(str, "NAN", 3) ||
+//       !s21_strncmp(str, "nan", 3) ||
+//       !s21_strncmp(str, "INF", 3) ||
+//       !s21_strncmp(str, "inf", 3)) {
+//     result = 3;
+//   }
+//   return result;
+// }
 
 int getIntIDU (char * str, Specif * sp) {
   long long int max = INT64_MAX;
@@ -276,63 +281,45 @@ int getIntIDU (char * str, Specif * sp) {
     str++;
     count++;
   }
-  if (!sp->err && strchrsc("0123456789abcdef", *str)) {
-      if (sp->setWidth) {
-        int size = (int)s21_strspn(str, "0123456789abcdefx");
-        sp->width = sp->width > size ? size : sp->width;
-        char * buf = (char *)calloc((sp->width + 1), sizeof(char));
-        s21_strncpy(buf, str, sp->width);
-        result = strtoll(buf, NULL, notion);
-        count += sp->width;
-        free(buf);
-      } else {
-        char * st = str;
-        result = strtoll(str, &str, notion);
-        count += str - st;
-      }
-      if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
-        result *= mark;
-        result -= 1;
-      } else {
-        result *= mark;
-      }
-      sp->val.li = result;
+  char * suc = NULL;
+  if ('o' == sp->spec) {
+    suc = "01234567";
+  } else if ('x' == sp->spec || 'i' == sp->spec || 'p' == sp->spec){
+    suc = "0123456789abcdefABCDEF";
+  } else {
+    suc = "0123456789";
+  }
+  if (!sp->err && strchrsc(suc, *str)) {
+    if (sp->setWidth) {
+      int size = (int)s21_strspn(str, "0123456789abcdefABCDEFx");
+      sp->width = sp->width > size ? size : sp->width;
+      char * buf = (char *)calloc((sp->width + 1), sizeof(char));
+      s21_strncpy(buf, str, sp->width);
+      result = strtoll(buf, NULL, notion);
+      count += sp->width;
+      free(buf);
     } else {
-      if ('p' != sp->spec) {
-          sp->err = -1;
-      }
+      char * st = str;
+      result = strtoll(str, &str, notion);
+      count += str - st;
     }
-    if (isWhiteSpace(sp->next)) {
-      str += count;
-      while (isWhiteSpace(*str)) {
-        str++;
-        count++;
-      }
+    if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
+      result *= mark;
+      result -= 1;
+    } else {
+      result *= mark;
     }
-    // if (8 == notion) {
-    //   if ('0' == *str) {
-    //     str++;
-    //     count++;
-    //   }
-    //   while ((strchrsc("01234567", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
-    //     result = (result * notion) + (*str - '0');
-    //     sp->width--;
-    //     count++;
-    //     str++;
-    //   }
-    // }
-    // if (16 == notion) {
-    //   if (strncmp("0X", str, 2) || strncmp("0x", str, 2)) {
-    //     str += 2;
-    //     count += 2;
-    //   }
-    //   while ((strchrsc("0123456789abcdef", *str) && 0 != *str) && (sp->width || !sp->setWidth)) {
-    //     result = (result * notion) + ('9' < *str ? toUperChar(*str) - 55 : *str - '0');
-    //     sp->width--;
-    //     count++;
-    //     str++;
-    //   }
-    // }
+    sp->val.li = result;
+  } else {
+    if ('p' != sp->spec && !sp->err) {
+      if ('\0' != *str) {
+        sp->err = 1;
+      } else {
+        sp->err = -1;
+      }
+        
+    }
+  }    
   return count;
 }
 
@@ -348,7 +335,7 @@ void setValue(va_list ptr, Specif * sp) {
   // long long unsigned mi = 9223372036854775807;
   if ('*' != sp->pod /*&& '%' == sp->spec*/) {
     void *pointer = NULL;
-    if ('p' != toLowerChar(sp->spec)) {
+    if ('p' != sp->spec && '%' != sp->spec) {
       pointer = va_arg(ptr, void *);
     }
     
@@ -412,7 +399,7 @@ void setValue(va_list ptr, Specif * sp) {
         s21_strcpy((char *)pointer, (char *)(sp->val.p));
         break;
     }
-    if ('n' != sp->spec) {
+    if ('n' != sp->spec && '%' != sp->spec) {
       sp->count += 1;
     }
   }
@@ -437,7 +424,7 @@ int initStruct (char * str, Specif * sp) {
       str += parseToInt(str, &(sp->width));
       sp->setWidth = 1;
     }
-    while (strchr(modif, *str) && !err) {
+    while (strchrsc(modif, *str) && !err) {
       if ('\0' == sp->mod) {
         sp->mod = *str;
         sp->countMod = 1;
@@ -450,7 +437,7 @@ int initStruct (char * str, Specif * sp) {
       }
     }
     if (!sp->spec) {
-      if (strchr(spec, *str) && !err) {
+      if (strchrsc(spec, *str) && !err) {
         sp->spec = *str;
         str++;
       }
@@ -488,3 +475,54 @@ char* strchrsc(const char* str, int c) {
   return res;
 }
 
+int getIntFEG (char * str, Specif * sp) {
+  // long double max = MAXF;
+  long double result = 0;
+  int err = 0;
+  int count = 0;
+  int n = 0;
+  char spase[7] = {9, 10, 11, 12, 13, 32, 0};
+  while (strchrsc(spase, *str)) {
+    str++;
+    count++;
+  }  
+  int mark = 1;
+  if ('+' == *str || '-' == *str) {
+    if ('-' == *str) {
+      mark = -1;     
+    }
+    if (sp->setWidth) {
+      sp->width--;
+      if (!sp->width) {
+        sp->err = 1;
+      }
+    }
+    str++;
+    count++;
+  }
+  if (!sp->err && strchrsc("0123456789.", *str)) {
+    if (sp->setWidth) {
+      int size = (int)s21_strspn(str, "0123456789e-+.");
+      sp->width = sp->width > size ? size : sp->width;
+      char * buf = (char *)calloc((sp->width + 1), sizeof(char));
+      s21_strncpy(buf, str, sp->width);
+      result = strtold(buf, NULL);
+      count += sp->width;
+      free(buf);
+    } else {
+      char * st = str;
+      result = strtold(str, &str);
+      count += str - st;
+    }
+    // if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
+      result *= mark;
+    //   result -= 1;
+    // } else {
+    //   result *= mark;
+    // }
+    sp->val.ld = result;
+  } else {
+    sp->err = -1;
+  }
+  return count;
+}
