@@ -1,7 +1,48 @@
 #include "../s21_string_tests.h"
 
 START_TEST(s21_strcspn_1) {
-        ck_assert_int_eq(1,1);
+    char* str = "Hello World";
+    char* search = "Wight";
+    int ac = s21_strcspn(str,search);
+    int ex = strcspn(str,search);
+    //printf("--> %d --> %d\n",ac, ex);
+        ck_assert_int_eq(ac,ex);
+} END_TEST
+
+START_TEST(s21_strcspn_2) {
+    char* str = "Hello World";
+    char* search = "Light";
+    int ac = s21_strcspn(str,search);
+    int ex = strcspn(str,search);
+    //printf("--> %d --> %d\n",ac, ex);
+    ck_assert_int_eq(ac,ex);
+} END_TEST
+
+START_TEST(s21_strcspn_3) {
+    char* str = "Hello World";
+    char* search = "";
+    int ac = s21_strcspn(str,search);
+    int ex = strcspn(str,search);
+    //printf("--> %d --> %d\n",ac, ex);
+    ck_assert_int_eq(ac,ex);
+} END_TEST
+
+START_TEST(s21_strcspn_4) {
+    char* str = "Hello\n World";
+    char* search = "\n";
+    int ac = s21_strcspn(str,search);
+    int ex = strcspn(str,search);
+    //printf("--> %d --> %d\n",ac, ex);
+    ck_assert_int_eq(ac,ex);
+} END_TEST
+
+START_TEST(s21_strcspn_5) {
+    char* str = "Hello World";
+    char* search = "\0";
+    int ac = s21_strcspn(str,search);
+    int ex = strcspn(str,search);
+    //printf("--> %d --> %d\n",ac, ex);
+    ck_assert_int_eq(ac,ex);
 } END_TEST
 
         Suite* s21_strcspn_create_suite(void) {
@@ -9,6 +50,10 @@ START_TEST(s21_strcspn_1) {
     TCase* tc = tcase_create("Core of s21_strcspn");
     /*Tests*/
     tcase_add_test(tc,s21_strcspn_1);
+    tcase_add_test(tc,s21_strcspn_2);
+    tcase_add_test(tc,s21_strcspn_3);
+    tcase_add_test(tc,s21_strcspn_4);
+    tcase_add_test(tc,s21_strcspn_5);
 
     suite_add_tcase(s,tc);
     return s;
