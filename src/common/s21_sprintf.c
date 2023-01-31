@@ -84,7 +84,8 @@ int s21_sprintf(char *str, const char *format, ...) {
       format++;
       {
       int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
-      char * buf = strndup(format, a);
+      char * buf = (char *)calloc(a, sizeof(char));
+      strncpy(buf, format, a);
       initStruct(buf, &sp, ptr);
       free(buf);
       format += a;
