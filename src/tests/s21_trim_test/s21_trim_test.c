@@ -19,7 +19,7 @@ START_TEST(s21_trim_2) {
 START_TEST(s21_trim_3) {
     char str[]="   hello             !!!!";
     char* s = s21_trim(str," hello!");
-    ck_assert_ptr_null(s);
+    ck_assert_str_eq(s,"");
 } END_TEST
 
 START_TEST(s21_trim_4) {
@@ -30,7 +30,7 @@ START_TEST(s21_trim_4) {
 
 START_TEST(s21_trim_5) {
     char str[]="   hello             !!!!";
-    char ex[]="   hello             !!!!";
+    char ex[]="hello             !!!!";
     char* s = s21_trim(str,NULL);
     ck_assert_str_eq(ex,s);
     free(s);
