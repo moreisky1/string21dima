@@ -6,14 +6,19 @@ static char* mem = NULL;  // указатель на возвращаемую л
 static int flag = 0;  // флаг, поднимаемый после первого выполнения функции
 
 char* s21_strtok(char* str, const char* delim) {
-  char* res;
+  char* res; //delete
+  // if (!flag) {
+    
+  // }
   if (str != NULL) {  // подаётся строка - либо первое выполнение, либо
-                      // выполнение для новой строки(опять же, первое)
+    mem = NULL;       // выполнение для новой строки(опять же, первое)
     flag = 0;         // начало работы
     if (delim != NULL) {
       int flag_break = 0;
-      for (int i = 0; i < s21_strlen(str); i++) {
-        // int flag_break = 0;
+      s21_size_t step = s21_strspn(str, delim);
+      str += step;
+      s21_size_t n = s21_strlen(str);
+      for (int i = 0; i < n; i++) {
         for (int j = 0; j < s21_strlen(delim); j++) {
           if (str[i] == delim[j]) {
             str[i] = '\0';
@@ -31,6 +36,9 @@ char* s21_strtok(char* str, const char* delim) {
           break;
         }
         if (flag_break == 1) {
+          if (!s21_strlen(mem)) {
+            mem = NULL;
+          }
           break;
         }
       }
@@ -40,43 +48,78 @@ char* s21_strtok(char* str, const char* delim) {
 
   } else if (str == NULL) {  // либо вывод новых лексем, либо выход
     if (flag != 0) {  // новые лексемы
-      if (delim != NULL) {
-        if (s21_strlen(pointer) == 0) {
-          mem = NULL;
+      if (delim != NULL && *pointer != '\0') {
+        s21_size_t step = s21_strspn(pointer, delim);
+        if (step == 0) {
+          mem = pointer;
         } else {
-          int flag_start = 0;
-          int flag_break = 0;
-          for (int i = 0; i < s21_strlen(pointer); i++) {
-            for (int j = 0; j < s21_strlen(delim); j++) {
-              if (pointer[i] != delim[j]) {
-                flag_start = 1;
-              }
-              if ((pointer[i] == delim[j]) && flag_start == 0) {
-                pointer++;
-                continue;
-              } else if ((pointer[i] == delim[j]) && flag_start != 0) {
-                pointer[i] = '\0';
-                mem = pointer;
-                pointer = pointer + i + 1;
-                flag_break = 1;
-                break;
-              }
-              if (pointer[i + 1] == '\0') {
-                mem = pointer;
-                pointer = pointer + i + 1;
-              }
-            }
-            if (flag_break == 1) {
-              break;
-            }
-          }
+          pointer += step;
+          mem = pointer;
         }
-      } else if (delim == NULL) {
+        int n_poin = (int)s21_strlen(pointer);
+        char * p = NULL;
+        p = s21_strpbrk(pointer, delim);
+        if (p != S21_NULL){
+          *p = '\0';
+          pointer = pointer + (p - pointer) + 1;
+        } else {
+          // if (pointer[i + 1] == '\0') {
+            // mem = pointer;
+            pointer = pointer + n_poin;
+          // } 
+        }
+        if (!s21_strlen(mem)) {
+          mem = NULL;
+        }
+
+        // 
+        // if (n_poin == 0) {
+        //   mem = NULL;
+        // } else {
+          
+        //   int flag_break = 0;
+        //   for (int i = 0; i < n_poin; i++) {
+        //     int j = 0;
+        //     int flag_start = 0;
+        //     int n_delim = (int)s21_strlen(delim);
+        //     int glag = 0;
+        //     for (j = 0; j < n_delim; j++) {              
+        //       if (pointer[i] != delim[j]) {
+        //         flag_start = 1;
+        //         glag += 1;
+        //       }
+        //       if ((pointer[i] == delim[j]) && flag_start == 0) {
+        //         pointer++;
+        //         // flag_start = 0;
+        //         break;
+        //         // continue;
+        //       } else if ((pointer[i] == delim[j]) && flag_start != 0 && glag == n_delim) {
+        //         pointer[i] = '\0';
+        //         mem = pointer;
+        //         pointer = pointer + i + 1;
+        //         flag_break = 1;
+        //         break;
+        //       }
+
+        //                 
+            
+        //     }
+
+        //     if (flag_break == 1) {
+        //       if (!s21_strlen(mem)) {
+        //         mem = NULL;
+        //       }
+        //       break;
+        //     }
+        //   }
+        // }
+      } else /*if (delim == NULL)*/ {
         mem = NULL;
       }
     } else {  // выход
       ;
     }
   }
+  
   return mem;
 }

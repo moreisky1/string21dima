@@ -2,6 +2,10 @@
 #define _S21_STRING_H_
 #include <stddef.h>
 #include <stdlib.h>
+
+#define s21_size_t long unsigned int
+#define S21_NULL (void *)0x0
+
 /*#1
  * tests ---> NON
  * realise ----> NON
