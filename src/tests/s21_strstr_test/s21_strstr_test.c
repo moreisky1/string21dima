@@ -85,8 +85,8 @@ START_TEST(s21_strstr_9) {
 } END_TEST
 
 START_TEST(s21_strstr_10) {
-    char str[] = "fdkglks";
-    char str2[] = "s";
+    char str[] = "nulllll";
+    char str2[] = "u";
     // char* s21 = s21_strstr(str,str2);
     // char* or = strstr(str,str2);
     ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
@@ -99,7 +99,7 @@ START_TEST(s21_strstr_11) {
 
  ck_assert_ptr_null(s21_strstr(str,str2));
  //Опция отличается от оригинального strstr. Оригинальный не обрабатывает значение ноль и рубит с ошибкой
-
+    
 } END_TEST
 
 START_TEST(s21_strstr_12) {
@@ -111,6 +111,87 @@ START_TEST(s21_strstr_12) {
 START_TEST(s21_strstr_13) {
     char str[] = "Hellow my frends";
     char str2[] = "dsa";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_13) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_14) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_15) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_16) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_17) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_18) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_19) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_20) {
+    char str[] = "nulllll";
+    char str2[] = "u";
+    // char* s21 = s21_strstr(str,str2);
+    // char* or = strstr(str,str2);
+    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+
+} END_TEST
+
+START_TEST(s21_strstr_21) {
+    char str[] = "nulllll";
+    char str2[] = "u";
     // char* s21 = s21_strstr(str,str2);
     // char* or = strstr(str,str2);
     ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
