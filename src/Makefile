@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 #
 USERNAME_1= barbreye
 USERNAME1=$(shell users)
@@ -157,4 +155,3 @@ clean:
 	rm -rf *.html
 	rm -rf *.css
 	rm -rf report
->>>>>>> barbreye_trim
