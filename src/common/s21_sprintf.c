@@ -815,7 +815,9 @@ int formatForInputInt(Specif sp, char * str) {
     #endif
     #if defined (__APPLE__)
     if ((int)strlen(str) < sp.precision && (strcmp(str, "0") || strchr("ouxXidp", sp.spec))) {// зануление перед нулём
-      insertMy(str, '0', sp.precision - strlen(str));
+      if (!strchr("gG", sp.spec)) {
+        insertMy(str, '0', sp.precision - strlen(str));
+      }
     }
     #endif
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
