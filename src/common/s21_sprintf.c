@@ -821,7 +821,7 @@ int formatForInputInt(Specif sp, char * str) {
     }
     #endif
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
-      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
+      if ((strcmp(str, " 0") && strcmp(str, "0") && (strlen(str) != strspn(str, "0"))) || 'p' == sp.spec) {
         insertMy(str, 'x', 1);
         insertMy(str, '0', 1);
       }
