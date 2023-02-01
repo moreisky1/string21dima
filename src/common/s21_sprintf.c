@@ -712,11 +712,18 @@ int signedToString(char * str, __int128_t a, Specif sp) {
 
 long double getValueModDoub(Specif sp, va_list ptr) {
   long double result = 0;
+
   if (sp.mod == '\0') {
     result = va_arg(ptr, double);
   } 
   if (sp.mod == 'L') {
     result = va_arg(ptr, long double);
+  }
+  if (sp.mod == 'h') {
+    result = va_arg(ptr, double);
+  }
+  if (sp.mod == 'l') {
+    result = va_arg(ptr, double);
   } 
   return result;
 }
@@ -728,32 +735,31 @@ long long getValueModInt(Specif sp, va_list ptr) {
   }
   if (sp.mod == 'l') {
     if (1 < sp.countMod) {
-      result = va_arg(ptr, long long int);
+      result = (long long int)va_arg(ptr, long long int);
     } else {
-      result = va_arg(ptr, long int);
+      result = (long int)va_arg(ptr, long int);
     }    
   }
   if (sp.mod == '\0') {
-    result = va_arg(ptr, int);
+    result = (int)va_arg(ptr, int);
   }  
   return result;
 }
 
 long long unsigned getValueModUInt(Specif sp, va_list ptr) {
   long long unsigned result = 0;
-  // void * p = va_arg(ptr, void *);
   if (sp.mod == 'h') {
     result = (unsigned short int)va_arg(ptr, unsigned int);
   }
   if (sp.mod == 'l') {
     if (1 < sp.countMod) {
-      result = va_arg(ptr, long long unsigned int);
+      result = (long long unsigned)va_arg(ptr, long long unsigned int);
     } else {
-      result = va_arg(ptr, long unsigned int);
+      result = (long unsigned)va_arg(ptr, long unsigned int);
     }    
   }
   if (sp.mod == '\0') {
-    result = va_arg(ptr, unsigned int);
+    result = (unsigned)va_arg(ptr, unsigned int);
   }
   return result;
 }

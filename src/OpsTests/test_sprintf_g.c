@@ -500,7 +500,7 @@ START_TEST(sprintf_float_many) {
   long double val5 = 95919539159.53151351131;
   ck_assert_int_eq(
       s21_sprintf(str1, format, val, val1, val2, val3, val4, val5),
-      sprintf(str2, format, val, val1, val2, val3, val4, val5));  //=====
+      sprintf(str2, format, val, val1, val2, val3, val4, val5));  
 
   ck_assert_str_eq(str1, str2);
 }
@@ -520,7 +520,7 @@ START_TEST(sprintf_e_many) {
   ck_assert_int_eq(s21_sprintf(str1, format, val, val1, val2, val3, val4, val5),
                    sprintf(str2, format, val, val1, val2, val3, val4, val5));
 
-  ck_assert_str_eq(str1, str2);  //=====
+  ck_assert_str_eq(str1, str2);  
 }
 END_TEST
 
@@ -796,7 +796,7 @@ START_TEST(sprintf_test_sprintf11) {
   char format[] = "%+li%+lu%+d%+lf";
 
   ck_assert_int_eq(s21_sprintf(str1, format, -123, 321, -5555, -1213.123),
-                   sprintf(str2, format, -123, 321, -5555, -1213.123));  //=====
+                   sprintf(str2, format, -123, 321, -5555, -1213.123));  
 
   ck_assert_str_eq(str1, str2);
 }
@@ -809,7 +809,7 @@ START_TEST(sprintf_test_sprintf14) {
 
   ck_assert_int_eq(
       s21_sprintf(str1, format, 1, 222, 33333333333, -166513.1232),
-      sprintf(str2, format, 1, 222, 33333333333, -166513.1232));  //=====
+      sprintf(str2, format, 1, 222, 33333333333, -166513.1232));  
 
   ck_assert_str_eq(str1, str2);
 }
@@ -822,7 +822,7 @@ START_TEST(sprintf_test_sprintf15) {
 
   ck_assert_int_eq(
       s21_sprintf(str1, format, 1, 222, 33333333333, -166513.1232),
-      sprintf(str2, format, 1, 222, 33333333333, -166513.1232));  //=====
+      sprintf(str2, format, 1, 222, 33333333333, -166513.1232));  
 
   ck_assert_str_eq(str1, str2);
 }
@@ -834,7 +834,7 @@ START_TEST(sprintf_test_sprintf36) {
   char format[] = "%5.3e%3.2e%lf";
 
   ck_assert_int_eq(s21_sprintf(str1, format, 0.000111, 111.555, 1.999),
-                   sprintf(str2, format, 0.000111, 111.555, 1.999));  //=====
+                   sprintf(str2, format, 0.000111, 111.555, 1.999));  
 
   ck_assert_str_eq(str1, str2);
 }
