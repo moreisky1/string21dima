@@ -34,7 +34,7 @@ int s21_memcmp(const void *str1, const void *str2, size_t n) {
     // if (st1[i] - st2[i] > 0) result = 1;
     // if (st1[i] - st2[i] < 0) result = (-1);
 
-    if (0 == n) result = 0;
+    if (0 == n || i == n) result = 0;
     else result = st1[i] - st2[i];
     return result;
 }
