@@ -741,8 +741,9 @@ long long getValueModInt(Specif sp, va_list ptr) {
 
 long long unsigned getValueModUInt(Specif sp, va_list ptr) {
   long long unsigned result = 0;
+  // void * p = va_arg(ptr, void *);
   if (sp.mod == 'h') {
-    result = (short int)va_arg(ptr, unsigned int);
+    result = (unsigned short int)va_arg(ptr, unsigned int);
   }
   if (sp.mod == 'l') {
     if (1 < sp.countMod) {
