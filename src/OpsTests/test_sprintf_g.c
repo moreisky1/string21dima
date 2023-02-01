@@ -530,8 +530,12 @@ START_TEST(sprintf_test_one_hex_lower) {
   ck_assert_int_eq(s21_sprintf(str1, "%x", (unsigned)INT32_MIN),
                    sprintf(str2, "%x", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%x", 0), sprintf(str2, "%x", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%x", INT32_MAX),
                    sprintf(str2, "%x", INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -545,8 +549,12 @@ START_TEST(sprintf_test_one_hex_upper) {
   ck_assert_int_eq(s21_sprintf(str1, "%X", (unsigned)INT32_MIN),
                    sprintf(str2, "%X", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%X", 0), sprintf(str2, "%x", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%X", INT32_MAX),
                    sprintf(str2, "%X", INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -560,8 +568,12 @@ START_TEST(sprintf_test_one_hex_lower_with_alignment_left) {
   ck_assert_int_eq(s21_sprintf(str1, "%-3x", (unsigned)INT32_MIN),
                    sprintf(str2, "%-3x", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%-3x", 0), sprintf(str2, "%-3x", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%-3x", INT32_MAX),
                    sprintf(str2, "%-3x", INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -575,8 +587,12 @@ START_TEST(sprintf_test_one_hex_lower_with_alignment_right) {
   ck_assert_int_eq(s21_sprintf(str1, "%13x", (unsigned)INT32_MIN),
                    sprintf(str2, "%13x", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%13x", 0), sprintf(str2, "%13x", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%13x", INT32_MAX),
                    sprintf(str2, "%13x", INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -590,8 +606,12 @@ START_TEST(sprintf_test_one_hex_upper_with_alignment_left) {
   ck_assert_int_eq(s21_sprintf(str1, "%-60X", INT32_MIN),
                    sprintf(str2, "%-60X", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%-60X", 0), sprintf(str2, "%-60X", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%-60X", INT32_MAX),
                    sprintf(str2, "%-60X", INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -605,8 +625,12 @@ START_TEST(sprintf_test_one_hex_upper_with_alignment_right) {
   ck_assert_int_eq(s21_sprintf(str1, "%7X", (unsigned)INT32_MIN),
                    sprintf(str2, "%7X", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%7X", 0), sprintf(str2, "%7X", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf
 (str1, "%7X", INT32_MAX),
                    sprintf(str2, "%7X", INT32_MAX));
@@ -621,8 +645,12 @@ START_TEST(sprintf_test_one_hex_with_hashtag) {
   ck_assert_int_eq(s21_sprintf(str1, "%#x", INT32_MIN),
                    sprintf(str2, "%#x", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%#x", 0), sprintf(str2, "%#x", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%#x", INT32_MAX),
                    sprintf(str2, "%#x", INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -636,8 +664,12 @@ START_TEST(sprintf_test_one_hex_upper_with_hashtag) {
   ck_assert_int_eq(s21_sprintf(str1, "%#X", INT32_MIN),
                    sprintf(str2, "%#X", (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%#X", 0), sprintf(str2, "%#X", 0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%#X", INT32_MAX),
                    sprintf(str2, "%#X", INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -651,11 +683,13 @@ START_TEST(sprintf_test_one_hex_lower_with_width_star) {
   ck_assert_int_eq(s21_sprintf(str1, "%*x", 11, INT32_MIN),
                    sprintf(str2, "%*x", 11, (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
-
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%*x", 11, 0),
                    sprintf(str2, "%*x", 11, 0));
   ck_assert_str_eq(str1, str2);
-
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%*x", 11, INT32_MAX),
                    sprintf(str2, "%*x", 11, INT32_MAX));
   ck_assert_str_eq(str1, str2);
@@ -704,15 +738,23 @@ START_TEST(sprintf_test_one_hex_lower_with_length) {
   ck_assert_int_eq(s21_sprintf(str1, "%hx", -11),
                    sprintf(str2, "%hx", (unsigned short)-11));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%hx", 0),
                    sprintf(str2, "%hx", (unsigned short)0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%hx", 11),
                    sprintf(str2, "%hx", (unsigned short)11));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   long unsigned int val = INT32_MAX;
   ck_assert_int_eq(s21_sprintf(str1, "%lx", val), sprintf(str2, "%lx", val));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   long unsigned int v = 0;
   ck_assert_int_eq(s21_sprintf(str1, "%lx", v), sprintf(str2, "%lx", v));
   ck_assert_str_eq(str1, str2);
@@ -726,15 +768,23 @@ END_TEST
   ck_assert_int_eq(s21_sprintf(str1, "%hx", -11),
                    sprintf(str2, "%hx", (unsigned short)-11));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%hx", 0),
                    sprintf(str2, "%hx", (unsigned short)0));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%hx", 11),
                    sprintf(str2, "%hx", (unsigned short)11));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   long unsigned int val = INT32_MAX;
   ck_assert_int_eq(s21_sprintf(str1, "%lx", val), sprintf(str2, "%lx", val));
   ck_assert_str_eq(str1, str2);
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   long unsigned int v = 0;
   ck_assert_int_eq(s21_sprintf(str1, "%lx", v), sprintf(str2, "%lx", v));
   ck_assert_str_eq(str1, str2);
