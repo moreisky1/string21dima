@@ -669,11 +669,14 @@ START_TEST(sprintf_test_one_hex_upper_with_width_star) {
   ck_assert_int_eq(s21_sprintf(str1, "%*X", 11, INT32_MIN),
                    sprintf(str2, "%*X", 11, (unsigned)INT32_MIN));
   ck_assert_str_eq(str1, str2);
-
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%*X", 11, 0),
                    sprintf(str2, "%*X", 11, 0));
   ck_assert_str_eq(str1, str2);
 
+  memset(str1, '\0', SIZE);
+  memset(str2, '\0', SIZE);
   ck_assert_int_eq(s21_sprintf(str1, "%*X", 11, INT32_MAX),
                    sprintf(str2, "%*X", 11, INT32_MAX));
   ck_assert_str_eq(str1, str2);
