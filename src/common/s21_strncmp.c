@@ -11,7 +11,8 @@ int s21_strncmp(const char *str1, const char *str2, size_t n) {
         i++;
     }
 
-    if (str1[i] != str2[i]) result = str1[i] - str2[i];
+    if (0 == n || i == n) result = 0;
+    else if (str1[i] != str2[i]) result = str1[i] - str2[i];
 
     return result;
 }
