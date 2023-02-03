@@ -50,15 +50,9 @@ long long unsigned getValueModUInt(Specif sp, va_list ptr);
 
 char* strchrsc(const char* str, int c);
 
-<<<<<<< HEAD
 int getValueS(char * str, Specif * sp);
 int initStructS(char * str, Specif * sp);
 int parseToIntS(char * str, int * val);
-=======
-int getValue (char * str, Specif * sp);
-int initStruct (char * str, Specif * sp);
-int parseToInt(char * str, int * val);
->>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
 
 int s21_sscanf(const char *src, const char *format, ...);
 
@@ -84,11 +78,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
         int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1;
         char * buf = (char *)calloc(a, sizeof(char));
         s21_strncpy(buf, format, a);
-<<<<<<< HEAD
         initStructS(buf, &sp);
-=======
-        initStruct(buf, &sp);
->>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
         sp.countB = countB;
         sp.next = *(format + a);
         free(buf);
@@ -99,11 +89,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
       }
       {
         sp.count = count;
-<<<<<<< HEAD
         int size = getValueS((char *)str, &sp);
-=======
-        int size = getValue((char *)str, &sp);
->>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
         if ('p' == sp.spec && !size) {
           sp.spec = '%';
         } 
@@ -197,11 +183,7 @@ int strToChar(const char *str, Specif * sp) {
   return size > spa ? size : spa;
 }
 
-<<<<<<< HEAD
 int getValueS(char * str, Specif * sp) {
-=======
-int getValue (char * str, Specif * sp) {
->>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
   int count = 0;
   int step = 0;
   switch (toLowerChar(sp->spec)) {
@@ -428,11 +410,7 @@ void setValue(va_list ptr, Specif * sp) {
 
 //////////////////// init my struct /////////////
 
-<<<<<<< HEAD
 int initStructS (char * str, Specif * sp) {  
-=======
-int initStruct (char * str, Specif * sp) {  
->>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
   int err = 0;
   char * modif = "hlL";
   char * spec = "cdieEfgGosuxXpn%";
@@ -443,11 +421,7 @@ int initStruct (char * str, Specif * sp) {
       sp->pod = '*';
       str++;
     } else if (*str >= '0' && *str <= '9') {
-<<<<<<< HEAD
       str += parseToIntS(str, &(sp->width));
-=======
-      str += parseToInt(str, &(sp->width));
->>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
       sp->setWidth = 1;
     }
     while (strchrsc(modif, *str) && !err) {
@@ -474,11 +448,7 @@ int initStruct (char * str, Specif * sp) {
   return err;
 }
 
-<<<<<<< HEAD
 int parseToIntS(char * str, int * val) {
-=======
-int parseToInt(char * str, int * val) {
->>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
   int count = 0;
   *val = 0;
   while (*str >= '0' && *str <= '9') {
