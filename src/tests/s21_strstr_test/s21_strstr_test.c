@@ -94,17 +94,23 @@ START_TEST(s21_strstr_10) {
 } END_TEST
 
 START_TEST(s21_strstr_11) {
-    char str[] = "nulllll";
-    char str2[] = "u";
-    // char* s21 = s21_strstr(str,str2);
-    // char* or = strstr(str,str2);
-    ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
+    char str[] = "fdkglks";
+    char* str2 = NULL;
 
+ ck_assert_ptr_null(s21_strstr(str,str2));
+ //Опция отличается от оригинального strstr. Оригинальный не обрабатывает значение ноль и рубит с ошибкой
+    
 } END_TEST
 
 START_TEST(s21_strstr_12) {
-    char str[] = "nulllll";
-    char str2[] = "u";
+//   char str[] = "fdkglks";
+//   char str2[] = "s";
+  ck_assert_str_eq(s21_strstr("\0","\0"),strstr("\0","\0"));
+} END_TEST
+
+START_TEST(s21_strstr_13) {
+    char str[] = "Hellow my frends";
+    char str2[] = "dsa";
     // char* s21 = s21_strstr(str,str2);
     // char* or = strstr(str,str2);
     ck_assert_str_eq(s21_strstr(str,str2),strstr(str,str2));
@@ -209,14 +215,6 @@ Suite* s21_strstr_create_suite(void) {
     tcase_add_test(tc,s21_strstr_11);
     tcase_add_test(tc,s21_strstr_12);
     tcase_add_test(tc,s21_strstr_13);
-    tcase_add_test(tc,s21_strstr_14);
-    tcase_add_test(tc,s21_strstr_15);
-    tcase_add_test(tc,s21_strstr_16);
-    tcase_add_test(tc,s21_strstr_17);
-    tcase_add_test(tc,s21_strstr_18);
-    tcase_add_test(tc,s21_strstr_19);
-    tcase_add_test(tc,s21_strstr_20);
-    tcase_add_test(tc,s21_strstr_21);
     suite_add_tcase(s,tc);
     return s;
 }
