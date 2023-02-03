@@ -1,7 +1,50 @@
 #include "../s21_string_tests.h"
 
 START_TEST(s21_strpbrk_1) {
-        ck_assert_int_eq(1,1);
+    char* str1 = "Hello";
+    char* str2 = "erio";
+    char* as = s21_strpbrk(str1,str2);
+    char* ex = strpbrk(str1,str2);
+    //printf("--> |%s| --> |%s|\n",as,ex);
+        ck_assert_str_eq(as,ex);
+} END_TEST
+
+START_TEST(s21_strpbrk_2) {
+    char* str1 = "Hello";
+    char* str2 = "olleH";
+    char* as = s21_strpbrk(str1,str2);
+    char* ex = strpbrk(str1,str2);
+    //printf("--> |%s| --> |%s|\n",as,ex);
+    ck_assert_str_eq(as,ex);
+} END_TEST
+
+START_TEST(s21_strpbrk_3) {
+    char* str1 = "Hello";
+    char* str2 = "Hello";
+    char* as = s21_strpbrk(str1,str2);
+    char* ex = strpbrk(str1,str2);
+    //printf("--> |%s| --> |%s|\n",as,ex);
+    ck_assert_str_eq(as,ex);
+} END_TEST
+
+START_TEST(s21_strpbrk_4) {
+    char* str1 = "Hello";
+    char* str2 = "";
+    char* as = s21_strpbrk(str1,str2);
+    char* ex = strpbrk(str1,str2);
+    //printf("--> |%s| --> |%s|\n",as,ex);
+    ck_assert_ptr_null(as);
+    ck_assert_ptr_null(ex);
+} END_TEST
+
+START_TEST(s21_strpbrk_5) {
+    char* str1 = "Hello";
+    char* str2 = "bup";
+    char* as = s21_strpbrk(str1,str2);
+    char* ex = strpbrk(str1,str2);
+    //printf("--> |%s| --> |%s|\n",as,ex);
+    ck_assert_ptr_null(as);
+    ck_assert_ptr_null(ex);
 } END_TEST
 
         Suite* s21_strpbrk_create_suite(void) {
@@ -9,7 +52,10 @@ START_TEST(s21_strpbrk_1) {
     TCase* tc = tcase_create("Core of s21_strpbrk");
     /*Tests*/
     tcase_add_test(tc,s21_strpbrk_1);
-
+    tcase_add_test(tc,s21_strpbrk_2);
+    tcase_add_test(tc,s21_strpbrk_3);
+    tcase_add_test(tc,s21_strpbrk_4);
+    tcase_add_test(tc,s21_strpbrk_5);
     suite_add_tcase(s,tc);
     return s;
 }

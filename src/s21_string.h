@@ -2,9 +2,10 @@
 #define _S21_STRING_H_
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-#define s21_size_t unsigned long
 #define S21_NULL ((void *)0x0)
+#define s21_size_t unsigned long int
 
 /*#1
  * tests ---> NON
@@ -256,7 +257,7 @@ char* s21_strstr(const char *haystack, const char *needle);
 char* s21_strtok(char *str, const char *delim);
 
 /*#21
- * tests ---> NON
+ * tests ---> NON   char * str = "Hellow"
  * realise ----> NON
  *
  * Возвращает копию строки (str), преобразованной в верхний регистр.
