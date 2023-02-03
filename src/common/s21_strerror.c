@@ -259,8 +259,13 @@
 
 
 void compil(char * buf, char * str, int errnum);
+<<<<<<< HEAD
 int signedToStringE(char * str, int a);
 int getCiferE(char * str, int a);
+=======
+int signedToString(char * str, int a);
+int getCifer(char * str, int a);
+>>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
 
 char* strcat_int(char* dest, int n);
 char* int_to_str(int n);
@@ -286,7 +291,11 @@ char* s21_strerror(int errnum) {
 void compil(char * buf, char * str, int errnum) {
   strcpy(buf, str);  
   char bus[1024] = "";
+<<<<<<< HEAD
   signedToStringE(bus, errnum);
+=======
+  signedToString(bus, errnum);
+>>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
   strcat(buf, bus);
 }
 
@@ -327,7 +336,11 @@ void compil(char * buf, char * str, int errnum) {
 //     return dest;
 // }
 
+<<<<<<< HEAD
 int signedToStringE(char * str, int a) {
+=======
+int signedToString(char * str, int a) {
+>>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
   int count = 0;
   if (0 > a) {
     *str = '-';
@@ -339,17 +352,28 @@ int signedToStringE(char * str, int a) {
     *str = '0';
     count++;
   } else {
+<<<<<<< HEAD
     int step = getCiferE(str, a);    
+=======
+    int step = getCifer(str, a);    
+>>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
     str += step;
     count += step;
   }
   return count;
 }
 
+<<<<<<< HEAD
 int getCiferE(char * str, int a) {
   int count = 0;
   if(9 < a) {
     count += getCiferE(str, a / 10);
+=======
+int getCifer(char * str, int a) {
+  int count = 0;
+  if(9 < a) {
+    count += getCifer(str, a / 10);
+>>>>>>> de1a2b66e2ea0ad35b9315b14ade17b32a6c68bf
     str += count;
   }
   int buf = a % 10;
