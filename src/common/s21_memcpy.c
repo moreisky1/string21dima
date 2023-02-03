@@ -9,7 +9,7 @@ void* s21_memcpy(void *dest, const void *src, size_t n) {
 //        i++;
 //    }
     while (j < n) {
-       d[j] =s[j];
+       d[j] = s[j];
        j++;
 //       i++;
     }
