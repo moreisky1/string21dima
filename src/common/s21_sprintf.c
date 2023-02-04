@@ -35,6 +35,7 @@ typedef struct specif {
   int count;
 }Specif;
 
+s21_size_t stringWcharCpy(char * str, char c);
 int stringToString(Specif sp, char * str, va_list ptr);
 int charToString(Specif sp, char * str, va_list ptr);
 
@@ -293,7 +294,9 @@ int getChar(Specif sp, char * str, char c) {
 
 int stringToString(Specif sp, char * str, va_list ptr) {
   int count = 0;
-  char * null = strdup(STR_NULL);
+  // char * null = strdup(STR_NULL);
+  char * null = (char *)calloc(7, sizeof(char));
+  s21_strncpy(null, STR_NULL, 7);
   if ('l' == sp.mod) {
     wchar_t * buf = va_arg(ptr, wchar_t *);
     if (buf == S21_NULL) {      
@@ -386,25 +389,24 @@ int stringCpy(char * str, char * buf, Specif sp) {
   return 0;
 }
 
-int stringWcpy(char * str, wchar_t * buf, Specif sp) { 
+int stringWcpy(char * str, wchar_t * buf, Specif sp) {
   if (sp.precision && sp.prec) {
     for (int i = 0; i < sp.precision; i++) {
-      /* code */
-      char bus[256] = {'\0'};
-      wctomb(bus, buf[i]);
-      s21_strcpy(str,bus);
-      str += strlen(bus);
+      str += stringWcharCpy(str, buf[i]);
     }
   } else {
     for (int i = 0; buf[i] != '\0'; i++) {
-      /* code */
-      char bus[256] = {'\0'};
-      wctomb(bus, buf[i]);
-      s21_strcpy(str,bus);
-      str += strlen(bus);
+      str += stringWcharCpy(str, buf[i]);
     }
   }
   return 0;
+}
+
+s21_size_t stringWcharCpy(char * str, char c) {
+  char bus[256] = {'\0'};
+  wctomb(bus, c);
+  s21_strcpy(str,bus);
+  return s21_strlen(bus);
 }
 
 //////////////////// init my struct /////////////
@@ -496,7 +498,7 @@ int doubleToStringG(char * str, long double a, Specif * sp) {
   doubleToString(str, a, *sp);
   sp->spec = 'g';
 
-  // if (s21_strchr("gG", sp->pod) && strcmp(str, "0")){
+  // if (s21_strchr("gG", sp->pod) && s21_strcmp(str, "0")){
   //   formatForInputFl(str, *sp);
   // }
   return 0;
@@ -509,7 +511,7 @@ long double myRound(Specif sp, char * str, long double a, int * man) {
   }
   
   if (s21_strchr("eE",sp.spec)) {
-    if (/*a < 1e-30 && a > -1e-30*/ a == 0) {
+    if (a == 0) {
       *str = '0';
       if (sp.precision) {
         *(str + 1) = '.';
@@ -645,7 +647,7 @@ int stringDuble(Specif sp, char *str, long double a) {
       *str = buf % 10 + '0';
       str++;
     }
-    if (strcmp(str, "0")){
+    if (s21_strcmp(str, "0")){
       if (s21_strchr("gG", sp.pod) && !sp.flag.grid) {
         formatForInputFl(buf, sp);
       }
@@ -687,7 +689,7 @@ int signedToString(char * str, __int128_t a, Specif sp) {
     count++;
     a *= -1;
   } else {
-    if (!sp.flag.pl && /*!sp.flag.zero && */sp.flag.spase) {
+    if (!sp.flag.pl && sp.flag.spase) {
       *str = ' ';
       str++;
       count++;
@@ -779,7 +781,7 @@ int formatForInputFl (char * str, Specif sp) {
 }
 
 int formatForInputInt(Specif sp, char * str) {
-  if (0 == sp.precision && (!strcmp(str, " 0") || !strcmp(str, "0"))) {
+  if (0 == sp.precision && (!s21_strcmp(str, " 0") || !s21_strcmp(str, "0"))) {
     if (!s21_strchr("fgG", sp.spec)) {
       // if (sp.flag.spase) {
       //   *(s21_strchr(str, '0')) = ' ';
@@ -789,7 +791,7 @@ int formatForInputInt(Specif sp, char * str) {
     }    
   }
   if (sp.flag.grid && 'o' == sp.spec) {
-    if (strcmp(str, " 0") && strcmp(str, "0")) {
+    if (s21_strcmp(str, " 0") && s21_strcmp(str, "0")) {
       insertMy(str, '0', 1);
     }
   }
@@ -801,7 +803,7 @@ int formatForInputInt(Specif sp, char * str) {
       }
     }
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
-      if ((strcmp(str, " 0") && strcmp(str, "0")) || 'p' == sp.spec) {
+      if ((s21_strcmp(str, " 0") && s21_strcmp(str, "0")) || 'p' == sp.spec) {
         insertMy(str, 'x', 1);
         insertMy(str, '0', 1);
       }
@@ -809,19 +811,19 @@ int formatForInputInt(Specif sp, char * str) {
   } else {
     // i = 0
     #if defined (__linux__)
-    if ((int)strlen(str) < sp.precision && (strcmp(str, "0") || s21_strchr("ouxXid", sp.spec))) {// зануление перед нулём
+    if ((int)strlen(str) < sp.precision && (s21_strcmp(str, "0") || s21_strchr("ouxXid", sp.spec))) {// зануление перед нулём
       insertMy(str, '0', sp.precision - strlen(str));
     }
     #endif
     #if defined (__APPLE__)
-    if ((int)strlen(str) < sp.precision && (strcmp(str, "0") || s21_strchr("ouxXidp", sp.spec))) {// зануление перед нулём
+    if ((int)strlen(str) < sp.precision && (s21_strcmp(str, "0") || s21_strchr("ouxXidp", sp.spec))) {// зануление перед нулём
       if (!s21_strchr("gG", sp.spec)) {
         insertMy(str, '0', sp.precision - strlen(str));
       }
     }
     #endif
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
-      if ((strcmp(str, " 0") && strcmp(str, "0") && (strlen(str) != strspn(str, "0"))) || 'p' == sp.spec) {
+      if ((s21_strcmp(str, " 0") && s21_strcmp(str, "0") && (strlen(str) != s21_strspn(str, "0"))) || 'p' == sp.spec) {
         insertMy(str, 'x', 1);
         insertMy(str, '0', 1);
       }
@@ -879,10 +881,10 @@ int fillingInWidthBuffer(Specif sp, char * buf, int n) {
 //     str++;
 //   }
 //   char * buf = s21_to_lower(str);
-//   if (!strcmp(buf, "nan")) {
+//   if (!s21_strcmp(buf, "nan")) {
 //     result = 1;
 //   }
-//   if (!strcmp(buf, "inf")) {
+//   if (!s21_strcmp(buf, "inf")) {
 //     result = 2;
 //   }
 //   free(buf);

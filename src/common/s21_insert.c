@@ -6,7 +6,7 @@ void* s21_insert(const char *src, const char *str, size_t start_index) {
         size_t src_len = s21_strlen(src);
         size_t str_len = s21_strlen(str);
         int size = src_len + str_len + 1;
-        result = (char*) malloc(sizeof (char) * (size));
+        result = (char*) calloc(size, sizeof (char));
         size_t i = start_index;
         size_t j = str_len;
         size_t g = src_len - i;

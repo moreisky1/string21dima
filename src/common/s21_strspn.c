@@ -17,8 +17,8 @@
  * Если первый символ в string1 не входит в строку string2, функция возвращает ноль.
  * */
 
-size_t s21_strspn(const char *str1, const char *str2) {
-    size_t result = 0;
+s21_size_t s21_strspn(const char *str1, const char *str2) {
+    s21_size_t result = 0;
     int i = 0, j = 0;
     while (str1[i]) {
         while (str2[j]) {

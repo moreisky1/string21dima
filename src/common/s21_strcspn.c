@@ -18,10 +18,9 @@
  * Длина строки string1, если ни один из символов строки string2 не входит в состав string1.
  * */
 
-size_t s21_strcspn(const char *str1, const char *str2) {
-    size_t i = 0;
-    size_t j = 0;
-
+s21_size_t s21_strcspn(const char *str1, const char *str2) {
+    s21_size_t i = 0;
+    s21_size_t j = 0;
     while (str1[i] != '\0') {
         while (str2[j] != '\0') {
             if(str1[i] == str2[j]) break;
@@ -31,6 +30,5 @@ size_t s21_strcspn(const char *str1, const char *str2) {
         i++;
         j = 0;
     }
-
     return i;
 }
