@@ -1,6 +1,5 @@
 // #include "../s21_string.h"
 #include <stdarg.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -59,7 +58,7 @@ long long unsigned getValueModUInt(Specif sp, va_list ptr);
 int formatForInputFl (char * str, Specif sp);
 int formatForInputInt(Specif sp, char * str);
 int fillingInWidthBuffer(Specif sp, char * buf, int n);
-int insertMy(char * str, char c, int n);
+int insertMy(char * str, int c, s21_size_t n);
 
 int getValue (char * str, Specif * sp, va_list ptr);
 int initStruct (char * str, Specif * sp, va_list ptr);
@@ -86,7 +85,7 @@ int s21_sprintf(char *str, const char *format, ...) {
       {
       int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1;
       char * buf = (char *)calloc(a, sizeof(char));
-      strncpy(buf, format, a);
+      s21_strncpy(buf, format, a);
       initStruct(buf, &sp, ptr);
       free(buf);
       format += a;
@@ -120,13 +119,14 @@ int s21_sprintf(char *str, const char *format, ...) {
           }          
         }        
       }
+      s21_size_t n = s21_strlen(buf);
       if (s21_strchr("p", sp.spec)) {
         #if defined (__linux__)
         if (sp.flag.pl) {
-          s21_memmove(buf + 1, buf, strlen(buf));
+          s21_memmove(buf + 1, buf, n);
           *buf = '+';
         } else if (sp.flag.spase) {
-          s21_memmove(buf + 1, buf, strlen(buf));
+          s21_memmove(buf + 1, buf, n);
           *buf = ' ';
         }
         #endif
@@ -137,8 +137,8 @@ int s21_sprintf(char *str, const char *format, ...) {
         }        
       }
       // todo  lowercase +32
-      size = (size > (int)strlen(buf))? size : (int)strlen(buf);
-      strcat(str, buf);
+      size = (size > (int)n)? size : (int)n;
+      s21_strcat(str, buf);
       str += size;
       count += size;
       }
@@ -238,25 +238,26 @@ int getWchar(Specif sp, char * str, wchar_t c) {
   if (sp.flag.zero && !sp.flag.min) {
     dop = '0';
   }
-  if ((int)strlen(buf) < sp.width) {
+  s21_size_t n = s21_strlen(buf);
+  if ((int)n < sp.width) {
     if (sp.flag.min) {
       // |<-
         s21_strcpy(str, buf);
-        for (int i = (int)strlen(buf); i < sp.width; i++) {
+        for (int i = (int)n; i < sp.width; i++) {
           str[i] = dop;
         }
         str[sp.width] = '\0';
       } else {
       // ->|
-      for (int i = 0; i < sp.width - (int)strlen(buf); i++) {
+      for (int i = 0; i < sp.width - (int)n; i++) {
         str[i] = dop;
       }
-      s21_strcpy(str + (sp.width - (int)strlen(buf)), buf);
+      s21_strcpy(str + (sp.width - (int)n), buf);
     }
     count = sp.width;
   } else {
     s21_strcpy(str, buf);
-    count = (int)strlen(buf);
+    count = (int)n;
   }
   return count;
 }
@@ -320,7 +321,7 @@ int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
   int count = 0;
   char bus[4096] = "";
   stringWcpy(bus, buf, sp);
-  int size = (sp.precision && sp.prec) ? sp.precision : (int)strlen(bus);
+  int size = (sp.precision && sp.prec) ? sp.precision : (int)s21_strlen(bus);
   char dop = ' ';
   if (sp.flag.zero && !sp.flag.min) {
     dop = '0';
@@ -350,7 +351,8 @@ int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
 
 int formatCharString(Specif sp, char * str, char * buf) {
   int count = 0;
-  int size = (sp.prec) ? (sp.precision > (int)strlen(buf) ? (int)strlen(buf) : sp.precision) : (int)strlen(buf);
+  s21_size_t n = s21_strlen(buf);
+  int size = (sp.prec) ? (sp.precision > (int)n ? (int)n : sp.precision) : (int)n;
   char dop = ' ';
   #if defined (__APPLE__)
   if (sp.flag.zero && !sp.flag.min) {
@@ -382,7 +384,7 @@ int formatCharString(Specif sp, char * str, char * buf) {
 
 int stringCpy(char * str, char * buf, Specif sp) {
   if (sp.prec) {
-    strncpy(str, buf, sp.precision);
+    s21_strncpy(str, buf, sp.precision);
   } else {
     s21_strcpy(str, buf);
   }
@@ -611,7 +613,7 @@ int doubleToString(char * str, long double a, Specif sp) {
       mark = '-';
     }
     
-    str += strlen(str);
+    str += s21_strlen(str);
     *str = sp.spec;
     *(str + 1) = mark;
     if (man < 10) {
@@ -771,11 +773,11 @@ long long unsigned getValueModUInt(Specif sp, va_list ptr) {
 //////////////////////// format for input ///////////////
 
 int formatForInputFl (char * str, Specif sp) {
-  for (int i = strlen(str) - 1; str[i] == '0'; i--){
+  for (int i = s21_strlen(str) - 1; str[i] == '0'; i--){
     str[i] = '\0';
   }
-  if (str[strlen(str) - 1] == '.' && !sp.flag.grid) {
-    str[strlen(str) - 1] = '\0';
+  if (str[s21_strlen(str) - 1] == '.' && !sp.flag.grid) {
+    str[s21_strlen(str) - 1] = '\0';
   } 
   return 0;
 }
@@ -797,9 +799,9 @@ int formatForInputInt(Specif sp, char * str) {
   }
   if ('+' == *str || '-' == *str || ' ' == *str) {
     //  i = 1 && size - 1
-    if ((int)(strlen(str) - 1) < sp.precision) {
+    if ((int)(s21_strlen(str) - 1) < sp.precision) {
       if(!s21_strchr("gG", sp.spec)) {
-        insertMy(str + 1, '0', sp.precision - (strlen(str) - 1));
+        insertMy(str + 1, '0', sp.precision - (s21_strlen(str) - 1));
       }
     }
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
@@ -811,43 +813,43 @@ int formatForInputInt(Specif sp, char * str) {
   } else {
     // i = 0
     #if defined (__linux__)
-    if ((int)strlen(str) < sp.precision && (s21_strcmp(str, "0") || s21_strchr("ouxXid", sp.spec))) {// зануление перед нулём
-      insertMy(str, '0', sp.precision - strlen(str));
+    if ((int)s21_strlen(str) < sp.precision && (s21_strcmp(str, "0") || s21_strchr("ouxXid", sp.spec))) {// зануление перед нулём
+      insertMy(str, '0', sp.precision - s21_strlen(str));
     }
     #endif
     #if defined (__APPLE__)
-    if ((int)strlen(str) < sp.precision && (s21_strcmp(str, "0") || s21_strchr("ouxXidp", sp.spec))) {// зануление перед нулём
+    if ((int)s21_strlen(str) < sp.precision && (s21_strcmp(str, "0") || s21_strchr("ouxXidp", sp.spec))) {// зануление перед нулём
       if (!s21_strchr("gG", sp.spec)) {
-        insertMy(str, '0', sp.precision - strlen(str));
+        insertMy(str, '0', sp.precision - s21_strlen(str));
       }
     }
     #endif
     if (sp.flag.grid && ('x' == sp.spec || 'X' == sp.spec || 'p' == sp.spec)) {
-      if ((s21_strcmp(str, " 0") && s21_strcmp(str, "0") && (strlen(str) != s21_strspn(str, "0"))) || 'p' == sp.spec) {
+      if ((s21_strcmp(str, " 0") && s21_strcmp(str, "0") && (s21_strlen(str) != s21_strspn(str, "0"))) || 'p' == sp.spec) {
         insertMy(str, 'x', 1);
         insertMy(str, '0', 1);
       }
     }
   }
-  if ((int)strlen(str) < sp.width) {
+  if ((int)s21_strlen(str) < sp.width) {
     if (sp.flag.min) {
       //  |<-      
-      // fillingInWidthBuffer(sp, str + strlen(str), sp.width - strlen(str)); 
-      memset(str + strlen(str), ' ', sp.width - strlen(str));     
+      // fillingInWidthBuffer(sp, str + s21_strlen(str), sp.width - s21_strlen(str)); 
+      s21_memset(str + s21_strlen(str), ' ', sp.width - s21_strlen(str));     
     } else {
       //  ->|
       if (s21_strchr("eEfdgG", sp.spec)){
-        int n = sp.width - strlen(str);
+        int n = sp.width - s21_strlen(str);
         if (('+' == *str || '-' == *str || ' ' == *str) && sp.flag.zero) {
-          s21_memmove(str + n + 1, str + 1, strlen(str));
+          s21_memmove(str + n + 1, str + 1, s21_strlen(str));
           fillingInWidthBuffer(sp, str + 1, n); 
         } else {
-          s21_memmove(str + n, str, strlen(str));
+          s21_memmove(str + n, str, s21_strlen(str));
           fillingInWidthBuffer(sp, str, n); 
         }
       } else {
-        int n = sp.width - strlen(str);
-        s21_memmove(str + n, str, strlen(str));
+        int n = sp.width - s21_strlen(str);
+        s21_memmove(str + n, str, s21_strlen(str));
         fillingInWidthBuffer(sp, str, n);
       }
     }
@@ -855,9 +857,9 @@ int formatForInputInt(Specif sp, char * str) {
   return 0;
 }
 
-int insertMy(char * str, char c, int n) {
-  s21_memmove(str + n, str, strlen(str));
-  memset(str, c, n);
+int insertMy(char * str, int c, s21_size_t n) {
+  s21_memmove(str + n, str, s21_strlen(str));
+  s21_memset(str, c, n);
   // for (int i = 0; i < n; i++) {
   //   str[i] = c;
   // }
@@ -866,9 +868,9 @@ int insertMy(char * str, char c, int n) {
 
 int fillingInWidthBuffer(Specif sp, char * buf, int n) {
   if (sp.flag.zero) {
-    memset(buf, '0', n);
+    s21_memset(buf, '0', n);
   } else {
-    memset(buf, ' ', n);
+    s21_memset(buf, ' ', n);
   }
   return 0;
 }
