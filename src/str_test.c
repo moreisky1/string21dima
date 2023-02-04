@@ -10,7 +10,7 @@ int main(/*int argc, char *argv[]*/) {
   // size_t bytes;
   char str1[2042] = "";
   int i = 12354145;
-  int* p = &i;
+  int *p = &i;
   double ii = 123456;
   double zero = 0;
   double m_zero = -0;

@@ -18,7 +18,7 @@
  * size_t n --->
  * return --->
  * */
-void* s21_memchr(const void *str, int c, size_t n);
+void *s21_memchr(const void *str, int c, size_t n);
 
 /*#2
  * tests ---> NON
@@ -43,7 +43,7 @@ int s21_memcmp(const void *str1, const void *str2, size_t n);
  * const void* src --->
  * size_t n --->
  * */
-void* s21_memcpy(void *dest, const void *src, size_t n);
+void *s21_memcpy(void *dest, const void *src, size_t n);
 
 /*#4
  * tests ---> NON
@@ -56,63 +56,68 @@ void* s21_memcpy(void *dest, const void *src, size_t n);
  * size_t n --->
  * return --->
  * */
-void* s21_memmove(void *dest, const void *src, size_t n);
+void *s21_memmove(void *dest, const void *src, size_t n);
 
 /*#5
  * tests ---> NON
  * realise ----> NON
  *
- * Копирует символ c (беззнаковый тип) в первые n символов строки, на которую указывает аргумент str.
+ * Копирует символ c (беззнаковый тип) в первые n символов строки, на которую
+ * указывает аргумент str.
  *
  * void* str --->
  * int c --->
  * size_t n --->
  * return --->
  * */
-void* s21_memset(void *str, int c, size_t n);
+void *s21_memset(void *str, int c, size_t n);
 
 /*#6
  * tests ---> NON
  * realise ----> NON
  *
- * Добавляет строку, на которую указывает src, в конец строки, на которую указывает dest.
+ * Добавляет строку, на которую указывает src, в конец строки, на которую
+ * указывает dest.
  *
  * char* dest --->
  * const char* src --->
  * return --->
  * */
-char* s21_strcat(char *dest, const char *src);
+char *s21_strcat(char *dest, const char *src);
 
 /*#7
  * tests ---> NON
  * realise ----> NON
  *
- * Добавляет строку, на которую указывает src, в конец строки, на которую указывает dest, длиной до n символов.
+ * Добавляет строку, на которую указывает src, в конец строки, на которую
+ * указывает dest, длиной до n символов.
  *
  * char* dest --->
  * const char* src --->
  * size_t n --->
  * return --->
  * */
-char* s21_strncat(char *dest, const char *src, size_t n);
+char *s21_strncat(char *dest, const char *src, size_t n);
 
 /*#8
  * tests ---> NON
  * realise ----> NON
  *
- * Выполняет поиск первого вхождения символа c (беззнаковый тип) в строке, на которую указывает аргумент str.
+ * Выполняет поиск первого вхождения символа c (беззнаковый тип) в строке, на
+ * которую указывает аргумент str.
  *
  * const char* str --->
  * int c --->
  * return --->
  * */
-char* s21_strchr(const char *str, int c);
+char *s21_strchr(const char *str, int c);
 
 /*#9
  * tests ---> NON
  * realise ----> NON
  *
- * Сравнивает строку, на которую указывает str1, со строкой, на которую указывает str2.
+ * Сравнивает строку, на которую указывает str1, со строкой, на которую
+ * указывает str2.
  *
  * const char* str1 --->
  * const char* str2 --->
@@ -143,7 +148,7 @@ int s21_strncmp(const char *str1, const char *str2, size_t n);
  * const char* src --->
  * return --->
  * */
-char* s21_strcpy(char *dest, const char *src);
+char *s21_strcpy(char *dest, const char *src);
 
 /*#12
  * tests ---> NON
@@ -156,13 +161,14 @@ char* s21_strcpy(char *dest, const char *src);
  * size_t n --->
  * return --->
  * */
-char* s21_strncpy(char *dest, const char *src, size_t n);
+char *s21_strncpy(char *dest, const char *src, size_t n);
 
 /*#13
  * tests ---> NON
  * realise ----> NON
  *
- * Вычисляет длину начального сегмента str1, который полностью состоит из символов, не входящих в str2.
+ * Вычисляет длину начального сегмента str1, который полностью состоит из
+ * символов, не входящих в str2.
  *
  * const char* str1 --->
  * const char* str2 --->
@@ -174,14 +180,16 @@ size_t s21_strcspn(const char *str1, const char *str2);
  * tests ---> NON
  * realise ----> NON
  *
- * Выполняет поиск во внутреннем массиве номера ошибки errnum и возвращает указатель на строку с сообщением об ошибке.
- * Нужно объявить макросы, содержащие массивы сообщений об ошибке для операционных систем mac и linux.
- * Описания ошибок есть в оригинальной библиотеке. Проверка текущей ОС осуществляется с помощью директив.
+ * Выполняет поиск во внутреннем массиве номера ошибки errnum и возвращает
+ * указатель на строку с сообщением об ошибке. Нужно объявить макросы,
+ * содержащие массивы сообщений об ошибке для операционных систем mac и linux.
+ * Описания ошибок есть в оригинальной библиотеке. Проверка текущей ОС
+ * осуществляется с помощью директив.
  *
  * int errnum --->
  * return --->
  * */
-char* s21_strerror(int errnum);
+char *s21_strerror(int errnum);
 
 /*#15
  * tests ---> NON
@@ -198,31 +206,34 @@ size_t s21_strlen(const char *str);
  * tests ---> NON
  * realise ----> NON
  *
- * Находит первый символ в строке str1, который соответствует любому символу, указанному в str2.
+ * Находит первый символ в строке str1, который соответствует любому символу,
+ * указанному в str2.
  *
  * const char* str1 --->
  * const char* str2 --->
  * return --->
  * */
-char* s21_strpbrk(const char* str1, const char* str2);
+char *s21_strpbrk(const char *str1, const char *str2);
 
 /*#17
  * tests ---> NON
  * realise ----> NON
  *
- * Выполняет поиск последнего вхождения символа c (беззнаковый тип) в строке, на которую указывает аргумент str.
+ * Выполняет поиск последнего вхождения символа c (беззнаковый тип) в строке, на
+ * которую указывает аргумент str.
  *
  * const char* str --->
  * int c --->
  * return --->
  * */
-char* s21_strrchr(const char *str, int c);
+char *s21_strrchr(const char *str, int c);
 
 /*#18
  * tests ---> NON
  * realise ----> NON
  *
- * Вычисляет длину начального сегмента str1, который полностью состоит из символов str2.
+ * Вычисляет длину начального сегмента str1, который полностью состоит из
+ * символов str2.
  *
  * const char* str1 --->
  * const char* str2 --->
@@ -234,14 +245,14 @@ size_t s21_strspn(const char *str1, const char *str2);
  * tests ---> NON
  * realise ----> NON
  *
- * Находит первое вхождение всей строки needle (не включая завершающий нулевой символ),
- * которая появляется в строке haystack.
+ * Находит первое вхождение всей строки needle (не включая завершающий нулевой
+ * символ), которая появляется в строке haystack.
  *
  * const char* haystack --->
  * const char* needle --->
  * return --->
  * */
-char* s21_strstr(const char *haystack, const char *needle);
+char *s21_strstr(const char *haystack, const char *needle);
 
 /*#20
  * tests ---> NON
@@ -253,7 +264,7 @@ char* s21_strstr(const char *haystack, const char *needle);
  * const char* delim --->
  * return --->
  * */
-char* s21_strtok(char *str, const char *delim);
+char *s21_strtok(char *str, const char *delim);
 
 /*#21
  * tests ---> NON   char * str = "Hellow"
@@ -265,7 +276,7 @@ char* s21_strtok(char *str, const char *delim);
  * const char* str --->
  * return --->
  * */
-void* s21_to_upper(const char *str);
+void *s21_to_upper(const char *str);
 
 /*#22
  * tests ---> NON
@@ -277,7 +288,7 @@ void* s21_to_upper(const char *str);
  * const char* str --->
  * return --->
  * */
-void* s21_to_lower(const char *str);
+void *s21_to_lower(const char *str);
 
 /*#23
  * tests ---> NON
@@ -292,7 +303,7 @@ void* s21_to_lower(const char *str);
  * size_t start_index --->
  * return --->
  * */
-void* s21_insert(const char *src, const char *str, size_t start_index);
+void *s21_insert(const char *src, const char *str, size_t start_index);
 
 /*#24
  * tests ---> NON
@@ -306,7 +317,7 @@ void* s21_insert(const char *src, const char *str, size_t start_index);
  * const char* trim_chars --->
  * return --->
  * */
-void* s21_trim(const char *src, const char *trim_chars);
+void *s21_trim(const char *src, const char *trim_chars);
 
 /*#25
  * tests ---> NON
@@ -334,4 +345,4 @@ int s21_sprintf(char *str, const char *format, ...);
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-#endif // _S21_STRING_H_
+#endif  // _S21_STRING_H_

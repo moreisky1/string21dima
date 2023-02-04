@@ -15,20 +15,20 @@
  * Если ни один из символов string2 не присутствует в строке string1,
  * возвращается нулевой указатель.
  * */
-char* s21_strpbrk(const char* str1, const char* str2) {
-    char* result = NULL;
-    int j = 0, i = 0;
-    while(str1[i]) {
-        while (str2[j]) {
-            if(str1[i] == str2[j]) break;
-            j++;
-        }
-        if(str1[i] == str2[j]) {
-            result = (char *)str1 + i;
-            break;
-        }
-        j = 0;
-        i++;
+char *s21_strpbrk(const char *str1, const char *str2) {
+  char *result = NULL;
+  int j = 0, i = 0;
+  while (str1[i]) {
+    while (str2[j]) {
+      if (str1[i] == str2[j]) break;
+      j++;
     }
-    return result;
+    if (str1[i] == str2[j]) {
+      result = (char *)str1 + i;
+      break;
+    }
+    j = 0;
+    i++;
+  }
+  return result;
 }

@@ -4,7 +4,7 @@
 #include "../../s21_string.h"
 
 int main() {
-  char* s = NULL;
+  char *s = NULL;
   int c = -1;
   size_t n = 0;
   // int pointer = 0;
@@ -14,8 +14,8 @@ int main() {
     n = 5;
     // pointer = memchr(s, c, n);
     printf("<%s>\t<%c>\t<%ld>\n", s, c, n);
-    printf("orig:\t|%s|\n", (char*)memchr(s, c, n));
-    printf(" s21:\t|%s|\n", (char*)s21_memchr(s, c, n));
+    printf("orig:\t|%s|\n", (char *)memchr(s, c, n));
+    printf(" s21:\t|%s|\n", (char *)s21_memchr(s, c, n));
     printf("===================\n");
   }
   {
@@ -24,8 +24,8 @@ int main() {
     n = 5;
     // pointer = memchr(s, c, n);
     printf("<%s>\t<%c>\t<%ld>\n", s, c, n);
-    printf("orig:\t|%s|\n", (char*)memchr(s, c, n));
-    printf(" s21:\t|%s|\n", (char*)s21_memchr(s, c, n));
+    printf("orig:\t|%s|\n", (char *)memchr(s, c, n));
+    printf(" s21:\t|%s|\n", (char *)s21_memchr(s, c, n));
     printf("===================\n");
   }
   {
@@ -34,8 +34,8 @@ int main() {
     n = 0;
     // pointer = memchr(s, c, n);
     printf("<%s>\t<%c>\t<%ld>\n", s, c, n);
-    printf("orig:\t|%s|\n", (char*)memchr(s, c, n));
-    printf(" s21:\t|%s|\n", (char*)s21_memchr(s, c, n));
+    printf("orig:\t|%s|\n", (char *)memchr(s, c, n));
+    printf(" s21:\t|%s|\n", (char *)s21_memchr(s, c, n));
     printf("===================\n");
   }
   {
@@ -44,8 +44,8 @@ int main() {
     n = 0;
     // pointer = memchr(s, c, n);
     printf("<%s>\t<%c>\t<%ld>\n", s, c, n);
-    printf("orig:\t|%s|\n", (char*)memchr(s, c, n));
-    printf(" s21:\t|%s|\n", (char*)s21_memchr(s, c, n));
+    printf("orig:\t|%s|\n", (char *)memchr(s, c, n));
+    printf(" s21:\t|%s|\n", (char *)s21_memchr(s, c, n));
     printf("===================\n");
   }
   {
@@ -54,8 +54,8 @@ int main() {
     n = 5;
     // pointer = memchr(s, c, n);
     printf("<%s>\t<%c>\t<%ld>\n", s, c, n);
-    printf("orig:\t|%s|\n", (char*)memchr(s, c, n));
-    printf(" s21:\t|%s|\n", (char*)s21_memchr(s, c, n));
+    printf("orig:\t|%s|\n", (char *)memchr(s, c, n));
+    printf(" s21:\t|%s|\n", (char *)s21_memchr(s, c, n));
     printf("===================\n");
   }
 

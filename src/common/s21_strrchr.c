@@ -9,28 +9,29 @@
  * В Си эта функция  определена так:
  * Параметры:
  * string - Строка, в которой выполняется поиск.
- * symbol - Искомый символ. Передается функции как целое число, после конвертируется в char.
+ * symbol - Искомый символ. Передается функции как целое число, после
+ * конвертируется в char.
  *
  * Возвращаемое значение:
  * Указатель на последнее вхождение символа в строку string.
  * Если значение не найдено, функция возвращает нулевой указатель.
  * */
-char* s21_strrchr(const char *str, int c) {
-    char* result = NULL;
-    int temp = -1;
-    int i = 0;
+char *s21_strrchr(const char *str, int c) {
+  char *result = NULL;
+  int temp = -1;
+  int i = 0;
 
-    while (str[i] != '\0') {
-        if(str[i] == c) {
-            temp = i;
-        }
-        i++;
+  while (str[i] != '\0') {
+    if (str[i] == c) {
+      temp = i;
     }
-    if(str[i] == c) {
-        temp = i;
-    }
-    if (temp >= 0) {
-        result = (char*)str + temp;
-    }
-    return result;
+    i++;
+  }
+  if (str[i] == c) {
+    temp = i;
+  }
+  if (temp >= 0) {
+    result = (char *)str + temp;
+  }
+  return result;
 }

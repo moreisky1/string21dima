@@ -1,17 +1,18 @@
+#include <errno.h>
+#include <math.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <wchar.h>
-#include <errno.h>
 
 #include "../s21_string.h"
 
-#if defined (__APPLE__)
-  #define STR_NULL "(null)"
+#if defined(__APPLE__)
+#define STR_NULL "(null)"
 #endif
-#if defined (__linux__)
-  #define STR_NULL "(nil)"
+#if defined(__linux__)
+#define STR_NULL "(nil)"
 #endif
 
 typedef union {
@@ -22,7 +23,7 @@ typedef union {
 
 typedef struct specif {
   char spec;
-  char mod; 
+  char mod;
   int width;
   int setWidth;
   int countMod;
@@ -32,43 +33,39 @@ typedef struct specif {
   int err;
   char next;
   int countB;
-}Specif;
+} Specif;
 
 char toUperChar(char c);
 char toLowerChar(char c);
 int isWhiteSpace(char c);
 
-void setValue(va_list ptr, Specif * sp);
-int strToStr(char * str, Specif * sp);
+void setValue(va_list ptr, Specif *sp);
+int strToStr(char *str, Specif *sp);
 
-int isNanInfS(const char * str);
-int getIntFEG (char * str, Specif * sp);
-int getIntIDU (char * str, Specif * sp);
+int isNanInfS(const char *str);
+int getIntFEG(char *str, Specif *sp);
+int getIntIDU(char *str, Specif *sp);
 
 long double getValueModDoub(Specif sp, va_list ptr);
 long long getValueModInt(Specif sp, va_list ptr);
 long long unsigned getValueModUInt(Specif sp, va_list ptr);
 
-char* strchrsc(const char* str, int c);
+char *strchrsc(const char *str, int c);
 
-int getValueS(char * str, Specif * sp);
-int initStructS(char * str, Specif * sp);
-int parseToIntS(char * str, int * val);
+int getValueS(char *str, Specif *sp);
+int initStructS(char *str, Specif *sp);
+int parseToIntS(char *str, int *val);
 
 int s21_sscanf(const char *src, const char *format, ...);
 
 int s21_sscanf(const char *str, const char *format, ...) {
-  __error();
-  // char * str = s21_to_lower(src);
   int count = 0;
   int countB = 0;
   int flags = 1;
   Specif sp = {0};
-  // UnionVal up = {0};
-  // sp.val = up; 
-  char * start = (char *)str;
-  char * startf = (char *)format;
-  char * spec = "cdieEfgGosuxXpn%"; 
+  char *start = (char *)str;
+  char *startf = (char *)format;
+  char *spec = "cdieEfgGosuxXpn%";
   va_list ptr;
   va_start(ptr, format);
   while (*format) {
@@ -76,8 +73,9 @@ int s21_sscanf(const char *str, const char *format, ...) {
       flags = 1;
       format++;
       {
-        int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1;
-        char * buf = (char *)calloc(a, sizeof(char));
+        int a = (long long int)s21_strpbrk(format, spec) -
+                (long long int)format + 1;
+        char *buf = (char *)calloc(a, sizeof(char));
         s21_strncpy(buf, format, a);
         initStructS(buf, &sp);
         sp.countB = countB;
@@ -93,8 +91,8 @@ int s21_sscanf(const char *str, const char *format, ...) {
         int size = getValueS((char *)str, &sp);
         if ('p' == sp.spec && !size) {
           sp.spec = '%';
-        } 
-        if (sp.err ) {
+        }
+        if (sp.err) {
           if ('d' == sp.spec && -1 == sp.err) {
             count = -1;
           }
@@ -110,9 +108,8 @@ int s21_sscanf(const char *str, const char *format, ...) {
         } else {
           count = -1;
         }
-        
       }
-          
+
     } else {
       if ((isWhiteSpace(*format) || *format == *str) && flags) {
         if (*format != *str) {
@@ -122,12 +119,12 @@ int s21_sscanf(const char *str, const char *format, ...) {
           str++;
           countB++;
         }
-        
+
       } else {
         flags = 0;
         format++;
       }
-    }    
+    }
   }
   va_end(ptr);
   str = start;
@@ -136,17 +133,10 @@ int s21_sscanf(const char *str, const char *format, ...) {
   return count;
 }
 
-int strToStr(char * str, Specif * sp) {
-  
+int strToStr(char *str, Specif *sp) {
   s21_size_t counter = 0;
   s21_size_t size = 0;
-  
-  // if (sp->setWidth) {
-  //   while (**buffer && config.set[(unsigned char)**buffer])
-  //     string[counter++] = *(*buffer)++;
-  //   free(config.set);
-  // } else {
-  int len = (int)s21_strlen(str);  
+  int len = (int)s21_strlen(str);
   size = sp->setWidth ? (unsigned long)sp->width : len;
   char *string = calloc(size + 1, sizeof(char));
   if (len) {
@@ -154,24 +144,24 @@ int strToStr(char * str, Specif * sp) {
       string[i] = *(str);
       str++;
       counter++;
-    }    
+    }
   }
   sp->val.p = string;
   return counter < size ? counter : size;
 }
 
 int isWhiteSpace(char c) {
-char spase[7] = {9, 10, 11, 12, 13, 32, 0};
-return strchrsc(spase, c) ? 1 : 0;
+  char spase[7] = {9, 10, 11, 12, 13, 32, 0};
+  return strchrsc(spase, c) ? 1 : 0;
 }
 
-int strToChar(const char *str, Specif * sp) {
+int strToChar(const char *str, Specif *sp) {
   size_t len = s21_strlen(str);
   size_t size = sp->setWidth ? (sp->width < len ? sp->width : len) : 1;
   char *pointer = malloc(size * sizeof(char));
   int spa = 0;
   s21_memcpy(pointer, str, size);
-  
+
   if (isWhiteSpace(sp->next)) {
     spa += size;
     while (isWhiteSpace(*(str + size))) {
@@ -179,76 +169,75 @@ int strToChar(const char *str, Specif * sp) {
       spa++;
     }
   }
-  
+
   sp->val.p = pointer;
   return size > spa ? size : spa;
 }
 
-int getValueS(char * str, Specif * sp) {
+int getValueS(char *str, Specif *sp) {
   int count = 0;
   int step = 0;
   switch (toLowerChar(sp->spec)) {
-  case 'i':
-  case 'd':
-  case 'u':
-  case 'x':
-  case 'o':
-    count = getIntIDU(str, sp);
-    break;
-  case 'p':
-    count = getIntIDU(str, sp);
-    break;
-  case 'n':
-    sp->val.li = sp->countB;
-    break;
-  case 'c':
-    count = strToChar(str, sp);
-    break;
-  case 's':
-    count = strToStr(str, sp);
-    break;
-  case '%':
-    if ('%' == *str) {
-      count = 1;
-    } else {
-      sp->err = 1;
-    }
-    break;
-  case 'f':
-  case 'e':
-  case 'g':
-  ;
-    int res = isNanInfS(str);
-    if (1 == res) {
-      if ('-' == *str) {
-        sp->val.ld = -NAN;
-        count += 4;
-      } else if('+' == *str) {
-        sp->val.ld = NAN;
-        count += 4;
+    case 'i':
+    case 'd':
+    case 'u':
+    case 'x':
+    case 'o':
+      count = getIntIDU(str, sp);
+      break;
+    case 'p':
+      count = getIntIDU(str, sp);
+      break;
+    case 'n':
+      sp->val.li = sp->countB;
+      break;
+    case 'c':
+      count = strToChar(str, sp);
+      break;
+    case 's':
+      count = strToStr(str, sp);
+      break;
+    case '%':
+      if ('%' == *str) {
+        count = 1;
       } else {
-        sp->val.ld = NAN;
-        count += 3;
-      }      
-    } else if (2 == res) {
-      if ('-' == *str) {
-        sp->val.ld = -INFINITY;
-        count += 4;
-      } else if('+' == *str) {
-        sp->val.ld = INFINITY;
-        count += 4;
-      } else {
-        sp->val.ld = INFINITY;
-        count += 3;
+        sp->err = 1;
       }
-    } else {
-      count = getIntFEG(str, sp);
-    }    
-    break;
-  
-  default:
-    break;
-  }  
+      break;
+    case 'f':
+    case 'e':
+    case 'g':;
+      int res = isNanInfS(str);
+      if (1 == res) {
+        if ('-' == *str) {
+          sp->val.ld = -NAN;
+          count += 4;
+        } else if ('+' == *str) {
+          sp->val.ld = NAN;
+          count += 4;
+        } else {
+          sp->val.ld = NAN;
+          count += 3;
+        }
+      } else if (2 == res) {
+        if ('-' == *str) {
+          sp->val.ld = -INFINITY;
+          count += 4;
+        } else if ('+' == *str) {
+          sp->val.ld = INFINITY;
+          count += 4;
+        } else {
+          sp->val.ld = INFINITY;
+          count += 3;
+        }
+      } else {
+        count = getIntFEG(str, sp);
+      }
+      break;
+
+    default:
+      break;
+  }
   return count;
 }
 
@@ -263,8 +252,8 @@ int getValueS(char * str, Specif * sp) {
 //   return result;
 // }
 
-int getIntIDU (char * str, Specif * sp) {
-  long long int max = INT64_MAX;
+int getIntIDU(char *str, Specif *sp) {
+  // long long int max = INT64_MAX;
   long long int result = 0;
   int err = 0;
   int count = 0;
@@ -284,7 +273,7 @@ int getIntIDU (char * str, Specif * sp) {
     str++;
     count++;
   }
-  if ('p' == sp->spec && '0' == *str &&  'x' == *(str + 1)) {
+  if ('p' == sp->spec && '0' == *str && 'x' == *(str + 1)) {
     str += 2;
     count += 2;
     if (sp->setWidth) {
@@ -297,7 +286,7 @@ int getIntIDU (char * str, Specif * sp) {
   int mark = 1;
   if ('+' == *str || '-' == *str) {
     if ('-' == *str) {
-      mark = -1;     
+      mark = -1;
     }
     if (sp->setWidth) {
       sp->width--;
@@ -308,10 +297,10 @@ int getIntIDU (char * str, Specif * sp) {
     str++;
     count++;
   }
-  char * suc = NULL;
+  char *suc = NULL;
   if ('o' == sp->spec) {
     suc = "01234567";
-  } else if ('x' == sp->spec || 'i' == sp->spec || 'p' == sp->spec){
+  } else if ('x' == sp->spec || 'i' == sp->spec || 'p' == sp->spec) {
     suc = "0123456789abcdefABCDEF";
   } else {
     suc = "0123456789";
@@ -320,13 +309,13 @@ int getIntIDU (char * str, Specif * sp) {
     if (sp->setWidth) {
       int size = (int)s21_strspn(str, "0123456789abcdefABCDEFx");
       sp->width = sp->width > size ? size : sp->width;
-      char * buf = (char *)calloc((sp->width + 1), sizeof(char));
+      char *buf = (char *)calloc((sp->width + 1), sizeof(char));
       s21_strncpy(buf, str, sp->width);
       result = strtoll(buf, NULL, notion);
       count += sp->width;
       free(buf);
     } else {
-      char * st = str;
+      char *st = str;
       result = strtoll(str, &str, notion);
       count += str - st;
     }
@@ -344,29 +333,24 @@ int getIntIDU (char * str, Specif * sp) {
       } else {
         sp->err = -1;
       }
-        
     }
-  }    
+  }
   return count;
 }
 
-char toUperChar(char c) {
-  return (96 < c && 123 > c) ? c - 32 : c;
-}
+char toUperChar(char c) { return (96 < c && 123 > c) ? c - 32 : c; }
 
-char toLowerChar(char c) {
-  return (64 < c && 91 > c) ? c + 32 : c;
-}
+char toLowerChar(char c) { return (64 < c && 91 > c) ? c + 32 : c; }
 
-void setValue(va_list ptr, Specif * sp) {
+void setValue(va_list ptr, Specif *sp) {
   // long long unsigned mi = 9223372036854775807;
   if ('*' != sp->pod /*&& '%' == sp->spec*/) {
     void *pointer = NULL;
     if ('p' != sp->spec && '%' != sp->spec) {
       pointer = va_arg(ptr, void *);
     }
-    
-    switch (toLowerChar(sp->spec)) { 
+
+    switch (toLowerChar(sp->spec)) {
       case 'd':
       case 'i':
       case 'n':
@@ -393,20 +377,22 @@ void setValue(va_list ptr, Specif * sp) {
           if ('l' == sp->mod) {
             *(unsigned long long *)pointer = (unsigned long long)sp->val.li;
           } else if ('h' == sp->mod) {
-            *(unsigned char *)pointer = (unsigned char)(long int)(double)sp->val.li;
+            *(unsigned char *)pointer =
+                (unsigned char)(long int)(double)sp->val.li;
           }
         } else {
           if ('l' == sp->mod) {
             *(unsigned long *)pointer = (unsigned long)sp->val.li;
           } else if ('h' == sp->mod) {
-            *(unsigned short *)pointer = (unsigned short)(long int)(double)sp->val.li;
+            *(unsigned short *)pointer =
+                (unsigned short)(long int)(double)sp->val.li;
           } else {
             *(unsigned int *)pointer = (unsigned int)sp->val.li;
           }
         }
         break;
-      case 'p':      
-          *(va_arg(ptr, void **)) = (void *)sp->val.li;
+      case 'p':
+        *(va_arg(ptr, void **)) = (void *)sp->val.li;
         break;
       case 'f':
       case 'e':
@@ -437,10 +423,10 @@ void setValue(va_list ptr, Specif * sp) {
 
 //////////////////// init my struct /////////////
 
-int initStructS (char * str, Specif * sp) {  
+int initStructS(char *str, Specif *sp) {
   int err = 0;
-  char * modif = "hlL";
-  char * spec = "cdieEfgGosuxXpn%";
+  char *modif = "hlL";
+  char *spec = "cdieEfgGosuxXpn%";
   Specif qwer = {0};
   *sp = qwer;
   while (*str != '\0' && !err) {
@@ -470,12 +456,12 @@ int initStructS (char * str, Specif * sp) {
       }
     } else {
       err = 1;
-    }    
+    }
   }
   return err;
 }
 
-int parseToIntS(char * str, int * val) {
+int parseToIntS(char *str, int *val) {
   int count = 0;
   *val = 0;
   while (*str >= '0' && *str <= '9') {
@@ -484,17 +470,17 @@ int parseToIntS(char * str, int * val) {
     str++;
     count++;
   }
-  
+
   return count;
 }
 
-char* strchrsc(const char* str, int c) {
-  char* res = NULL;
+char *strchrsc(const char *str, int c) {
+  char *res = NULL;
   int size = (int)s21_strlen(str);
   if (0 <= c && 127 >= c) {
     for (int i = 0; i < size; i++) {
       if (str[i] == c) {
-        res = (char*)str + i;
+        res = (char *)str + i;
         break;
       }
     }
@@ -502,7 +488,7 @@ char* strchrsc(const char* str, int c) {
   return res;
 }
 
-int getIntFEG (char * str, Specif * sp) {
+int getIntFEG(char *str, Specif *sp) {
   // long double max = MAXF;
   long double result = 0;
   int err = 0;
@@ -512,11 +498,11 @@ int getIntFEG (char * str, Specif * sp) {
   while (strchrsc(spase, *str)) {
     str++;
     count++;
-  }  
+  }
   int mark = 1;
   if ('+' == *str || '-' == *str) {
     if ('-' == *str) {
-      mark = -1;     
+      mark = -1;
     }
     if (sp->setWidth) {
       sp->width--;
@@ -531,18 +517,18 @@ int getIntFEG (char * str, Specif * sp) {
     if (sp->setWidth) {
       int size = (int)s21_strspn(str, "0123456789e-+.");
       sp->width = sp->width > size ? size : sp->width;
-      char * buf = (char *)calloc((sp->width + 1), sizeof(char));
+      char *buf = (char *)calloc((sp->width + 1), sizeof(char));
       s21_strncpy(buf, str, sp->width);
       result = strtold(buf, NULL);
       count += sp->width;
       free(buf);
     } else {
-      char * st = str;
+      char *st = str;
       result = strtold(str, &str);
       count += str - st;
     }
     // if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
-      result *= mark;
+    result *= mark;
     //   result -= 1;
     // } else {
     //   result *= mark;
@@ -554,12 +540,12 @@ int getIntFEG (char * str, Specif * sp) {
   return count;
 }
 
-int isNanInfS(const char * str) {
+int isNanInfS(const char *str) {
   int result = 0;
   if ('-' == *str || '+' == *str) {
     str++;
   }
-  char * buf = s21_to_lower(str);
+  char *buf = s21_to_lower(str);
   if (!s21_strncmp(buf, "nan", 3)) {
     result = 1;
   }
@@ -567,5 +553,5 @@ int isNanInfS(const char * str) {
     result = 2;
   }
   free(buf);
-  return result;  
+  return result;
 }

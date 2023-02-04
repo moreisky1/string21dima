@@ -96,9 +96,9 @@ gcov_report: clean s21_string.a
 	rm -rf *.gcda *gcno
 
 gcov_repo:  gs21_string.a
-	${GCC_G} ${FLAGS} tests/*/*.c tests/*.c s21_string.a ${SOURCE_TESTS} ${LDFLAGS} ${GCOV_FLAGS}
+	${GCC_G} ${FLAGS} OpsTests/*.c s21_string.a ${SOURCE_TESTS} ${LDFLAGS} ${GCOV_FLAGS}
 	./test
-	rm -rf *_test.gcda *_test.gcno main.gc*
+	rm -rf *test_*.gcda *test_*.gcno main.gc*
 	gcovr -p
 	mkdir report
 	gcovr -p --html-details -o report/report.html
@@ -117,11 +117,26 @@ gi:
 
 #======================================== VALGRIND ====================================================================
 
-valgrind_test:
+tests_valgrind: test1
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=res_leak.txt ./st
+	grep -e ERROR res_leak.txt
+	rm -rf *.gcda
 
-valgrind_test_gcov:
+tests_valgrind_gcov: gcov_repo
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=res_leak.txt ./test
+	grep -e ERROR res_leak.txt
+	rm -rf *.gcda
+
 
 #======================================== Style    ====================================================================
+
+style:
+	clang-format -n tests/*/*.c tests/*.c tests/*.h
+	clang-format -n common/*.c *.c OpsTests/*.c OpsTests/*.h s21_string.h
+
+style_red:
+	clang-format -i tests/*/*.c tests/*.c tests/*.h
+	clang-format -i common/*.c *.c OpsTests/*.c OpsTests/*.h s21_string.h
 
 #======================================== CLEAN =======================================================================
 clean.o:

@@ -4,8 +4,8 @@
 #include "../../s21_string.h"
 
 int main() {
-  char* str_1 = NULL;
-  char* str_2 = NULL;
+  char *str_1 = NULL;
+  char *str_2 = NULL;
   size_t n = 0;
   {
     str_1 = "valley";

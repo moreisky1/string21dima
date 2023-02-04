@@ -4,16 +4,16 @@
 #include "../../s21_string.h"
 
 int main() {
-  char* str1 = "needle_in_haystack";
-  char* str2 = "needle";
-  char* str3 = "noodle";
-  char* empt_hay = "";
-  char* empt_ned = "";
+  char *str1 = "needle_in_haystack";
+  char *str2 = "needle";
+  char *str3 = "noodle";
+  char *empt_hay = "";
+  char *empt_ned = "";
   // char* null_hay = NULL;
   // char* null_ned = NULL;
 
-  char* res1 = NULL;
-  char* res2 = NULL;
+  char *res1 = NULL;
+  char *res2 = NULL;
 
   res1 = s21_strstr(str1, str2);
   res2 = strstr(str1, str2);

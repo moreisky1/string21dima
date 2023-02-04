@@ -1,18 +1,18 @@
 #include "../s21_string.h"
 
-static char* pointer = NULL;
+static char *pointer = NULL;
 // указатель на элемент после делимитера найденного в прошлом цикле
-static char* mem = NULL;  // указатель на возвращаемую лексему
+static char *mem = NULL;  // указатель на возвращаемую лексему
 static int flag = 0;  // флаг, поднимаемый после первого выполнения функции
 
-char* s21_strtok(char* str, const char* delim) {
-  char* res; //delete
+char *s21_strtok(char *str, const char *delim) {
+  char *res;  // delete
   // if (!flag) {
-    
+
   // }
   if (str != NULL) {  // подаётся строка - либо первое выполнение, либо
-    mem = NULL;       // выполнение для новой строки(опять же, первое)
-    flag = 0;         // начало работы
+    mem = NULL;  // выполнение для новой строки(опять же, первое)
+    flag = 0;    // начало работы
     if (delim != NULL) {
       int flag_break = 0;
       s21_size_t step = s21_strspn(str, delim);
@@ -57,33 +57,33 @@ char* s21_strtok(char* str, const char* delim) {
           mem = pointer;
         }
         int n_poin = (int)s21_strlen(pointer);
-        char * p = NULL;
+        char *p = NULL;
         p = s21_strpbrk(pointer, delim);
-        if (p != S21_NULL){
+        if (p != S21_NULL) {
           *p = '\0';
           pointer = pointer + (p - pointer) + 1;
         } else {
           // if (pointer[i + 1] == '\0') {
-            // mem = pointer;
-            pointer = pointer + n_poin;
-          // } 
+          // mem = pointer;
+          pointer = pointer + n_poin;
+          // }
         }
         if (!s21_strlen(mem)) {
           mem = NULL;
         }
 
-        // 
+        //
         // if (n_poin == 0) {
         //   mem = NULL;
         // } else {
-          
+
         //   int flag_break = 0;
         //   for (int i = 0; i < n_poin; i++) {
         //     int j = 0;
         //     int flag_start = 0;
         //     int n_delim = (int)s21_strlen(delim);
         //     int glag = 0;
-        //     for (j = 0; j < n_delim; j++) {              
+        //     for (j = 0; j < n_delim; j++) {
         //       if (pointer[i] != delim[j]) {
         //         flag_start = 1;
         //         glag += 1;
@@ -93,7 +93,8 @@ char* s21_strtok(char* str, const char* delim) {
         //         // flag_start = 0;
         //         break;
         //         // continue;
-        //       } else if ((pointer[i] == delim[j]) && flag_start != 0 && glag == n_delim) {
+        //       } else if ((pointer[i] == delim[j]) && flag_start != 0 && glag
+        //       == n_delim) {
         //         pointer[i] = '\0';
         //         mem = pointer;
         //         pointer = pointer + i + 1;
@@ -101,8 +102,8 @@ char* s21_strtok(char* str, const char* delim) {
         //         break;
         //       }
 
-        //                 
-            
+        //
+
         //     }
 
         //     if (flag_break == 1) {
@@ -120,6 +121,6 @@ char* s21_strtok(char* str, const char* delim) {
       ;
     }
   }
-  
+
   return mem;
 }

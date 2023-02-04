@@ -1,7 +1,7 @@
 #include "../s21_string.h"
 
-void* s21_to_lower(const char* str) {
-  char* result;
+void *s21_to_lower(const char *str) {
+  char *result;
   size_t i = 0;
   if (str == NULL) {
     result = NULL;

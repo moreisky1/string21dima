@@ -1,11 +1,12 @@
-#include <string.h>
-#include "s21_string.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <string.h>
+
+#include "s21_string.h"
 
 // static int con = 0;
-void workSprintf() ;
+void workSprintf();
 void test_memchr(const void *str, int c, size_t n);
 void test_memcmp(const void *str1, const void *str2, size_t n);
 void test_memcpy(void *dest, const void *src, size_t n);
@@ -22,24 +23,25 @@ void test_strpbrk(const char *str1, const char *str2);
 void test_strrchr(const char *str, int c);
 void test_insert(const char *src, const char *str, size_t start_index);
 
-int printNumber(char * str, int a, int s);
-int getCifra(char* str, long long unsigned a, int b);
-int getCifra1(char* str, long long int a, int b);
+int printNumber(char *str, int a, int s);
+int getCifra(char *str, long long unsigned a, int b);
+int getCifra1(char *str, long long int a, int b);
 int bitInCifra(long long unsigned a, int b);
-int getCifra2(char * str, unsigned a);
-
+int getCifra2(char *str, unsigned a);
 
 int main() {
   printf("TEST\n\n");
   // for (int i = -2; i < 50; i++)
   // {
   //   test_strerror(i);
-  // } 
-  
+  // }
+
   // str1 = strdup("");
-  // str2 = strdup("");  // str3 = strdup("");  // printf("str1 <%s>\ntr2 <%s>\nstr3 <%s>\nstr4 <%s>\n", str1, str2, str3, str4);
-  // printf("<%s>\n <%s>n%d\n\n", (char *)s21_strncpy(str1, str3, 4), strncpy(str2, str3, 4), strcmp(str1,str2));
-  
+  // str2 = strdup("");  // str3 = strdup("");  // printf("str1 <%s>\ntr2
+  // <%s>\nstr3 <%s>\nstr4 <%s>\n", str1, str2, str3, str4); printf("<%s>\n
+  // <%s>n%d\n\n", (char *)s21_strncpy(str1, str3, 4), strncpy(str2, str3, 4),
+  // strcmp(str1,str2));
+
   // int *str = NULL;
   // int a = 134;
   // str = &a;
@@ -68,38 +70,42 @@ int main() {
   // s += getCifra2(s, (unsigned)*p1);
   // s += getCifra2(s, (unsigned)*p);
   // printf("%s\n", str);
-/*
-  char str[1024] = "";
-  char str1[1024] = "";
-  long long int b = 8964489;
-  char * p = NULL;
-  char * s = "Hekow sdf lklsf' ";
-  // p = &b;  
-  long long int b = (long long int)&s;
+  /*
+    char str[1024] = "";
+    char str1[1024] = "";
+    long long int b = 8964489;
+    char * p = NULL;
+    char * s = "Hekow sdf lklsf' ";
+    // p = &b;
+    long long int b = (long long int)&s;
 
-     sprintf(str1, "int = %llu int = %llo int = %llx int = %llX |%%| pointer = %p | %lld|", b, b, b, b, p, (long long int)p);
-    // sprintf(str1, "!d = %s ", s);
-    // sprintf(str1, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b, b, b);    
-    printf("%s\n", str1);
-    
-     
-  s21_sprintf(str, "int = %llu int = %llo int = %llx int = %llX |%%| pointer = %p | %lld|", b, b, b, b, p, (long long int)p);
-  // s21_sprintf(str, "|d = %s ", s);
-  // s21_sprintf(str, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b, b, b);
-  printf("%s\n", str);
-  */
-//     b = 0.9876751;
-//     sprintf(str1, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b, b, b);    
-//     printf("%s\n", str1);
-// s21_sprintf(str, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b, b, b);
-//   printf("%s\n", str);
+       sprintf(str1, "int = %llu int = %llo int = %llx int = %llX |%%| pointer =
+    %p | %lld|", b, b, b, b, p, (long long int)p);
+      // sprintf(str1, "!d = %s ", s);
+      // sprintf(str1, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b,
+    b, b); printf("%s\n", str1);
 
-//   b = 8964489.9876751;
-//     sprintf(str1, "d = %#f | d = %e | d = %E | d = %g | d = %G |", b, b, b, b, b);    
-//     printf("%s\n", str1);
-// s21_sprintf(str, "d = %#f | d = %e | d = %E | d = %g | d = %G |", b, b, b, b, b);
-//   printf("%s\n", str);
-  
+
+    s21_sprintf(str, "int = %llu int = %llo int = %llx int = %llX |%%| pointer =
+    %p | %lld|", b, b, b, b, p, (long long int)p);
+    // s21_sprintf(str, "|d = %s ", s);
+    // s21_sprintf(str, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b,
+    b, b); printf("%s\n", str);
+    */
+  //     b = 0.9876751;
+  //     sprintf(str1, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b,
+  //     b, b); printf("%s\n", str1);
+  // s21_sprintf(str, "d = %f | d = %e | d = %E | d = %g | d = %G |", b, b, b,
+  // b, b);
+  //   printf("%s\n", str);
+
+  //   b = 8964489.9876751;
+  //     sprintf(str1, "d = %#f | d = %e | d = %E | d = %g | d = %G |", b, b, b,
+  //     b, b); printf("%s\n", str1);
+  // s21_sprintf(str, "d = %#f | d = %e | d = %E | d = %g | d = %G |", b, b, b,
+  // b, b);
+  //   printf("%s\n", str);
+
   // f e E g G n
   // u o x X % p d i c s
 
@@ -110,17 +116,17 @@ int main() {
   // double w = 0.9876751;
   // char * s = str2;
   // int f = 0;
-    // s += sprintf(s, "d = %5d | u = %u | o = %o | x = %x \n", q, q, q, q);
-    // s += sprintf(s, "d = %-+ #0f | d = %-+ #0e | d = %-+ #0E | d = %-+ #0X \n", w, w, w, q); 
-    // s += sprintf(s, "d = %i | d = %s | d = %c | d = %% \n", q, st, e); 
-    // s += sprintf(s, "d = %-+ #0n | d = %-+ #0p | d = %-+ #0G | d = %-+ #0g \n", &f, st, w, w);    
-    // printf("%s\n", str2);
+  // s += sprintf(s, "d = %5d | u = %u | o = %o | x = %x \n", q, q, q, q);
+  // s += sprintf(s, "d = %-+ #0f | d = %-+ #0e | d = %-+ #0E | d = %-+ #0X \n",
+  // w, w, w, q); s += sprintf(s, "d = %i | d = %s | d = %c | d = %% \n", q, st,
+  // e); s += sprintf(s, "d = %-+ #0n | d = %-+ #0p | d = %-+ #0G | d = %-+ #0g
+  // \n", &f, st, w, w); printf("%s\n", str2);
   // test_insert("\0", "\0", 0);
   // char m[300] = "It is test string for memcpy";
   // test_memset(m, 67, 10);
   // test_memset(m - 1, 67, 10);
   // test_memset(m + 3, 67, 4);
-  workSprintf();// gcc -Wall -Werror -Wextra -o me %.c
+  workSprintf();  // gcc -Wall -Werror -Wextra -o me %.c
 
   return 0;
 }
@@ -130,7 +136,7 @@ int main() {
 //   // int notation = s;
 //   // int step = 87;
 //   // while (1) {
-    
+
 //   //   int b = (int)getCifra1(str, a, notation);
 //   //   printf("\n");
 //   //   if (b > 9 && notation == 16) {
@@ -145,7 +151,7 @@ int main() {
 //   //   } else {
 //   //     break;
 //   //   }
-//   // }   
+//   // }
 //   // getCifra1(str, a, s);
 //   return count;
 // }
@@ -153,7 +159,7 @@ int main() {
 // int getCifra(char * str, long long unsigned a, int b) {
 //   int count = 0;
 //   if (a != 0) {
-//     count += getCifra(str, a / b, b);    
+//     count += getCifra(str, a / b, b);
 //     str += count;
 //     if (a % b > 9 && b == 16) {
 //       *str = a % b + 87;
@@ -161,8 +167,8 @@ int main() {
 //       *str = a % b + '0';
 //     }
 //     count++;
-//   }   
-//   return count;  
+//   }
+//   return count;
 // }
 
 // int getCifra1(char * str, long long int a, int b) {
@@ -173,10 +179,10 @@ int main() {
 //   if (b == 8) {cel = 3;}
 //   if (b == 4) {cel = 2;}
 //   if (b == 2) {cel = 1;}
-//   while (a != 0) {    
+//   while (a != 0) {
 //     buf = bitInCifra(a, cel);
 //     printf("%d|", buf);
-//     a >>= cel;    
+//     a >>= cel;
 //     if (buf > 9 && b == 16) {
 //       *str = buf + 87;
 //     } else {
@@ -184,8 +190,8 @@ int main() {
 //     }
 //     str++;
 //     count++;
-//   }   
-//   return count;  
+//   }
+//   return count;
 // }
 
 void workSprintf() {
@@ -193,180 +199,184 @@ void workSprintf() {
     char str[2024] = "";
     int a = 123456;
     sprintf(str, "<%%i> -              |%i|", a);
-    printf("%s\n", str);           
+    printf("%s\n", str);
   }
   {
     char str[2024] = "";
     int a = 123456;
     sprintf(str, "<%%li> -             |%li|", (long)a);
-    printf("%s\n", str);           
+    printf("%s\n", str);
   }
   {
     char str[2024] = "";
     int a = 123456;
     sprintf(str, "<%%lli> -            |%lli|", (long long)a);
-    printf("%s\n", str);           
+    printf("%s\n", str);
   }
   {
     char str[2024] = "";
     int a = 123456;
     sprintf(str, "<%%Li> -             |%Li|", (long long)a);
-    printf("%s\n", str);           
+    printf("%s\n", str);
   }
   {
     char str[2024] = "";
     int a = 32767;
     sprintf(str, "<%%hi> -             |%hi|", a);
-    printf("%s\n", str);           
+    printf("%s\n", str);
   }
-  {           
-    char str[2024] = "";           
-    int a = 123456;           
+  {
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%4i> -             |%4i|", a);
-    printf("%s\n", str);           
-  }           
-  {           
-    char str[2024] = "";           
-    int a = 123456;           
+    printf("%s\n", str);
+  }
+  {
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%.4i> -            |%.4i|", a);
     printf("%s\n", str);
-  }           
-  {           
-    char str[2024] = "";           
-    int a = 123456;           
+  }
+  {
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%11i> -            |%11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%.11i> -           |%.11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%0i> -             |%0i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%011i> -           |%011i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%04i> -            |%04i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%% .11i> -           |% .11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    // int a = 123456;           
-    sprintf(str, "<%%0.4i> - error: '0' flag ignored with precision and '%%i' gnu_printf format ");
+    char str[2024] = "";
+    // int a = 123456;
+    sprintf(str,
+            "<%%0.4i> - error: '0' flag ignored with precision and '%%i' "
+            "gnu_printf format ");
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
+    char str[2024] = "";
     int a = 123456;
     sprintf(str, "<%%-i> -             |%-i|", a);
     printf("%s\n%d", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%-4i> -            |%-4i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%-11i> -           |%-11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    // int a = 123456;           
-    sprintf(str, "<%%-011i> - error: '0' flag ignored with '-' flag in gnu_printf format");
+    char str[2024] = "";
+    // int a = 123456;
+    sprintf(str,
+            "<%%-011i> - error: '0' flag ignored with '-' flag in "
+            "gnu_printf format");
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%-.4i> -           |%-.4i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%-.11i> -          |%-.11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%+4i> -            |%+4i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%+11i> -           |%+11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%+011i> -          |%+011i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%+.11i> -          |%+.11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%+11.11i> -        |%+11.11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = 123456;           
+    char str[2024] = "";
+    int a = 123456;
     sprintf(str, "<%%+-11i> -          |%+-11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = -123456;           
+    char str[2024] = "";
+    int a = -123456;
     sprintf(str, "<%%+-11i> -          |%+-11i|", a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = -123456;           
+    char str[2024] = "";
+    int a = -123456;
     sprintf(str, "<%%+*.11i> -         |%+*.11i|", 12, a);
     printf("%s\n", str);
   }
   {
-    char str[2024] = "";           
-    int a = -123456;           
+    char str[2024] = "";
+    int a = -123456;
     sprintf(str, "<%%+-*i> -           |%+-*i|", 12, a);
     printf("%s\n", str);
   }
 
   {
-    char str[2024] = "";           
-    int a = 1234567;           
+    char str[2024] = "";
+    int a = 1234567;
     sprintf(str, "<%%+11i> -           |%-+11i|", a);
     printf("%s\n", str);
     sprintf(str, "<%%+11d> -           |%+11d|", a);
@@ -383,10 +393,7 @@ void workSprintf() {
     printf("%s\n", str);
     sprintf(str, "<%%+11g> -           |%+11g|", (double)a);
     printf("%s\n", str);
-   
   }
-  
-  
 }
 
 // int bitInCifra(long long unsigned a, int b) {
@@ -410,7 +417,7 @@ void workSprintf() {
 // int getCifra2(char * str, unsigned a) {
 //   int count = 0, count1 = 0;
 //   unsigned q = 0b10000000000000000000000000000000;
-//   while (q != 0) {    
+//   while (q != 0) {
 //     if(a & q) {
 //       *str = '1';
 //     } else {
@@ -426,9 +433,9 @@ void workSprintf() {
 //       str++;
 //       count++;
 //     }
-    
-//   }   
-//   return count;  
+
+//   }
+//   return count;
 // }
 
 // void test_insert(const char *src, const char *str, size_t start_index) {

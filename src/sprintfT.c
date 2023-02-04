@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <string.h>
+
 #include "s21_string.h"
 
-int main () {
+int main() {
   {
     char str[1000] = "";
     char s21[1000] = "";
     char *str3 = "test: %.1Lg!\ntest: %.2Lg!\ntest: %.3Lg!";
     long double num = 9999.999999;
     printf("%s\n", str3);
-    printf("%d|%d\nstr=|%s|\ns21=|%s|\n",
-          sprintf(str, str3, num, num, num),
-      s21_sprintf(s21, str3, num, num, num),
-      str, s21
-      );
+    printf("%d|%d\nstr=|%s|\ns21=|%s|\n", sprintf(str, str3, num, num, num),
+           s21_sprintf(s21, str3, num, num, num), str, s21);
     printf("%d\n", strcmp(str, s21));
     printf("\n\n");
   }
@@ -24,10 +22,8 @@ int main () {
     double num = 573429.56589367;
     printf("%s\n", str3);
     printf("%d|%d\nstr=|%s|\ns21=|%s|\n",
-          sprintf(str, str3, num, num, num, num, num),
-      s21_sprintf(s21, str3, num, num, num, num, num),
-      str, s21
-      );
+           sprintf(str, str3, num, num, num, num, num),
+           s21_sprintf(s21, str3, num, num, num, num, num), str, s21);
     printf("%d\n", strcmp(str, s21));
     printf("\n\n");
   }
@@ -38,13 +34,11 @@ int main () {
     double num = 0.0000756589367;
     printf("%s\n", str3);
     printf("%d|%d\nstr=|%s|\ns21=|%s|\n",
-          sprintf(str, str3, num, num, num, num, num),
-      s21_sprintf(s21, str3, num, num, num, num, num),
-      str, s21
-      );
+           sprintf(str, str3, num, num, num, num, num),
+           s21_sprintf(s21, str3, num, num, num, num, num), str, s21);
     printf("%d\n", strcmp(str, s21));
     printf("\n\n");
-  }  
+  }
   {
     char str[1000] = "";
     char s21[1000] = "";
@@ -52,10 +46,8 @@ int main () {
     double num = 573429.56589367;
     printf("%s\n", str3);
     printf("%d|%d\nstr=|%s|\ns21=|%s|\n",
-          sprintf(str, str3, num, num, num, num, num),
-      s21_sprintf(s21, str3, num, num, num, num, num),
-      str, s21
-      );
+           sprintf(str, str3, num, num, num, num, num),
+           s21_sprintf(s21, str3, num, num, num, num, num), str, s21);
     printf("%d\n", strcmp(str, s21));
     printf("\n\n");
   }
@@ -77,6 +69,6 @@ int main () {
   //   printf("%d\n", strcmp(str, s21));
   //   printf("\n\n");
   // }
-   
+
   return 0;
 }
