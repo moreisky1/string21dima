@@ -94,9 +94,7 @@ int s21_sprintf(char *str, const char *format, ...) {
       char buf[4096] = "";
       sp.count = count;
       int size = getValue(buf, &sp, ptr);
-      if (s21_strchr("feEgG", sp.spec)){
-        formatForInputInt(sp, buf);
-      }
+      
       
       if (s21_strchr("iduoxXp", sp.spec)){
         formatForInputInt(sp, buf);
@@ -162,33 +160,40 @@ int s21_sprintf(char *str, const char *format, ...) {
 
 int getValue (char * str, Specif * sp, va_list ptr) {
   int count = 0;
-  if (sp->spec == 'c') {
+  switch (sp->spec) {
+  case 'i':
+  case 'd': {
+    long long int a = getValueModInt(*sp, ptr);
+    signedToString(str, a, *sp);
+    }
+    break;
+  case 'o':
+  case 'x':
+  case 'X':
+  case 'u': {
+    long long unsigned int a = getValueModUInt(*sp, ptr);
+    unsignedToString(str, a, *sp);
+    }
+    break;
+  case 'c': {
     count = charToString(*sp, str, ptr);
-  }
-  if (sp->spec == '%') {
+    }
+    break;
+  case 's': {
+    count = stringToString(*sp, str, ptr); 
+    }
+    break;
+  case 'n': {
+    *(va_arg(ptr, int *)) = sp->count;
+    }
+    break;
+  case '%': {
     *str = '%';
     str++;
     count++;
-  }
-  if (sp->spec == 'n') {
-    *(va_arg(ptr, int *)) = sp->count;
-  }
-  if (sp->spec == 's') {
-    count = stringToString(*sp, str, ptr);      
-  }  
-  if (sp->spec == 'i' || sp->spec == 'd') {
-    long long int a = getValueModInt(*sp, ptr);
-    signedToString(str, a, *sp);
-  }
-  if (sp->spec == 'o' || sp->spec == 'u') {
-    long long unsigned int a = getValueModUInt(*sp, ptr);
-    unsignedToString(str, a, *sp);
-  }
-  if (sp->spec == 'x' || sp->spec == 'X') {
-    long long unsigned int a = getValueModUInt(*sp, ptr);
-    unsignedToString(str, a, *sp);
-  }
-  if (sp->spec == 'p') {
+    }
+    break;
+  case 'p': {
     sp->flag.grid = 1;
     long long unsigned int a = (long long unsigned)va_arg(ptr, void *);
     #if defined (__linux__)
@@ -201,19 +206,57 @@ int getValue (char * str, Specif * sp, va_list ptr) {
     #if defined (__linux__)
     }
     #endif
-  }
-  if (sp->spec == 'f') {
+    }
+    break;
+  case 'f':
+  case 'e':
+  case 'E': {
     long double a = getValueModDoub(*sp, ptr);
-    count = doubleToString(str, a, *sp);
-  }
-  if (sp->spec == 'e' || sp->spec == 'E') {
+    if (isnan(a)) {
+      if (a < 0) {
+        s21_strcpy(str, "-nan");
+      } else {
+        s21_strcpy(str, "nan");
+      }
+    } else if (isinf(a)) {
+      if (a < 0) {
+        s21_strcpy(str, "-inf");
+      } else {
+        s21_strcpy(str, "inf");
+      }
+    } else {
+      count = doubleToString(str, a, *sp);
+      if (s21_strchr("feEgG", sp->spec)){
+        formatForInputInt(*sp, str);
+      }
+    }
+    }
+    break;
+  case 'g':
+  case 'G': {    
     long double a = getValueModDoub(*sp, ptr);
-    count = doubleToString(str, a, *sp);
+    if (isnan(a)) {
+      if (a < 0) {
+        s21_strcpy(str, "-nan");
+      } else {
+        s21_strcpy(str, "nan");
+      }
+    } else if (isinf(a)) {
+      if (a < 0) {
+        s21_strcpy(str, "-inf");
+      } else {
+        s21_strcpy(str, "inf");
+      }
+    } else {
+      count = doubleToStringG(str, a, sp);
+      if (s21_strchr("feEgG", sp->spec)){
+        formatForInputInt(*sp, str);
+      }
+    }
+    }    
+    break;
   }
-  if (sp->spec == 'g' || sp->spec == 'G') {
-    long double a = getValueModDoub(*sp, ptr);
-    count = doubleToStringG(str, a, sp);
-  }
+  
   return count;
 } 
 
@@ -877,18 +920,3 @@ int fillingInWidthBuffer(Specif sp, char * buf, int n) {
 
 //////////////////////////////////////////
 
-// int isNanInf(const char * str) {
-//   int result = 0;
-//   if ('-' == *str || '+' == *str) {
-//     str++;
-//   }
-//   char * buf = s21_to_lower(str);
-//   if (!s21_strcmp(buf, "nan")) {
-//     result = 1;
-//   }
-//   if (!s21_strcmp(buf, "inf")) {
-//     result = 2;
-//   }
-//   free(buf);
-//   return result;  
-// }

@@ -41,6 +41,7 @@ int isWhiteSpace(char c);
 void setValue(va_list ptr, Specif * sp);
 int strToStr(char * str, Specif * sp);
 
+int isNanInfS(const char * str);
 int getIntFEG (char * str, Specif * sp);
 int getIntIDU (char * str, Specif * sp);
 
@@ -216,7 +217,33 @@ int getValueS(char * str, Specif * sp) {
   case 'f':
   case 'e':
   case 'g':
-    count = getIntFEG(str, sp);
+  ;
+    int res = isNanInfS(str);
+    if (1 == res) {
+      if ('-' == *str) {
+        sp->val.ld = -NAN;
+        count += 4;
+      } else if('+' == *str) {
+        sp->val.ld = NAN;
+        count += 4;
+      } else {
+        sp->val.ld = NAN;
+        count += 3;
+      }      
+    } else if (2 == res) {
+      if ('-' == *str) {
+        sp->val.ld = -INFINITY;
+        count += 4;
+      } else if('+' == *str) {
+        sp->val.ld = INFINITY;
+        count += 4;
+      } else {
+        sp->val.ld = INFINITY;
+        count += 3;
+      }
+    } else {
+      count = getIntFEG(str, sp);
+    }    
     break;
   
   default:
@@ -225,7 +252,7 @@ int getValueS(char * str, Specif * sp) {
   return count;
 }
 
-// int isNanInf (char * str) {
+// int isNanInfS (char * str) {
 //   int result = 0;
 //   if (!s21_strncmp(str, "NAN", 3) ||
 //       !s21_strncmp(str, "nan", 3) ||
@@ -525,4 +552,20 @@ int getIntFEG (char * str, Specif * sp) {
     sp->err = -1;
   }
   return count;
+}
+
+int isNanInfS(const char * str) {
+  int result = 0;
+  if ('-' == *str || '+' == *str) {
+    str++;
+  }
+  char * buf = s21_to_lower(str);
+  if (!s21_strncmp(buf, "nan", 3)) {
+    result = 1;
+  }
+  if (!s21_strncmp(buf, "inf", 3)) {
+    result = 2;
+  }
+  free(buf);
+  return result;  
 }
