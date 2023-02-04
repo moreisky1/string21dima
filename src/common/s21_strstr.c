@@ -7,7 +7,7 @@ char* s21_strstr(const char *haystack, const char *needle) {
   int marker = 0;
   if(haystack != NULL && needle != NULL){
     if (!strcmp(needle, "")) {
-      result = haystack;
+      result = (char *)haystack;
     } else {
       while (haystack[i]!='\0') {
         j = 0;

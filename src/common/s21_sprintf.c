@@ -83,7 +83,7 @@ int s21_sprintf(char *str, const char *format, ...) {
     if (*format == '%') {
       format++;
       {
-      int a = (long long int)strpbrk(format, spec) - (long long int)format + 1;
+      int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1;
       char * buf = (char *)calloc(a, sizeof(char));
       strncpy(buf, format, a);
       initStruct(buf, &sp, ptr);

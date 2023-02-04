@@ -9,7 +9,7 @@ void* s21_trim(const char *src, const char *trim_chars) {
     if (src == NULL && trim_chars == NULL) {
         result = NULL;
     } else if (trim_chars == NULL) {
-        result = whiteSpase(src, trim_chars, 1);
+        result = whiteSpase((char *)src, (char *)trim_chars, 1);
         // int j = 0;
         // while (src[j] != '\0') {
         //     result[j] = src[j];
@@ -18,9 +18,9 @@ void* s21_trim(const char *src, const char *trim_chars) {
         // result[j] = '\0';
     } else if (src != NULL) {
         if (!s21_strlen(trim_chars)) {
-            result = whiteSpase(src, trim_chars, 1);
+            result = whiteSpase((char *)src, (char *)trim_chars, 1);
         } else {
-            result = whiteSpase(src, trim_chars, 0);
+            result = whiteSpase((char *)src, (char *)trim_chars, 0);
         }
         
         
