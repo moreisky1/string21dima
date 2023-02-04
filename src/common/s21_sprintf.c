@@ -122,10 +122,10 @@ int s21_sprintf(char *str, const char *format, ...) {
       if (s21_strchr("p", sp.spec)) {
         #if defined (__linux__)
         if (sp.flag.pl) {
-          memmove(buf + 1, buf, strlen(buf));
+          s21_memmove(buf + 1, buf, strlen(buf));
           *buf = '+';
         } else if (sp.flag.spase) {
-          memmove(buf + 1, buf, strlen(buf));
+          s21_memmove(buf + 1, buf, strlen(buf));
           *buf = ' ';
         }
         #endif
@@ -240,7 +240,7 @@ int getWchar(Specif sp, char * str, wchar_t c) {
   if ((int)strlen(buf) < sp.width) {
     if (sp.flag.min) {
       // |<-
-        strcpy(str, buf);
+        s21_strcpy(str, buf);
         for (int i = (int)strlen(buf); i < sp.width; i++) {
           str[i] = dop;
         }
@@ -250,11 +250,11 @@ int getWchar(Specif sp, char * str, wchar_t c) {
       for (int i = 0; i < sp.width - (int)strlen(buf); i++) {
         str[i] = dop;
       }
-      strcpy(str + (sp.width - (int)strlen(buf)), buf);
+      s21_strcpy(str + (sp.width - (int)strlen(buf)), buf);
     }
     count = sp.width;
   } else {
-    strcpy(str, buf);
+    s21_strcpy(str, buf);
     count = (int)strlen(buf);
   }
   return count;
@@ -325,7 +325,7 @@ int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
   if (size < sp.width) {
     if (sp.flag.min) {
       // |<-
-        strcpy(str, bus);
+        s21_strcpy(str, bus);
         for (int i = size; i < sp.width; i++) {
           str[i] = dop;
         }
@@ -335,11 +335,11 @@ int formatWcharString(Specif sp, char * str, wchar_t  * buf) {
       for (int i = 0; i < sp.width - size; i++) {
         str[i] = dop;
       }
-      strcpy(str + (sp.width - size), bus);
+      s21_strcpy(str + (sp.width - size), bus);
     }
     count = sp.width;
   } else {
-    strcpy(str, bus);
+    s21_strcpy(str, bus);
     count = size;
   }
   return count;
@@ -381,7 +381,7 @@ int stringCpy(char * str, char * buf, Specif sp) {
   if (sp.prec) {
     strncpy(str, buf, sp.precision);
   } else {
-    strcpy(str, buf);
+    s21_strcpy(str, buf);
   }
   return 0;
 }
@@ -392,7 +392,7 @@ int stringWcpy(char * str, wchar_t * buf, Specif sp) {
       /* code */
       char bus[256] = {'\0'};
       wctomb(bus, buf[i]);
-      strcpy(str,bus);
+      s21_strcpy(str,bus);
       str += strlen(bus);
     }
   } else {
@@ -400,7 +400,7 @@ int stringWcpy(char * str, wchar_t * buf, Specif sp) {
       /* code */
       char bus[256] = {'\0'};
       wctomb(bus, buf[i]);
-      strcpy(str,bus);
+      s21_strcpy(str,bus);
       str += strlen(bus);
     }
   }
@@ -837,15 +837,15 @@ int formatForInputInt(Specif sp, char * str) {
       if (s21_strchr("eEfdgG", sp.spec)){
         int n = sp.width - strlen(str);
         if (('+' == *str || '-' == *str || ' ' == *str) && sp.flag.zero) {
-          memmove(str + n + 1, str + 1, strlen(str));
+          s21_memmove(str + n + 1, str + 1, strlen(str));
           fillingInWidthBuffer(sp, str + 1, n); 
         } else {
-          memmove(str + n, str, strlen(str));
+          s21_memmove(str + n, str, strlen(str));
           fillingInWidthBuffer(sp, str, n); 
         }
       } else {
         int n = sp.width - strlen(str);
-        memmove(str + n, str, strlen(str));
+        s21_memmove(str + n, str, strlen(str));
         fillingInWidthBuffer(sp, str, n);
       }
     }
@@ -854,7 +854,7 @@ int formatForInputInt(Specif sp, char * str) {
 }
 
 int insertMy(char * str, char c, int n) {
-  memmove(str + n, str, strlen(str));
+  s21_memmove(str + n, str, strlen(str));
   memset(str, c, n);
   // for (int i = 0; i < n; i++) {
   //   str[i] = c;
