@@ -15,10 +15,10 @@
  *
  * const void* str --->
  * int c --->
- * size_t n --->
+ * s21_size_t n --->
  * return --->
  * */
-void *s21_memchr(const void *str, int c, size_t n);
+void *s21_memchr(const void *str, int c, s21_size_t n);
 
 /*#2
  * tests ---> NON
@@ -28,10 +28,10 @@ void *s21_memchr(const void *str, int c, size_t n);
  *
  * const void* str1 --->
  * const void* str2 --->
- * size_t n --->
+ * s21_size_t n --->
  * return --->
  * */
-int s21_memcmp(const void *str1, const void *str2, size_t n);
+int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
 
 /*#3
  * tests ---> NON
@@ -41,9 +41,9 @@ int s21_memcmp(const void *str1, const void *str2, size_t n);
  *
  * void* dest --->
  * const void* src --->
- * size_t n --->
+ * s21_size_t n --->
  * */
-void *s21_memcpy(void *dest, const void *src, size_t n);
+void *s21_memcpy(void *dest, const void *src, s21_size_t n);
 
 /*#4
  * tests ---> NON
@@ -53,10 +53,10 @@ void *s21_memcpy(void *dest, const void *src, size_t n);
  *
  * void* dest --->
  * const void* src --->
- * size_t n --->
+ * s21_size_t n --->
  * return --->
  * */
-void *s21_memmove(void *dest, const void *src, size_t n);
+void *s21_memmove(void *dest, const void *src, s21_size_t n);
 
 /*#5
  * tests ---> NON
@@ -67,10 +67,10 @@ void *s21_memmove(void *dest, const void *src, size_t n);
  *
  * void* str --->
  * int c --->
- * size_t n --->
+ * s21_size_t n --->
  * return --->
  * */
-void *s21_memset(void *str, int c, size_t n);
+void *s21_memset(void *str, int c, s21_size_t n);
 
 /*#6
  * tests ---> NON
@@ -94,10 +94,10 @@ char *s21_strcat(char *dest, const char *src);
  *
  * char* dest --->
  * const char* src --->
- * size_t n --->
+ * s21_size_t n --->
  * return --->
  * */
-char *s21_strncat(char *dest, const char *src, size_t n);
+char *s21_strncat(char *dest, const char *src, s21_size_t n);
 
 /*#8
  * tests ---> NON
@@ -133,10 +133,10 @@ int s21_strcmp(const char *str1, const char *str2);
  *
  * const char* str1 --->
  * const char* str2 --->
- * size_t n --->
+ * s21_size_t n --->
  * return --->
  * */
-int s21_strncmp(const char *str1, const char *str2, size_t n);
+int s21_strncmp(const char *str1, const char *str2, s21_size_t n);
 
 /*#11
  * tests ---> NON
@@ -158,10 +158,10 @@ char *s21_strcpy(char *dest, const char *src);
  *
  * char* dest --->
  * const char* src --->
- * size_t n --->
+ * s21_size_t n --->
  * return --->
  * */
-char *s21_strncpy(char *dest, const char *src, size_t n);
+char *s21_strncpy(char *dest, const char *src, s21_size_t n);
 
 /*#13
  * tests ---> NON
@@ -174,7 +174,7 @@ char *s21_strncpy(char *dest, const char *src, size_t n);
  * const char* str2 --->
  * return --->
  * */
-size_t s21_strcspn(const char *str1, const char *str2);
+s21_size_t s21_strcspn(const char *str1, const char *str2);
 
 /*#14
  * tests ---> NON
@@ -198,9 +198,9 @@ char *s21_strerror(int errnum);
  * Вычисляет длину строки str, не включая завершающий нулевой символ.
  *
  * const char* str ---> измеряемая строка
- * return ---> возвращает количество символов в строке (size_t)
+ * return ---> возвращает количество символов в строке (s21_size_t)
  * */
-size_t s21_strlen(const char *str);
+s21_size_t s21_strlen(const char *str);
 
 /*#16
  * tests ---> NON
@@ -239,7 +239,7 @@ char *s21_strrchr(const char *str, int c);
  * const char* str2 --->
  * return --->
  * */
-size_t s21_strspn(const char *str1, const char *str2);
+s21_size_t s21_strspn(const char *str1, const char *str2);
 
 /*#19
  * tests ---> NON
@@ -300,10 +300,10 @@ void *s21_to_lower(const char *str);
  *
  * const char* src --->
  * const char* str --->
- * size_t start_index --->
+ * s21_size_t start_index --->
  * return --->
  * */
-void *s21_insert(const char *src, const char *str, size_t start_index);
+void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 
 /*#24
  * tests ---> NON
