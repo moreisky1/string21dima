@@ -1,82 +1,84 @@
 #include "../s21_string_tests.h"
 
 START_TEST(s21_memmove_1) {
-  char dest_as[100] = "Hello";
-  char dest_ex[100] = "Hello";
-  const char *src = " World";
-  size_t n = 5;
-
-  memmove(dest_ex, src, n);
-  s21_memmove(dest_as, src, n);
-  //   printf("--> |%s| --> |%s|\n",dest_as, dest_ex);
-
-  int res_as = memcmp(dest_as, dest_ex, n);
-  int res_ex = memcmp(dest_as, dest_ex, n);
-  ck_assert_int_eq(res_ex, res_as);
+  char s1[] = "String project";
+  char s2[] = "String project";
+  char s3[] = "Life";
+  s21_size_t n = 4;
+  memmove(s1, s3, n);
+  s21_memmove(s2, s3, n);
+  ck_assert_mem_eq(s1, s2, n);
 }
 END_TEST
 
 START_TEST(s21_memmove_2) {
-  char dest_as[100] = "Hello";
-  char dest_ex[100] = "Hello";
-  const char *src = " Wor\0ld";
-  size_t n = 10;
-
-  memmove(dest_ex, src, n);
-  s21_memmove(dest_as, src, n);
-  //   printf("--> |%s| --> |%s|\n",dest_as, dest_ex);
-
-  int res_as = memcmp(dest_as, dest_ex, n);
-  int res_ex = memcmp(dest_as, dest_ex, n);
-  ck_assert_int_eq(res_ex, res_as);
+  char s1[] = "String project";
+  char s2[] = "String project";
+  char s3[] = "Life";
+  s21_size_t n = 0;
+  memmove(s1, s3, n);
+  s21_memmove(s2, s3, n);
+  ck_assert_mem_eq(s1, s2, n);
 }
 END_TEST
 
 START_TEST(s21_memmove_3) {
-  char dest_as[100] = "Hello";
-  char dest_ex[100] = "Hello";
-  const char *src = "";
-  size_t n = 10;
-
-  memmove(dest_ex, src, n);
-  s21_memmove(dest_as, src, n);
-  //   printf("--> |%s| --> |%s|\n",dest_as, dest_ex);
-
-  int res_as = memcmp(dest_as, dest_ex, n);
-  int res_ex = memcmp(dest_as, dest_ex, n);
-  ck_assert_int_eq(res_ex, res_as);
+  char s1[] = "String project";
+  char s2[] = "String project";
+  s21_size_t n = 0;
+  memmove(s1, s1, n);
+  s21_memmove(s2, s2, n);
+  ck_assert_mem_eq(s1, s2, n);
 }
 END_TEST
 
 START_TEST(s21_memmove_4) {
-  char dest_as[100] = "Hello";
-  char dest_ex[100] = "Hello";
-  const char *src = "Wiii";
-  size_t n = 0;
-
-  memmove(dest_ex, src, n);
-  s21_memmove(dest_as, src, n);
-  //    printf("--> |%s| --> |%s|\n",dest_as, dest_ex);
-
-  int res_as = memcmp(dest_as, dest_ex, n);
-  int res_ex = memcmp(dest_as, dest_ex, n);
-  ck_assert_int_eq(res_ex, res_as);
+  char s1[] = "String project";
+  char s2[] = "String project";
+  s21_size_t n = 4;
+  memmove(s1, s1, n);
+  s21_memmove(s2, s2, n);
+  ck_assert_mem_eq(s1, s2, n);
 }
 END_TEST
 
 START_TEST(s21_memmove_5) {
-  char dest_as[100] = "Hello";
-  char dest_ex[100] = "Hello";
-  const char *src = "\0\0\0\0\0\0\0\0\0\0\0\n";
-  size_t n = 10;
+  char s1[] = "String project";
+  char s2[] = "String project";
+  s21_size_t n = 0;
+  memmove(s1, s1 + 2, n);
+  s21_memmove(s2, s2 + 2, n);
+  ck_assert_mem_eq(s1, s2, n);
+}
+END_TEST
 
-  memmove(dest_ex, src, n);
-  s21_memmove(dest_as, src, n);
-  //    printf("--> |%s| --> |%s|\n",dest_as, dest_ex);
+START_TEST(s21_memmove_6) {
+  char s1[] = "String project";
+  char s2[] = "String project";
+  s21_size_t n = 4;
+  memmove(s1, s1, n);
+  s21_memmove(s2, s2, n);
+  ck_assert_mem_eq(s1, s2, n);
+}
+END_TEST
 
-  int res_as = memcmp(dest_as, dest_ex, n);
-  int res_ex = memcmp(dest_as, dest_ex, n);
-  ck_assert_int_eq(res_ex, res_as);
+START_TEST(s21_memmove_7) {
+  char s1[] = "String project";
+  char s2[] = "String project";
+  s21_size_t n = 0;
+  memmove(s1 + 2, s1, n);
+  s21_memmove(s2 + 2, s2, n);
+  ck_assert_mem_eq(s1, s2, n);
+}
+END_TEST
+
+START_TEST(s21_memmove_8) {
+  char s1[] = "String project";
+  char s2[] = "String project";
+  s21_size_t n = 4;
+  memmove(s1 + 2, s1, n);
+  s21_memmove(s2 + 2, s2, n);
+  ck_assert_mem_eq(s1, s2, n);
 }
 END_TEST
 
@@ -89,6 +91,9 @@ Suite *s21_memmove_create_suite(void) {
   tcase_add_test(tc, s21_memmove_3);
   tcase_add_test(tc, s21_memmove_4);
   tcase_add_test(tc, s21_memmove_5);
+  tcase_add_test(tc, s21_memmove_6);
+  tcase_add_test(tc, s21_memmove_7);
+  tcase_add_test(tc, s21_memmove_8);
 
   suite_add_tcase(s, tc);
   return s;

@@ -1,6 +1,93 @@
 #include "../s21_string_tests.h"
 
-START_TEST(s21_memset_1) { ck_assert_int_eq(1, 1); }
+START_TEST(s21_memset_1) {
+  char s1[] = "Strng project";
+  char s2[] = "Strng project";
+  int ch = ' ';
+  s21_size_t n = 0;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_2) {
+  char s1[] = "Strng project";
+  char s2[] = "Strng project";
+  int ch = ' ';
+  s21_size_t n = 4;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_3) {
+  char s1[] = "Strng project";
+  char s2[] = "Strng project";
+  int ch = ' ';
+  s21_size_t n = strlen(s1);
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_4) {
+  char s1[] = "";
+  char s2[] = "";
+  int ch = '0';
+  s21_size_t n = 0;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_5) {
+  char s1[] = "";
+  char s2[] = "";
+  int ch = '0';
+  s21_size_t n = 4;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_6) {
+  char s1[] = "";
+  char s2[] = "";
+  int ch = '0';
+  s21_size_t n = strlen(s1);
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_7) {
+  char s1[] = "Strng project";
+  char s2[] = "Strng project";
+  int ch = ' ';
+  s21_size_t n = strlen(s1) + 2;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_8) {
+  char s1[] = "";
+  char s2[] = "";
+  int ch = '0';
+  s21_size_t n = strlen(s1) + 2;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_9) {
+  char s1[] = "Strng project";
+  char s2[] = "Strng project";
+  int ch = 65;
+  s21_size_t n = 7;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
+END_TEST
+
+START_TEST(s21_memset_10) {
+  char s1[] = "Strng project";
+  char s2[] = "Strng project";
+  int ch = 65;
+  s21_size_t n = 14;
+  ck_assert_str_eq(memset(s1, ch, n), s21_memset(s2, ch, n));
+}
 END_TEST
 
 Suite *s21_memset_create_suite(void) {
@@ -8,6 +95,15 @@ Suite *s21_memset_create_suite(void) {
   TCase *tc = tcase_create("Core of s21_memset");
   /*Tests*/
   tcase_add_test(tc, s21_memset_1);
+  tcase_add_test(tc, s21_memset_2);
+  tcase_add_test(tc, s21_memset_3);
+  tcase_add_test(tc, s21_memset_4);
+  tcase_add_test(tc, s21_memset_5);
+  tcase_add_test(tc, s21_memset_6);
+  tcase_add_test(tc, s21_memset_7);
+  tcase_add_test(tc, s21_memset_8);
+  tcase_add_test(tc, s21_memset_9);
+  tcase_add_test(tc, s21_memset_10);
 
   suite_add_tcase(s, tc);
   return s;

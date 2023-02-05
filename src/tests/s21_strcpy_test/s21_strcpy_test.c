@@ -1,80 +1,74 @@
 #include "../s21_string_tests.h"
 
 START_TEST(s21_strcpy_1) {
-  char src[10] = "Hello";
-  char dest_ac[10];
-  s21_strcpy(dest_ac, src);
-  char dest_ex[10];
-  strcpy(dest_ex, src);
-
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char str1[100] = "String project";
+  char str2[100] = "String project";
+  char str3[] = "String project";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
 }
 END_TEST
 
 START_TEST(s21_strcpy_2) {
-  char src[10] = "";
-  char dest_ac[10];
-  s21_strcpy(dest_ac, src);
-  char dest_ex[10];
-  strcpy(dest_ex, src);
-
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char str1[100] = "Das\0Fas";
+  char str2[100] = "Das\0Fas";
+  char str3[] = "String project";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
 }
 END_TEST
 
 START_TEST(s21_strcpy_3) {
-  char src[100] = "^^^^^|\n ;oerkg;dogn\bsdrd";
-  char dest_ac[100];
-  s21_strcpy(dest_ac, src);
-  char dest_ex[100];
-  strcpy(dest_ex, src);
-
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char str1[100] = "Das\0Fas";
+  char str2[100] = "Das\0Fas";
+  char str3[] = "Stri";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
 }
 END_TEST
 
 START_TEST(s21_strcpy_4) {
-  char *src = "\n\n\n\n\n\n";
-  char dest_ac[10];
-  s21_strcpy(dest_ac, src);
-  char dest_ex[10];
-  strcpy(dest_ex, src);
-
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char str1[100] = "String project";
+  char str2[100] = "String project";
+  char str3[] = "Das\0Fas";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
 }
 END_TEST
 
 START_TEST(s21_strcpy_5) {
-  char src[100] = "Hello\n Wor\0ld ";
-  char dest_ac[100];
-  s21_strcpy(dest_ac, src);
-  char dest_ex[100];
-  strcpy(dest_ex, src);
-
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char str1[100] = "\0";
+  char str2[100] = "\0";
+  char str3[] = "String project";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
 }
 END_TEST
 
 START_TEST(s21_strcpy_6) {
-  char src[10] = "\0";
-  char dest_ac[10];
-  s21_strcpy(dest_ac, src);
-  char dest_ex[10];
-  strcpy(dest_ex, src);
+  char str1[100] = "String project";
+  char str2[100] = "String project";
+  char str3[] = "\0";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
+}
+END_TEST
 
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+START_TEST(s21_strcpy_7) {
+  char str1[100] = " ";
+  char str2[100] = " ";
+  char str3[] = "";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
+}
+END_TEST
+
+START_TEST(s21_strcpy_8) {
+  char str1[100] = "";
+  char str2[100] = "";
+  char str3[] = " ";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
+}
+END_TEST
+
+START_TEST(s21_strcpy_9) {
+  char str1[100] = "thi00s";
+  char str2[100] = "thi00s";
+  char str3[] = "\0String project";
+  ck_assert_pstr_eq(strcpy(str1, str3), s21_strcpy(str2, str3));
 }
 END_TEST
 
@@ -88,6 +82,10 @@ Suite *s21_strcpy_create_suite(void) {
   tcase_add_test(tc, s21_strcpy_4);
   tcase_add_test(tc, s21_strcpy_5);
   tcase_add_test(tc, s21_strcpy_6);
+  tcase_add_test(tc, s21_strcpy_7);
+  tcase_add_test(tc, s21_strcpy_8);
+  tcase_add_test(tc, s21_strcpy_9);
+  
   suite_add_tcase(s, tc);
   return s;
 }
