@@ -7,7 +7,7 @@
  * */
 
 char *s21_strcat(char *dest, const char *src) {
-  if (dest != NULL && src != NULL) {
+  if (dest != S21_NULL && src != S21_NULL) {
     int i = 0, j = 0;
     while (dest[i] != '\0') {
       i++;

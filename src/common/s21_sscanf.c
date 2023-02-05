@@ -37,6 +37,7 @@ typedef struct specif {
 
 char toUperChar(char c);
 char toLowerChar(char c);
+s21_size_t strlen_mod(char *s);
 int isWhiteSpace(char c);
 
 void setValue(va_list ptr, Specif *sp);
@@ -56,8 +57,6 @@ int getValueS(char *str, Specif *sp);
 int initStructS(char *str, Specif *sp);
 int parseToIntS(char *str, int *val);
 
-int s21_sscanf(const char *src, const char *format, ...);
-
 int s21_sscanf(const char *str, const char *format, ...) {
   int count = 0;
   int countB = 0;
@@ -73,8 +72,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
       flags = 1;
       format++;
       {
-        int a = (long long int)s21_strpbrk(format, spec) -
-                (long long int)format + 1;
+        int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1;
         char *buf = (char *)calloc(a, sizeof(char));
         s21_strncpy(buf, format, a);
         initStructS(buf, &sp);
@@ -87,14 +85,29 @@ int s21_sscanf(const char *str, const char *format, ...) {
         format += a;
       }
       {
+        int size = 0;
         sp.count = count;
-        int size = getValueS((char *)str, &sp);
-        if ('p' == sp.spec && !size) {
-          sp.spec = '%';
+        if ('\0' == *str && 'n' != sp.spec && '%' != sp.spec) {
+          sp.err = -1;
+        } else {
+
+          while (isWhiteSpace(*str) && 'c' != sp.spec) {
+            str++;
+            countB++;
+          }
+          if (sp.setWidth && !sp.width) {
+            sp.width = 1;
+          }
+          size = getValueS((char *)str, &sp);
+          if ('p' == sp.spec && !size) {
+            sp.spec = '%';
+          }
         }
         if (sp.err) {
-          if ('d' == sp.spec && -1 == sp.err) {
-            count = -1;
+          if (-1 == sp.err) {
+            if (!count) {
+              count = -1;
+            }
           }
           break;
         }
@@ -129,18 +142,22 @@ int s21_sscanf(const char *str, const char *format, ...) {
   va_end(ptr);
   str = start;
   format = startf;
-  // free(str);
   return count;
 }
 
 int strToStr(char *str, Specif *sp) {
   s21_size_t counter = 0;
   s21_size_t size = 0;
-  int len = (int)s21_strlen(str);
+  if (isWhiteSpace(*str)) {
+    str++;
+    counter++;
+  }
+  int len = (int)strlen_mod(str);
   size = sp->setWidth ? (unsigned long)sp->width : len;
   char *string = calloc(size + 1, sizeof(char));
+  char spase[7] = {9, 10, 11, 12, 13, 32, 0};
   if (len) {
-    for (s21_size_t i = 0; i < size && *str && !isWhiteSpace(*str); ++i) {
+    for (s21_size_t i = 0; i < size && *str && !s21_strchr(spase, *str); ++i) {
       string[i] = *(str);
       str++;
       counter++;
@@ -150,14 +167,24 @@ int strToStr(char *str, Specif *sp) {
   return counter < size ? counter : size;
 }
 
+s21_size_t strlen_mod(char *s) {
+  s21_size_t len = 0;
+  while (*s != 0 && isWhiteSpace(*s) == 0) {
+    s++;
+    len++;
+  }
+  return len;
+}
+
 int isWhiteSpace(char c) {
   char spase[7] = {9, 10, 11, 12, 13, 32, 0};
   return strchrsc(spase, c) ? 1 : 0;
 }
 
 int strToChar(const char *str, Specif *sp) {
-  size_t len = s21_strlen(str);
-  size_t size = sp->setWidth ? (sp->width < len ? sp->width : len) : 1;
+  s21_size_t len = s21_strlen(str);
+  
+  s21_size_t size = sp->setWidth ? (sp->width < len ? sp->width : len) : 1;
   char *pointer = malloc(size * sizeof(char));
   int spa = 0;
   s21_memcpy(pointer, str, size);
@@ -233,6 +260,7 @@ int getValueS(char *str, Specif *sp) {
       } else {
         count = getIntFEG(str, sp);
       }
+
       break;
 
     default:
@@ -241,19 +269,8 @@ int getValueS(char *str, Specif *sp) {
   return count;
 }
 
-// int isNanInfS (char * str) {
-//   int result = 0;
-//   if (!s21_strncmp(str, "NAN", 3) ||
-//       !s21_strncmp(str, "nan", 3) ||
-//       !s21_strncmp(str, "INF", 3) ||
-//       !s21_strncmp(str, "inf", 3)) {
-//     result = 3;
-//   }
-//   return result;
-// }
-
 int getIntIDU(char *str, Specif *sp) {
-  // long long int max = INT64_MAX;
+  long long int max = INT64_MAX;
   long long int result = 0;
   int err = 0;
   int count = 0;
@@ -297,10 +314,11 @@ int getIntIDU(char *str, Specif *sp) {
     str++;
     count++;
   }
-  char *suc = NULL;
+  char *suc = S21_NULL;
   if ('o' == sp->spec) {
     suc = "01234567";
-  } else if ('x' == sp->spec || 'i' == sp->spec || 'p' == sp->spec) {
+  } else if ('x' == toLowerChar(sp->spec) || 'i' == sp->spec ||
+             'p' == sp->spec) {
     suc = "0123456789abcdefABCDEF";
   } else {
     suc = "0123456789";
@@ -311,7 +329,7 @@ int getIntIDU(char *str, Specif *sp) {
       sp->width = sp->width > size ? size : sp->width;
       char *buf = (char *)calloc((sp->width + 1), sizeof(char));
       s21_strncpy(buf, str, sp->width);
-      result = strtoll(buf, NULL, notion);
+      result = strtoll(buf, S21_NULL, notion);
       count += sp->width;
       free(buf);
     } else {
@@ -343,13 +361,11 @@ char toUperChar(char c) { return (96 < c && 123 > c) ? c - 32 : c; }
 char toLowerChar(char c) { return (64 < c && 91 > c) ? c + 32 : c; }
 
 void setValue(va_list ptr, Specif *sp) {
-  // long long unsigned mi = 9223372036854775807;
-  if ('*' != sp->pod /*&& '%' == sp->spec*/) {
-    void *pointer = NULL;
+  if ('*' != sp->pod) {
+    void *pointer = S21_NULL;
     if ('p' != sp->spec && '%' != sp->spec) {
       pointer = va_arg(ptr, void *);
     }
-
     switch (toLowerChar(sp->spec)) {
       case 'd':
       case 'i':
@@ -475,7 +491,7 @@ int parseToIntS(char *str, int *val) {
 }
 
 char *strchrsc(const char *str, int c) {
-  char *res = NULL;
+  char *res = S21_NULL;
   int size = (int)s21_strlen(str);
   if (0 <= c && 127 >= c) {
     for (int i = 0; i < size; i++) {
@@ -489,7 +505,6 @@ char *strchrsc(const char *str, int c) {
 }
 
 int getIntFEG(char *str, Specif *sp) {
-  // long double max = MAXF;
   long double result = 0;
   int err = 0;
   int count = 0;
@@ -513,13 +528,16 @@ int getIntFEG(char *str, Specif *sp) {
     str++;
     count++;
   }
+  if ('.' == *str && !strchrsc("0123456789", *(str + 1))) {
+    sp->err = 1;
+  }
   if (!sp->err && strchrsc("0123456789.", *str)) {
     if (sp->setWidth) {
       int size = (int)s21_strspn(str, "0123456789e-+.");
       sp->width = sp->width > size ? size : sp->width;
       char *buf = (char *)calloc((sp->width + 1), sizeof(char));
       s21_strncpy(buf, str, sp->width);
-      result = strtold(buf, NULL);
+      result = strtold(buf, S21_NULL);
       count += sp->width;
       free(buf);
     } else {
@@ -527,15 +545,12 @@ int getIntFEG(char *str, Specif *sp) {
       result = strtold(str, &str);
       count += str - st;
     }
-    // if (errno == ERANGE && 0 > mark && result == INT64_MAX) {
     result *= mark;
-    //   result -= 1;
-    // } else {
-    //   result *= mark;
-    // }
     sp->val.ld = result;
   } else {
-    sp->err = -1;
+    if (!sp->err) {
+      sp->err = 1;
+    }
   }
   return count;
 }

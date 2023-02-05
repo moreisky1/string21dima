@@ -13,8 +13,8 @@ START_TEST(sprintf_1_n) {
 END_TEST
 
 START_TEST(sprintf_2_n) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = "";
+  char str2[100] = "";
   char *str3 = "Test %o T%nest %o%n";
   int val = 012;
   int val2 = 017;
@@ -28,8 +28,8 @@ START_TEST(sprintf_2_n) {
 END_TEST
 
 // START_TEST(sprintf_3_n) {
-//   char str1[100];
-//   char str2[100];
+//   char str1[100] = "";
+//   char str2[100] = "";
 //   char *str3 = "%o Test %o Te%-+#nst %o";
 //   int val = 3015;
 //   int val2 = 712;
@@ -43,8 +43,8 @@ END_TEST
 // END_TEST
 
 // START_TEST(sprintf_4_n) {
-//   char str1[100];
-//   char str2[100];
+//   char str1[100] = "";
+//   char str2[100] = "";
 //   char *str3 = "%lo Test %lo Test %ho%34.23n";
 //   long int val = 3088675747373646;
 //   unsigned long int val2 = 33030030303;

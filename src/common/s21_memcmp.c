@@ -25,16 +25,12 @@ int s21_memcmp(const void *str1, const void *str2, size_t n) {
   int i = 0;
   unsigned char *st1 = (unsigned char *)str1;
   unsigned char *st2 = (unsigned char *)str2;
-
   while (i < n) {
     if (st1[i] != st2[i]) {
       break;
     }
     i++;
   }
-  // if (st1[i] - st2[i] > 0) result = 1;
-  // if (st1[i] - st2[i] < 0) result = (-1);
-
   if (0 == n || i == n)
     result = 0;
   else

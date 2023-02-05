@@ -2,9 +2,9 @@
 
 void *s21_to_upper(const char *str) {
   char *result;
-  size_t i = 0;
-  if (str == NULL) {
-    result = NULL;
+  s21_size_t i = 0;
+  if (str == S21_NULL) {
+    result = S21_NULL;
   } else {
     result = malloc(((s21_strlen(str) + 1) * sizeof(char)));
     while (str[i] != '\0') {

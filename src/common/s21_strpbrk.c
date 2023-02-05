@@ -16,7 +16,7 @@
  * возвращается нулевой указатель.
  * */
 char *s21_strpbrk(const char *str1, const char *str2) {
-  char *result = NULL;
+  char *result = S21_NULL;
   int j = 0, i = 0;
   while (str1[i]) {
     while (str2[j]) {

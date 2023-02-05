@@ -1,5 +1,4 @@
 #include "../s21_string.h"
-// #include "../s21_strerror.h"
 #include <string.h>
 
 #if defined(__linux__)
@@ -261,9 +260,6 @@ void compil(char *buf, char *str, int errnum);
 int signedToStringE(char *str, int a);
 int getCiferE(char *str, int a);
 
-char *strcat_int(char *dest, int n);
-char *int_to_str(int n);
-
 char *s21_strerror(int errnum) {
   char *result;
   char *errors[] = ERRORS;
@@ -288,43 +284,6 @@ void compil(char *buf, char *str, int errnum) {
   signedToStringE(bus, errnum);
   strcat(buf, bus);
 }
-
-// char* int_to_str(int n) {
-//     char res[16];
-//     int i = 0;
-//     do {
-//         res[i] = n % 10 + '0';
-//         n /= 10;
-//         i++;
-//     } while (n != 0);
-//     res[i]='\0';
-//     char buf[16];
-//     int j = 0;
-//     i--;
-//     while (i >= 0) {
-//         buf[j] = res[i];
-//         i--;
-//         j++;
-//     }
-//     buf[j] = '\0';
-//     char* r = buf;
-//     return r;
-// }
-
-// char* strcat_int(char* dest, int n) {
-//     int i =0, j = 0;
-//     char* nn = int_to_str(n);
-//     while(dest[i] != '\0') {
-//         i++;
-//     }
-//     while (nn[j] != '\0') {
-//         dest[i] = nn[j];
-//         j++;
-//         i++;
-//     }
-//     dest[i] = '\0';
-//     return dest;
-// }
 
 int signedToStringE(char *str, int a) {
   int count = 0;

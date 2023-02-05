@@ -3,10 +3,10 @@
 #include "../s21_string.h"
 
 char *s21_strstr(const char *haystack, const char *needle) {
-  char *result = NULL;
+  char *result = S21_NULL;
   int i = 0, j = 0;
   int marker = 0;
-  if (haystack != NULL && needle != NULL) {
+  if (haystack != S21_NULL && needle != S21_NULL) {
     if (!strcmp(needle, "")) {
       result = (char *)haystack;
     } else {

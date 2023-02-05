@@ -1,7 +1,7 @@
 #include "../s21_string.h"
 
-char *s21_strncat(char *dest, const char *src, size_t n) {
-  if (dest != NULL && src != NULL && n > 0) {
+char *s21_strncat(char *dest, const char *src, s21_size_t n) {
+  if (dest != S21_NULL && src != S21_NULL && n > 0) {
     int i = 0, j = 0;
     while (dest[i] != '\0') {
       i++;

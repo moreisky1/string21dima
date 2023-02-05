@@ -17,10 +17,9 @@
  * Если значение не найдено, функция возвращает нулевой указатель.
  * */
 char *s21_strrchr(const char *str, int c) {
-  char *result = NULL;
+  char *result = S21_NULL;
   int temp = -1;
   int i = 0;
-
   while (str[i] != '\0') {
     if (str[i] == c) {
       temp = i;

@@ -20,7 +20,7 @@
  * назначения.
  * */
 
-void *s21_memmove(void *dest, const void *src, size_t n) {
+void *s21_memmove(void *dest, const void *src, s21_size_t n) {
   char *d = (char *)dest;
   char *s = (char *)src;
   if (src < dest) {
@@ -31,12 +31,11 @@ void *s21_memmove(void *dest, const void *src, size_t n) {
     }
   } else {
     int i = 0;
-    while ((size_t)i < n) {
+    while ((s21_size_t)i < n) {
       d[i] = s[i];
       i++;
     }
   }
-  // 9170 7020
   dest = d;
   return dest;
 }

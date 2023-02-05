@@ -1,15 +1,15 @@
 #include "../s21_string.h"
 
-size_t s21_strespn(const char *str1, const char *str2);
+s21_size_t s21_strespn(const char *str1, const char *str2);
 char *whiteSpase(char *src, char *trim_chars, int flag);
 
 void *s21_trim(const char *src, const char *trim_chars) {
-  char *result = NULL;
-  if (src == NULL && trim_chars == NULL) {
-    result = NULL;
-  } else if (trim_chars == NULL) {
+  char *result = S21_NULL;
+  if (src == S21_NULL && trim_chars == S21_NULL) {
+    result = S21_NULL;
+  } else if (trim_chars == S21_NULL) {
     result = whiteSpase((char *)src, (char *)trim_chars, 1);
-  } else if (src != NULL) {
+  } else if (src != S21_NULL) {
     if (!s21_strlen(trim_chars)) {
       result = whiteSpase((char *)src, (char *)trim_chars, 1);
     } else {
@@ -20,7 +20,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
 }
 
 char *whiteSpase(char *src, char *trim_chars, int flag) {
-  size_t size = s21_strlen(src), start_step = 0, end_step = 0;
+  s21_size_t size = s21_strlen(src), start_step = 0, end_step = 0;
   char *result = (char *)malloc((size + 1) * sizeof(char));
   if (flag) {
     char whitespase[] = {9, 10, 11, 12, 13, 32, '\0'};
@@ -36,10 +36,10 @@ char *whiteSpase(char *src, char *trim_chars, int flag) {
   return result;
 }
 
-size_t s21_strespn(const char *str1, const char *str2) {
-  size_t size = s21_strlen(str1);
+s21_size_t s21_strespn(const char *str1, const char *str2) {
+  s21_size_t size = s21_strlen(str1);
   char *buf = (char *)malloc((size + 1) * sizeof(char));
-  for (size_t i = 0; i < size; i++) {
+  for (s21_size_t i = 0; i < size; i++) {
     buf[i] = str1[size - 1 - i];
   }
   buf[size] = 0;
