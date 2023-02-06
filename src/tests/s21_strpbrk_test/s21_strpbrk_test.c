@@ -3,52 +3,35 @@
 START_TEST(s21_strpbrk_1) {
   char *str1 = "Hello";
   char *str2 = "erio";
-  char *as = s21_strpbrk(str1, str2);
-  char *ex = strpbrk(str1, str2);
-  // printf("--> |%s| --> |%s|\n",as,ex);
-  ck_assert_str_eq(as, ex);
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
 }
 END_TEST
 
 START_TEST(s21_strpbrk_2) {
   char *str1 = "Hello";
   char *str2 = "olleH";
-  char *as = s21_strpbrk(str1, str2);
-  char *ex = strpbrk(str1, str2);
-  // printf("--> |%s| --> |%s|\n",as,ex);
-  ck_assert_str_eq(as, ex);
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
 }
 END_TEST
 
 START_TEST(s21_strpbrk_3) {
   char *str1 = "Hello";
   char *str2 = "Hello";
-  char *as = s21_strpbrk(str1, str2);
-  char *ex = strpbrk(str1, str2);
-  // printf("--> |%s| --> |%s|\n",as,ex);
-  ck_assert_str_eq(as, ex);
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
 }
 END_TEST
 
 START_TEST(s21_strpbrk_4) {
   char *str1 = "Hello";
   char *str2 = "";
-  char *as = s21_strpbrk(str1, str2);
-  char *ex = strpbrk(str1, str2);
-  // printf("--> |%s| --> |%s|\n",as,ex);
-  ck_assert_ptr_null(as);
-  ck_assert_ptr_null(ex);
+ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
 }
 END_TEST
 
 START_TEST(s21_strpbrk_5) {
   char *str1 = "Hello";
   char *str2 = "bup";
-  char *as = s21_strpbrk(str1, str2);
-  char *ex = strpbrk(str1, str2);
-  // printf("--> |%s| --> |%s|\n",as,ex);
-  ck_assert_ptr_null(as);
-  ck_assert_ptr_null(ex);
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
 }
 END_TEST
 

@@ -1,4 +1,4 @@
-#include "test_me.h"
+#include "../s21_string_tests.h"
 
 START_TEST(s21_memcmp_1) {
   char s1[] = "String project";

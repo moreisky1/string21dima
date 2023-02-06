@@ -1,6 +1,38 @@
 #include "../s21_string_tests.h"
 
-START_TEST(s21_strchr_1) { ck_assert_int_eq(1, 1); }
+START_TEST(s21_strchr_1) {
+  char s[] = "String project";
+  int ch = 'S';
+  ck_assert_pstr_eq(strchr(s, ch), s21_strchr(s, ch));
+}
+END_TEST
+
+START_TEST(s21_strchr_2) {
+  char s[] = "String project";
+  int ch = '\0';
+  ck_assert_pstr_eq(strchr(s, ch), s21_strchr(s, ch));
+}
+END_TEST
+
+START_TEST(s21_strchr_3) {
+  char s[] = "String project";
+  int ch = ' ';
+  ck_assert_pstr_eq(strchr(s, ch), s21_strchr(s, ch));
+}
+END_TEST
+
+START_TEST(s21_strchr_4) {
+  char s[] = "String project";
+  int ch = 't';
+  ck_assert_pstr_eq(strchr(s, ch), s21_strchr(s, ch));
+}
+END_TEST
+
+START_TEST(s21_strchr_5) {
+  char s[] = "String project";
+  int ch = '0';
+  ck_assert_pstr_eq(strchr(s, ch), s21_strchr(s, ch));
+}
 END_TEST
 
 Suite *s21_strchr_create_suite(void) {
@@ -8,6 +40,10 @@ Suite *s21_strchr_create_suite(void) {
   TCase *tc = tcase_create("Core of s21_strchr");
   /*Tests*/
   tcase_add_test(tc, s21_strchr_1);
+  tcase_add_test(tc, s21_strchr_2);
+  tcase_add_test(tc, s21_strchr_3);
+  tcase_add_test(tc, s21_strchr_4);
+  tcase_add_test(tc, s21_strchr_5);
 
   suite_add_tcase(s, tc);
   return s;

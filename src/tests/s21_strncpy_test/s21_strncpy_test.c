@@ -1,72 +1,65 @@
 #include "../s21_string_tests.h"
 
 START_TEST(s21_strncpy_1) {
-  char src[10] = "Hello";
-  char dest_ac[10];
-  s21_strncpy(dest_ac, src, 10);
-  char dest_ex[10];
-  strncpy(dest_ex, src, 10);
-
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char s1[20] = "String project";
+  char s2[20] = "String project";
+  char s3[] = "Good";
+  s21_size_t n = 5;
+  ck_assert_pstr_eq(strncpy(s1, s3, n), s21_strncpy(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncpy_2) {
-  char src[10] = "";
-  char dest_ac[10];
-  s21_strncpy(dest_ac, src, 1);
-  char dest_ex[10];
-  strncpy(dest_ex, src, 1);
-
-  ck_assert_str_eq(dest_ac, src);
-  ck_assert_str_eq(src, dest_ex);
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char s1[20] = "String project";
+  char s2[20] = "String project";
+  char s3[] = "\0";
+  s21_size_t n = 1;
+  ck_assert_pstr_eq(strncpy(s1, s3, n), s21_strncpy(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncpy_3) {
-  char src[100] = "aaaaaaaaaaa|";
-  char dest_ac[100];
-  char dest_ex[100];
-  s21_strncpy(dest_ex, src, 5);
-  strncpy(dest_ac, src, 5);
-
-  ck_assert_str_eq(dest_ac, dest_ex);
-}
-END_TEST
-
-START_TEST(s21_strncpy_4) {
-  char *src = "\n\n\n\n\n\n";
-  char dest_ac[10];
-  s21_strncpy(dest_ac, src, 3);
-  char dest_ex[10];
-  strncpy(dest_ex, src, 3);
-
-  ck_assert_str_eq(dest_ac, dest_ex);
-}
-END_TEST
-
-START_TEST(s21_strncpy_5) {
-  char src[100] = "Hello\n Wor\0ld ";
-  char dest_ac[100];
-  s21_strncpy(dest_ac, src, 5);
-  char dest_ex[100];
-  strncpy(dest_ex, src, 5);
-
-  ck_assert_str_eq(dest_ac, dest_ex);
+  char s1[30] = "String project";
+  char s2[30] = "String project";
+  char s3[] = "DAS";
+  s21_size_t n = 1;
+  ck_assert_pstr_eq(strncpy(s1, s3, n), s21_strncpy(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncpy_6) {
-  char src[10] = "\0";
-  char dest_ac[10];
-  s21_strncpy(dest_ac, src, 1);
-  char dest_ex[10];
-  strncpy(dest_ex, src, 1);
+  char s1[30] = "String project";
+  char s2[30] = "String project";
+  char s3[] = "DAS";
+  s21_size_t n = 0;
+  ck_assert_pstr_eq(strncpy(s1, s3, n), s21_strncpy(s2, s3, n));
+}
+END_TEST
 
-  ck_assert_str_eq(dest_ac, dest_ex);
+START_TEST(s21_strncpy_4) {
+  char s1[5] = "";
+  char s2[5] = "";
+  char s3[] = "";
+  s21_size_t n = 0;
+  ck_assert_pstr_eq(strncpy(s1, s3, n), s21_strncpy(s2, s3, n));
+}
+END_TEST
+
+START_TEST(s21_strncpy_5) {
+  char s1[5] = "";
+  char s2[5] = "";
+  char s3[] = "\0";
+  s21_size_t n = 1;
+  ck_assert_pstr_eq(strncpy(s1, s3, n), s21_strncpy(s2, s3, n));
+}
+END_TEST
+
+START_TEST(s21_strncpy_7) {
+  char s1[5] = "";
+  char s2[5] = "";
+  char s3[] = "";
+  s21_size_t n = 4;
+  ck_assert_pstr_eq(strncpy(s1, s3, n), s21_strncpy(s2, s3, n));
 }
 END_TEST
 
@@ -80,6 +73,7 @@ Suite *s21_strncpy_create_suite(void) {
   tcase_add_test(tc, s21_strncpy_4);
   tcase_add_test(tc, s21_strncpy_5);
   tcase_add_test(tc, s21_strncpy_6);
+  tcase_add_test(tc, s21_strncpy_7);
 
   suite_add_tcase(s, tc);
   return s;

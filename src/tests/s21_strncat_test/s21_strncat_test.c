@@ -1,65 +1,101 @@
 #include "../s21_string_tests.h"
 
 START_TEST(s21_strncat_1) {
-  char str_dest_as[100] = "Hello";
-  char str_dest_eq[100] = "Hello";
-  const char str_src[] = " World";
-  ck_assert_str_eq(s21_strncat(str_dest_as, str_src, 100),
-                   strncat(str_dest_eq, str_src, 100));
+  char s1[30] = "String project";
+  char s2[30] = "String project";
+  char s3[] = "String project";
+  s21_size_t n = 1;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncat_2) {
-  char str_dest_as[100] = "Hello";
-  char str_dest_eq[100] = "Hello";
-  const char str_src[] = " World";
-  ck_assert_str_eq(s21_strncat(str_dest_as, str_src, 2),
-                   strncat(str_dest_eq, str_src, 2));
+  char s1[30] = "String project";
+  char s2[30] = "String project";
+  char s3[] = "\0";
+  s21_size_t n = 1;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncat_3) {
-  char str_dest_as[100] = "Hello";
-  char str_dest_eq[100] = "Hello";
-  const char str_src[] = " World";
-  ck_assert_str_eq(s21_strncat(str_dest_as, str_src, 0),
-                   strncat(str_dest_eq, str_src, 0));
+  char s1[30] = "String project";
+  char s2[30] = "String project";
+  char s3[] = "\n\0\\d";
+  s21_size_t n = 3;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncat_4) {
-  char str_dest_as[100] = "\0";
-  char str_dest_eq[100] = "\0";
-  const char *str_src = "Hello";
-  ck_assert_str_eq(s21_strncat(str_dest_as, str_src, 3),
-                   strncat(str_dest_eq, str_src, 3));
+  char s1[30] = "String project";
+  char s2[30] = "String project";
+  char s3[] = "";
+  s21_size_t n = 0;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncat_5) {
-  char str_dest_as[100] = "Hello";
-  char str_dest_eq[100] = "Hello";
-  const char str_src[] = " \0";
-  ck_assert_str_eq(s21_strncat(str_dest_as, str_src, 1),
-                   strncat(str_dest_eq, str_src, 1));
+  char s1[30] = "";
+  char s2[30] = "";
+  char s3[] = "String project";
+  s21_size_t n = 13;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncat_6) {
-  char str_dest_as[100] = "Hello";
-  char str_dest_eq[100] = "Hello";
-  const char str_src[] = "\0";
-  ck_assert_str_eq(s21_strncat(str_dest_as, str_src, 5),
-                   strncat(str_dest_eq, str_src, 5));
+  char s1[30] = "";
+  char s2[30] = "";
+  char s3[] = "String project";
+  s21_size_t n = 3;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
 START_TEST(s21_strncat_7) {
-  char str_dest_as[100] = "\0";
-  char str_dest_eq[100] = "\0";
-  const char str_src[] = "\0";
-  ck_assert_str_eq(s21_strncat(str_dest_as, str_src, 1),
-                   strncat(str_dest_eq, str_src, 1));
+  char s1[100] = "";
+  char s2[100] = "";
+  char s3[] = "";
+  s21_size_t n = 10;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+}
+END_TEST
+
+START_TEST(s21_strncat_8) {
+  char s1[100] = "String project";
+  char s2[100] = "String project";
+  char s3[] = "\0";
+  s21_size_t n = 1;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+}
+END_TEST
+
+START_TEST(s21_strncat_9) {
+  char s1[100] = "String project";
+  char s2[100] = "String project";
+  char s3[] = "\0";
+  s21_size_t n = 0;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+}
+END_TEST
+
+START_TEST(s21_strncat_10) {
+  char s1[100] = "String project";
+  char s2[100] = "String project";
+  char s3[] = "\0\0\0\0";
+  s21_size_t n = 4;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+}
+END_TEST
+
+START_TEST(s21_strncat_11) {
+  char s1[100] = "String project";
+  char s2[100] = "String project";
+  char s3[] = "";
+  s21_size_t n = 2;
+  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -74,6 +110,11 @@ Suite *s21_strncat_create_suite(void) {
   tcase_add_test(tc, s21_strncat_5);
   tcase_add_test(tc, s21_strncat_6);
   tcase_add_test(tc, s21_strncat_7);
+  tcase_add_test(tc, s21_strncat_8);
+  tcase_add_test(tc, s21_strncat_9);
+  tcase_add_test(tc, s21_strncat_10);
+  tcase_add_test(tc, s21_strncat_11);
+
   suite_add_tcase(s, tc);
   return s;
 }

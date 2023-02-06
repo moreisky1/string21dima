@@ -1,5 +1,6 @@
 #include "../../s21_string.h"
 #include "../s21_string_tests.h"
+
 START_TEST(s21_strlen_1) {
   char base[] = "Hello";
   int ac = s21_strlen(base);

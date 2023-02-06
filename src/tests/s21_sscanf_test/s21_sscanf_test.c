@@ -1692,7 +1692,7 @@ START_TEST(s21_sscanf_106) {
 }
 END_TEST
 
-START_TEST(sscanf_107) {
+START_TEST(s21_sscanf_107) {
   char format[] = "%hho%hho%hho";
   char str[] = "123 +198 -87";
   unsigned char d1, d2;
@@ -1708,7 +1708,7 @@ START_TEST(sscanf_107) {
 }
 END_TEST
 
-START_TEST(sscanf_108) {
+START_TEST(s21_sscanf_108) {
   char format[] = "%1hho %1hho %1hho";
   char str[] = "1 +04 -3723";
   unsigned char d1 = 0, d2 = 0;
@@ -1724,7 +1724,7 @@ START_TEST(sscanf_108) {
 }
 END_TEST
 
-START_TEST(sscanf_109) {
+START_TEST(s21_sscanf_109) {
   char format[] = "%3hho %3hho %3hho";
   char str[] = "0123 +04 -3723";
   unsigned char d1 = 0, d2 = 0;
@@ -1740,7 +1740,7 @@ START_TEST(sscanf_109) {
 }
 END_TEST
 
-START_TEST(sscanf_110) {
+START_TEST(s21_sscanf_110) {
   char format[] = "%ho%ho%ho";
   char str[] = "123 +198 -87";
   unsigned short d1, d2;
@@ -1756,7 +1756,7 @@ START_TEST(sscanf_110) {
 }
 END_TEST
 
-START_TEST(sscanf_111) {
+START_TEST(s21_sscanf_111) {
   char format[] = "%2ho %2ho %2ho";
   char str[] = "0123 +04 -3723";
   unsigned short d1 = 0, d2 = 0;
@@ -1771,7 +1771,7 @@ START_TEST(sscanf_111) {
   ck_assert_uint_eq(z1, z2);
 }
 END_TEST
-START_TEST(sscanf_112) {
+START_TEST(s21_sscanf_112) {
   char format[] = "%o%o%o";
   char str[] = "123 +1564 -1723";
   unsigned int d1 = 0, d2 = 0;
@@ -1787,7 +1787,7 @@ START_TEST(sscanf_112) {
 }
 END_TEST
 
-START_TEST(sscanf_113) {
+START_TEST(s21_sscanf_113) {
   char format[] = "%2o %2o %2o";
   char str[] = "0123 +04 -3723";
   unsigned int d1 = 0, d2 = 0;
@@ -1803,7 +1803,7 @@ START_TEST(sscanf_113) {
 }
 END_TEST
 
-START_TEST(sscanf_114) {
+START_TEST(s21_sscanf_114) {
   char format[] = "%*o %*o %*o";
   char str[] = "0123 +04 -3723";
   unsigned int d1 = 0, d2 = 0;
@@ -1819,7 +1819,7 @@ START_TEST(sscanf_114) {
 }
 END_TEST
 
-START_TEST(sscanf_115) {
+START_TEST(s21_sscanf_115) {
   char format[] = "%lo%lo%lo";
   char str[] = "123 +1564 -1723";
   unsigned long int d1 = 0, d2 = 0;
@@ -1835,7 +1835,7 @@ START_TEST(sscanf_115) {
 }
 END_TEST
 
-START_TEST(sscanf_116) {
+START_TEST(s21_sscanf_116) {
   char format[] = "%1lo %1lo %1lo";
   char str[] = "1 +04 -3723";
   unsigned long int d1 = 0, d2 = 0;
@@ -1851,7 +1851,7 @@ START_TEST(sscanf_116) {
 }
 END_TEST
 
-START_TEST(sscanf_117) {
+START_TEST(s21_sscanf_117) {
   char format[] = "%3lo %3lo %3lo";
   char str[] = "0123 +04 -3723";
   unsigned long int d1 = 0, d2 = 0;
@@ -1867,7 +1867,7 @@ START_TEST(sscanf_117) {
 }
 END_TEST
 
-START_TEST(sscanf_118) {
+START_TEST(s21_sscanf_118) {
   char format[] = "%llo%llo%llo";
   char str[] = "123 +198 -87";
   unsigned long long int d1, d2;
@@ -1883,7 +1883,7 @@ START_TEST(sscanf_118) {
 }
 END_TEST
 
-START_TEST(sscanf_119) {
+START_TEST(s21_sscanf_119) {
   char format[] = "%3llo %3llo %3llo";
   char str[] = "0123 +04 -3723";
   unsigned long long int d1 = 0, d2 = 0;
@@ -1899,7 +1899,7 @@ START_TEST(sscanf_119) {
 }
 END_TEST
 
-START_TEST(sscanf_120) {
+START_TEST(s21_sscanf_120) {
   char format[] = "%*llo %*llo %*llo";
   char str[] = "0123 +04 -3723";
   unsigned long long int d1 = 0, d2 = 0;
@@ -1915,7 +1915,7 @@ START_TEST(sscanf_120) {
 }
 END_TEST
 
-START_TEST(sscanf_121) {
+START_TEST(s21_sscanf_121) {
   char format[] = "%f %f %f";
   char str[] = "123 +198 -87";
   float d1, d2;
@@ -1931,7 +1931,7 @@ START_TEST(sscanf_121) {
 }
 END_TEST
 
-START_TEST(sscanf_122) {
+START_TEST(s21_sscanf_122) {
   char format[] = "%fg %f w%fx";
   char str[] = "75g +19.8w -87.x";
   float d1, d2;
@@ -1947,7 +1947,7 @@ START_TEST(sscanf_122) {
 }
 END_TEST
 
-START_TEST(sscanf_123) {
+START_TEST(s21_sscanf_123) {
   char format[] = "%f %f %f %f";
   char str[] = "NAN nan -INF +inf";
   float d1, d2;
@@ -1966,7 +1966,7 @@ START_TEST(sscanf_123) {
 }
 END_TEST
 
-START_TEST(sscanf_124) {
+START_TEST(s21_sscanf_124) {
   char format[] = "%f";
   char str[] = "Nap";
   float d1 = 0, d2 = 0;
@@ -1978,7 +1978,7 @@ START_TEST(sscanf_124) {
 }
 END_TEST
 
-START_TEST(sscanf_125) {
+START_TEST(s21_sscanf_125) {
   char format[] = "%f";
   char str[] = "id";
   float d1 = 0, d2 = 0;
@@ -1990,7 +1990,7 @@ START_TEST(sscanf_125) {
 }
 END_TEST
 
-START_TEST(sscanf_126) {
+START_TEST(s21_sscanf_126) {
   char format[] = "%f %f %f %f";
   char str[] = "34.56e3 83.2e-4 .43e+1 +2.43e3";
   float d1, d2;
@@ -2008,7 +2008,7 @@ START_TEST(sscanf_126) {
 }
 END_TEST
 
-START_TEST(sscanf_127) {
+START_TEST(s21_sscanf_127) {
   char format[] = "%*f %7f %*f %*f";
   char str[] = "34.5+6e3 83.2e-4 +43e+1 +2.43e3";
   float d1, d2;
@@ -2022,7 +2022,7 @@ START_TEST(sscanf_127) {
 }
 END_TEST
 
-START_TEST(sscanf_128) {
+START_TEST(s21_sscanf_128) {
   char format[] = "%1f %1f %1f %1f";
   char str[] = "34 32. +45.e +23E3 -0.3e4";
   float d1, d2;
@@ -2040,7 +2040,7 @@ START_TEST(sscanf_128) {
 }
 END_TEST
 
-START_TEST(sscanf_129) {
+START_TEST(s21_sscanf_129) {
   char format[] = "%3f %3f %4f %3f";
   char str[] = "34 3. +45.e +23E3 -0.3e4";
   float d1, d2;
@@ -2058,7 +2058,7 @@ START_TEST(sscanf_129) {
 }
 END_TEST
 
-START_TEST(sscanf_130) {
+START_TEST(s21_sscanf_130) {
   char format[] = "%f %fx %2f1 %2fx %*f %*f";
   char str[] = "1.1 2.x 1.1 2.x 1.1 2.x";
   float d1, d2;
@@ -2076,7 +2076,7 @@ START_TEST(sscanf_130) {
 }
 END_TEST
 
-START_TEST(sscanf_131) {
+START_TEST(s21_sscanf_131) {
   char format[] = "%p";
   char str[] = "0xAAAA";
   int *p1 = 0, *p2 = 0;
@@ -2088,7 +2088,7 @@ START_TEST(sscanf_131) {
 }
 END_TEST
 
-START_TEST(sscanf_132) {
+START_TEST(s21_sscanf_132) {
   char format[] = "%5p";
   char str[] = "0xAAAA";
   int *p1 = 0, *p2 = 0;
@@ -2100,7 +2100,7 @@ START_TEST(sscanf_132) {
 }
 END_TEST
 
-START_TEST(sscanf_133) {
+START_TEST(s21_sscanf_133) {
   char format[] = "%p";
   char str[] = "0xFFFFFF";
   int *p1 = 0, *p2 = 0;
@@ -2112,7 +2112,7 @@ START_TEST(sscanf_133) {
 }
 END_TEST
 
-START_TEST(sscanf_134) {
+START_TEST(s21_sscanf_134) {
   char format[] = "%p";
   char str[] = "0x0000";
   int *p1 = 0, *p2 = 0;
@@ -2124,7 +2124,7 @@ START_TEST(sscanf_134) {
 }
 END_TEST
 
-START_TEST(sscanf_135) {
+START_TEST(s21_sscanf_135) {
   char format[] = "%p";
   char str[] = "0x34567hjk";
   int *p1 = 0, *p2 = 0;
@@ -2136,7 +2136,7 @@ START_TEST(sscanf_135) {
 }
 END_TEST
 
-START_TEST(sscanf_136) {
+START_TEST(s21_sscanf_136) {
   char format[] = "%p";
   char str[] = "0x34567hjk678";
   int *p1 = 0, *p2 = 0;
@@ -2148,7 +2148,7 @@ START_TEST(sscanf_136) {
 }
 END_TEST
 
-START_TEST(sscanf_137) {
+START_TEST(s21_sscanf_137) {
   char format[] = "%p";
   char str[] = "1234567890ABCDEF";
   int *p1 = 0, *p2 = 0;
@@ -2160,7 +2160,7 @@ START_TEST(sscanf_137) {
 }
 END_TEST
 
-START_TEST(sscanf_138) {
+START_TEST(s21_sscanf_138) {
   char format[] = "%5p";
   char str[] = "0x237481";
   int *p1 = 0, *p2 = 0;
@@ -2172,7 +2172,7 @@ START_TEST(sscanf_138) {
 }
 END_TEST
 
-START_TEST(sscanf_139) {
+START_TEST(s21_sscanf_139) {
   char format[] = "%6p";
   char str[] = "0xdksajh";
   int *p1 = 0, *p2 = 0;
@@ -2184,7 +2184,7 @@ START_TEST(sscanf_139) {
 }
 END_TEST
 
-START_TEST(sscanf_140) {
+START_TEST(s21_sscanf_140) {
   char format[] = "%6p";
   char str[] = "0xAGAGUIY";
   int *p1 = 0, *p2 = 0;
@@ -2196,7 +2196,7 @@ START_TEST(sscanf_140) {
 }
 END_TEST
 
-START_TEST(sscanf_141) {
+START_TEST(s21_sscanf_141) {
   char format[] = "%p";
   char str[] = "0xAA64BB";
   int *p1 = 0, *p2 = 0;
@@ -2208,7 +2208,7 @@ START_TEST(sscanf_141) {
 }
 END_TEST
 
-START_TEST(sscanf_142) {
+START_TEST(s21_sscanf_142) {
   char format[] = "%p";
   char str[] = "0xGGH7TY";
   int *p1 = 0, *p2 = 0;
@@ -2220,7 +2220,7 @@ START_TEST(sscanf_142) {
 }
 END_TEST
 
-START_TEST(sscanf_143) {
+START_TEST(s21_sscanf_143) {
   char format[] = "%n";
   char str[] = "Ilyusha";
   int n1 = 0, n2 = 0;
@@ -2232,7 +2232,7 @@ START_TEST(sscanf_143) {
 }
 END_TEST
 
-START_TEST(sscanf_144) {
+START_TEST(s21_sscanf_144) {
   char format[] = "%d %n";
   char str[] = "80 Ilyusha";
   int d1 = 0, d2 = 0;
@@ -2246,7 +2246,7 @@ START_TEST(sscanf_144) {
 }
 END_TEST
 
-START_TEST(sscanf_145) {
+START_TEST(s21_sscanf_145) {
   char format[] = "%d %d %n %d %d %d";
   char str[] = "80 50 70 371 327";
   int d1 = 0, d2 = 0;
@@ -2268,7 +2268,7 @@ START_TEST(sscanf_145) {
 }
 END_TEST
 
-START_TEST(sscanf_146) {
+START_TEST(s21_sscanf_146) {
   char format[] = "Hello %n ";
   char str[] = "Hello";
   int *n1 = 0, *n2 = 0;
@@ -2280,7 +2280,7 @@ START_TEST(sscanf_146) {
 }
 END_TEST
 
-START_TEST(sscanf_147) {
+START_TEST(s21_sscanf_147) {
   char format[] = "%d %hn %d %hhn %d %d %hhn %d";
   char str[] = "80 50 70 371 327";
   int d1 = 0, d2 = 0;
@@ -2308,7 +2308,7 @@ START_TEST(sscanf_147) {
 }
 END_TEST
 
-START_TEST(sscanf_148) {
+START_TEST(s21_sscanf_148) {
   char format[] = "%d %ln %d %lln %d %d %lln %d";
   char str[] = "3263 225 724 38 482";
   int d1 = 0, d2 = 0;
@@ -2336,7 +2336,7 @@ START_TEST(sscanf_148) {
 }
 END_TEST
 
-START_TEST(sscanf_149) {
+START_TEST(s21_sscanf_159) {
   char format[] = "%%%c";
   char str[] = "%p";
   char d1 = 0, d2 = 0;
@@ -2348,7 +2348,7 @@ START_TEST(sscanf_149) {
 }
 END_TEST
 
-START_TEST(sscanf_1) {
+START_TEST(s21_sscanf_149) {
   char format[] = "%s %n %s %n %s %s %s %n";
   char str[] = "Hello, my name is Jinny";
   char s1[30], s2[30], s3[30], s4[30], s5[30], s6[30], s7[30], s8[30], s9[30],
@@ -2373,7 +2373,7 @@ START_TEST(sscanf_1) {
 }
 END_TEST
 
-START_TEST(sscanf_150) {
+START_TEST(s21_sscanf_150) {
   char format[] = "%lf %lf %lf %lf %n %lf";
   char str[] = ".0 66.34 9877.66 1.99 0.999";
   long double d1 = 0, d2 = 0;
@@ -2395,7 +2395,7 @@ START_TEST(sscanf_150) {
 }
 END_TEST
 
-START_TEST(sscanf_151) {
+START_TEST(s21_sscanf_151) {
   char format[] = "%s %s";
   char str[] = "hi \t\n";
   char s1[20], s2[20] = {0}, s3[20], s4[20] = {0};
@@ -2408,7 +2408,7 @@ START_TEST(sscanf_151) {
 }
 END_TEST
 
-START_TEST(sscanf_152) {
+START_TEST(s21_sscanf_152) {
   char fstr[] = "%d";
   char str[] = "        ";
 
@@ -2418,7 +2418,7 @@ START_TEST(sscanf_152) {
 }
 END_TEST
 
-START_TEST(sscanf_153) {
+START_TEST(s21_sscanf_153) {
   char fstr[] = "%d ";
   char str[] = "               ";
   int16_t a1 = 0, a2 = 0;
@@ -2429,7 +2429,7 @@ START_TEST(sscanf_153) {
 }
 END_TEST
 
-START_TEST(sscanf_154) {
+START_TEST(s21_sscanf_154) {
   char fstr[] = "%d ";
   char str[] = "  ";
   int16_t a1 = 0, a2 = 0;
@@ -2440,7 +2440,7 @@ START_TEST(sscanf_154) {
 }
 END_TEST
 
-START_TEST(sscanf_155) {
+START_TEST(s21_sscanf_155) {
   char fstr[] = "%c %c %c %c";
   char str[] = "   000 0    ";
   int16_t a1 = 0, a2 = 5, b1 = 0, b2 = 5, c1 = 0, c2 = 5, d1 = 0, d2 = 5;
@@ -2457,7 +2457,7 @@ START_TEST(sscanf_155) {
 }
 END_TEST
 
-START_TEST(sscanf_156) {
+START_TEST(s21_sscanf_156) {
   char fstr[] = "%c%c%c%c";
   char str[] = "\\\n\t\t\t";
   int16_t a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
@@ -2473,7 +2473,7 @@ START_TEST(sscanf_156) {
 }
 END_TEST
 
-START_TEST(sscanf_157) {
+START_TEST(s21_sscanf_157) {
   char fstr[] = "%1c %c %c %0c";
   char str[] = "z *'@";
   int16_t a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
@@ -2489,7 +2489,7 @@ START_TEST(sscanf_157) {
 }
 END_TEST
 
-START_TEST(sscanf_158) {
+START_TEST(s21_sscanf_158) {
   char fstr[] = "%c %c %c %c";
   char str[] = "z *'@";
   int16_t a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
@@ -2667,6 +2667,7 @@ Suite *s21_sscanf_create_suite(void) {
   tcase_add_test(tc, s21_sscanf_156);
   tcase_add_test(tc, s21_sscanf_157);
   tcase_add_test(tc, s21_sscanf_158);
+  tcase_add_test(tc, s21_sscanf_159);
 
   suite_add_tcase(s, tc);
   return s;

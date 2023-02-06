@@ -3,50 +3,35 @@
 START_TEST(s21_strcspn_1) {
   char *str = "Hello World";
   char *search = "Wight";
-  int ac = s21_strcspn(str, search);
-  int ex = strcspn(str, search);
-  // printf("--> %d --> %d\n",ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strcspn(str, search), strcspn(str, search));
 }
 END_TEST
 
 START_TEST(s21_strcspn_2) {
   char *str = "Hello World";
   char *search = "Light";
-  int ac = s21_strcspn(str, search);
-  int ex = strcspn(str, search);
-  // printf("--> %d --> %d\n",ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strcspn(str, search), strcspn(str, search));
 }
 END_TEST
 
 START_TEST(s21_strcspn_3) {
   char *str = "Hello World";
   char *search = "";
-  int ac = s21_strcspn(str, search);
-  int ex = strcspn(str, search);
-  // printf("--> %d --> %d\n",ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strcspn(str, search), strcspn(str, search));
 }
 END_TEST
 
 START_TEST(s21_strcspn_4) {
   char *str = "Hello\n World";
   char *search = "\n";
-  int ac = s21_strcspn(str, search);
-  int ex = strcspn(str, search);
-  // printf("--> %d --> %d\n",ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strcspn(str, search), strcspn(str, search));
 }
 END_TEST
 
 START_TEST(s21_strcspn_5) {
   char *str = "Hello World";
   char *search = "\0";
-  int ac = s21_strcspn(str, search);
-  int ex = strcspn(str, search);
-  // printf("--> %d --> %d\n",ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strcspn(str, search), strcspn(str, search));
 }
 END_TEST
 

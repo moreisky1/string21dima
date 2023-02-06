@@ -2,52 +2,36 @@
 
 START_TEST(s21_strrchr_1) {
   char str[] = "Hello World";
-  char c = 'l';
-  char *ac = s21_strrchr(str, c);
-  char *ex = strrchr(str, c);
-  // printf("--> |%s| --> |%s|\n", ac, ex);
-  ck_assert_str_eq(ac, ex);
+  char c = 'd';
+  ck_assert_pstr_eq(s21_strrchr(str, c), strrchr(str, c));
 }
 END_TEST
 
 START_TEST(s21_strrchr_2) {
   char str[] = "Hello World";
   char c = 'W';
-  char *ac = s21_strrchr(str, c);
-  char *ex = strrchr(str, c);
-  // printf("--> |%s| --> |%s|\n", ac, ex);
-  ck_assert_str_eq(ac, ex);
+  ck_assert_pstr_eq(s21_strrchr(str, c), strrchr(str, c));
 }
 END_TEST
 
 START_TEST(s21_strrchr_3) {
   char str[] = "Hello World";
   char c = 'H';
-  char *ac = s21_strrchr(str, c);
-  char *ex = strrchr(str, c);
-  // printf("--> |%s| --> |%s|\n", ac, ex);
-  ck_assert_str_eq(ac, ex);
+  ck_assert_pstr_eq(s21_strrchr(str, c), strrchr(str, c));
 }
 END_TEST
 
 START_TEST(s21_strrchr_4) {
   char str[] = "Hello World";
   char c = 'i';
-  char *ac = s21_strrchr(str, c);
-  char *ex = strrchr(str, c);
-  // printf("--> |%s| --> |%s|\n", ac, ex);
-  ck_assert_ptr_null(ac);
-  ck_assert_ptr_null(ex);
+  ck_assert_pstr_eq(s21_strrchr(str, c), strrchr(str, c));
 }
 END_TEST
 
 START_TEST(s21_strrchr_5) {
   char str[] = "Hello World";
   char c = '\0';
-  char *ac = s21_strrchr(str, c);
-  char *ex = strrchr(str, c);
-  // printf("--> |%s| --> |%s|\n", ac, ex);
-  ck_assert_str_eq(ac, ex);
+  ck_assert_pstr_eq(s21_strrchr(str, c), strrchr(str, c));
 }
 END_TEST
 

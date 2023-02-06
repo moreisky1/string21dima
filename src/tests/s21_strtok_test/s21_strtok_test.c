@@ -1,6 +1,75 @@
 #include "../s21_string_tests.h"
 
-START_TEST(s21_strtok_1) { ck_assert_int_eq(1, 1); }
+START_TEST(s21_strtok_1) {
+  char s1[] = "";
+  char s2[] = "";
+  char s3[] = "";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+}
+END_TEST
+
+START_TEST(s21_strtok_2) {
+  char s1[] = "String project";
+  char s2[] = "String project";
+  char s3[] = "\0";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+}
+END_TEST
+
+START_TEST(s21_strtok_3) {
+  char s1[] = "String project";
+  char s2[] = "String project";
+  char s3[] = "";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+}
+END_TEST
+
+START_TEST(s21_strtok_4) {
+  char s1[] = "String project";
+  char s2[] = "String project";
+  char s3[] = "String project";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+}
+END_TEST
+
+START_TEST(s21_strtok_5) {
+  char s1[] = "String project";
+  char s2[] = "String project";
+  char s3[] = "t";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+}
+END_TEST
+
+START_TEST(s21_strtok_6) {
+  char s1[] = "qwqwqwqwqwqwqwqwqwqwqwqwq";
+  char s2[] = "qwqwqwqwqwqwqwqwqwqwqwqwq";
+  char s3[] = "q";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+}
+END_TEST
+
+START_TEST(s21_strtok_7) {
+  char s1[] = "qwqwqwqwqwqwqwqwqwqwqwqwq";
+  char s2[] = "qwqwqwqwqwqwqwqwqwqwqwqwq";
+  char s3[] = "w";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+  ck_assert_pstr_eq(strtok(S21_NULL, s3), s21_strtok(S21_NULL, s3));
+}
+END_TEST
+
+START_TEST(s21_strtok_8) {
+  char *s1 = S21_NULL;
+  char *s2 = S21_NULL;
+  char s3[] = "";
+  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
+}
 END_TEST
 
 Suite *s21_strtok_create_suite(void) {
@@ -8,6 +77,13 @@ Suite *s21_strtok_create_suite(void) {
   TCase *tc = tcase_create("Core of s21_strtok");
   /*Tests*/
   tcase_add_test(tc, s21_strtok_1);
+  tcase_add_test(tc, s21_strtok_2);
+  tcase_add_test(tc, s21_strtok_3);
+  tcase_add_test(tc, s21_strtok_4);
+  tcase_add_test(tc, s21_strtok_5);
+  tcase_add_test(tc, s21_strtok_6);
+  tcase_add_test(tc, s21_strtok_7);
+  tcase_add_test(tc, s21_strtok_8);
 
   suite_add_tcase(s, tc);
   return s;

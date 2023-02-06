@@ -1,6 +1,6 @@
 #include "test_me.h"
 
-START_TEST(strncpy_1) {
+START_TEST(s21_strncpy_1) {
   char s1[20] = "Hello, world!";
   char s2[20] = "Hello, world!";
   char s3[] = "Good";
@@ -9,7 +9,7 @@ START_TEST(strncpy_1) {
 }
 END_TEST
 
-START_TEST(strncpy_2) {
+START_TEST(s21_strncpy_2) {
   char s1[20] = "Hello, world!";
   char s2[20] = "Hello, world!";
   char s3[] = "\0";
@@ -18,7 +18,7 @@ START_TEST(strncpy_2) {
 }
 END_TEST
 
-START_TEST(strncpy_3) {
+START_TEST(s21_strncpy_3) {
   char s1[30] = "Hello, world!";
   char s2[30] = "Hello, world!";
   char s3[] = "fг-аг-аг";
@@ -27,7 +27,7 @@ START_TEST(strncpy_3) {
 }
 END_TEST
 
-START_TEST(strncpy_4) {
+START_TEST(s21_strncpy_4) {
   char s1[5] = "";
   char s2[5] = "";
   char s3[] = "";
@@ -36,7 +36,7 @@ START_TEST(strncpy_4) {
 }
 END_TEST
 
-START_TEST(strncpy_5) {
+START_TEST(s21_strncpy_5) {
   char s1[70] = "";
   char s2[70] = "";
   char s3[] =
@@ -46,7 +46,7 @@ START_TEST(strncpy_5) {
 }
 END_TEST
 
-START_TEST(strncpy_6) {
+START_TEST(s21_strncpy_6) {
   char s1[5] = "";
   char s2[5] = "";
   char s3[] = "\0";
@@ -57,14 +57,14 @@ END_TEST
 
 Suite *test_strncpy(void) {
   Suite *s = suite_create("\033[45m-=S21_STRNCPY=-\033[0m");
-  TCase *tc = tcase_create("strncpy_tc");
+  TCase *tc = tcase_create("s21_strncpy_tc");
 
-  tcase_add_test(tc, strncpy_1);
-  tcase_add_test(tc, strncpy_2);
-  tcase_add_test(tc, strncpy_3);
-  tcase_add_test(tc, strncpy_4);
-  tcase_add_test(tc, strncpy_5);
-  tcase_add_test(tc, strncpy_6);
+  tcase_add_test(tc, s21_strncpy_1);
+  tcase_add_test(tc, s21_strncpy_2);
+  tcase_add_test(tc, s21_strncpy_3);
+  tcase_add_test(tc, s21_strncpy_4);
+  tcase_add_test(tc, s21_strncpy_5);
+  tcase_add_test(tc, s21_strncpy_6);
 
   suite_add_tcase(s, tc);
   return s;

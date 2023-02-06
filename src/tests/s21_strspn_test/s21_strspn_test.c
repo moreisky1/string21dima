@@ -3,50 +3,39 @@
 START_TEST(s21_strspn_1) {
   const char *str1 = "Hello World";
   const char *str2 = "Hello";
-  size_t ac = s21_strspn(str1, str2);
-  size_t ex = strspn(str1, str2);
-  // printf("--> %d --> %d\n", ac, ex);
-  ck_assert_int_eq(ac, ex);
 }
 END_TEST
 
 START_TEST(s21_strspn_2) {
   const char *str1 = "Hello World";
   const char *str2 = "World";
-  size_t ac = s21_strspn(str1, str2);
-  size_t ex = strspn(str1, str2);
-  // printf("--> %d --> %d\n", ac, ex);
-  ck_assert_int_eq(ac, ex);
 }
 END_TEST
 
 START_TEST(s21_strspn_3) {
   const char *str1 = "Hello World";
   const char *str2 = "Vap";
-  size_t ac = s21_strspn(str1, str2);
-  size_t ex = strspn(str1, str2);
-  // printf("--> %d --> %d\n", ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strspn(str1, str2), strspn(str1, str2));
 }
 END_TEST
 
 START_TEST(s21_strspn_4) {
   const char *str1 = "Hello World";
   const char *str2 = "\0";
-  size_t ac = s21_strspn(str1, str2);
-  size_t ex = strspn(str1, str2);
-  // printf("--> %d --> %d\n", ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strspn(str1, str2), strspn(str1, str2));
 }
 END_TEST
 
 START_TEST(s21_strspn_5) {
   const char *str1 = "Hello World";
   const char *str2 = "dlroW olleH";
-  size_t ac = s21_strspn(str1, str2);
-  size_t ex = strspn(str1, str2);
-  // printf("--> %d --> %d\n", ac, ex);
-  ck_assert_int_eq(ac, ex);
+  ck_assert_int_eq(s21_strspn(str1, str2), strspn(str1, str2));
+}
+END_TEST
+
+START_TEST(s21_strspn_6) {
+  const char *str1 = "Hello World";
+  const char *str2 = "ello";
 }
 END_TEST
 
@@ -59,6 +48,8 @@ Suite *s21_strspn_create_suite(void) {
   tcase_add_test(tc, s21_strspn_3);
   tcase_add_test(tc, s21_strspn_4);
   tcase_add_test(tc, s21_strspn_5);
+  tcase_add_test(tc, s21_strspn_6);
+
   suite_add_tcase(s, tc);
   return s;
 }
