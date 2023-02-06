@@ -113,7 +113,7 @@ gi:
 #======================================== VALGRIND ====================================================================
 
 tests_valgrind: test1
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=res_leak.txt ./st
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=res_leak.txt ./run_test
 	grep -e ERROR res_leak.txt
 	rm -rf *.gcda
 
