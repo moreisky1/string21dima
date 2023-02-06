@@ -9,7 +9,6 @@ GCC= gcc
 GCC_C= gcc -c
 GCC_G= gcc -g
 FLAGS= -Wall -Werror -Wextra -std=c11
-TESTS_UBUNTU= -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 GCOV_FLAGS= -fprofile-arcs -ftest-coverage -fPIC
 #======================================== 
 UNAME:=$(shell uname -s)
@@ -37,27 +36,18 @@ F_C_9= common/s21_trim.c common/s21_strcspn.c
 F_OUT = -o test
 F_H_T= tests/s21_string_tests.h
 F_C_T= tests/main.c
-F_C_T_1= tests/s21_insert_test/s21_insert_test.c tests/s21_memcmp_test/s21_memcmp_test.c tests/s21_memcpy_test/s21_memcpy_test.c
-F_C_T_2= tests/s21_memchr_test/s21_memchr_test.c tests/s21_memmove_test/s21_memmove_test.c tests/s21_memset_test/s21_memset_test.c
-F_C_T_3= tests/s21_sprintf_test/s21_sprintf_test.c tests/s21_sscanf_test/s21_sscanf_test.c tests/s21_strcat_test/s21_strcat_test.c
-F_C_T_4= tests/s21_strchr_test/s21_strchr_test.c tests/s21_strcmp_test/s21_strcmp_test.c tests/s21_strcpy_test/s21_strcpy_test.c
-F_C_T_5= tests/s21_strerror_test/s21_strerror_test.c tests/s21_strlen_test/s21_strlen_test.c tests/s21_strncat_test/s21_strncat_test.c
-F_C_T_6= tests/s21_strncmp_test/s21_strncmp_test.c tests/s21_strncpy_test/s21_strncpy_test.c tests/s21_strpbrk_test/s21_strpbrk_test.c
-F_C_T_7= tests/s21_strrchr_test/s21_strrchr_test.c tests/s21_strspn_test/s21_strspn_test.c tests/s21_strstr_test/s21_strstr_test.c
-F_C_T_8= tests/s21_strtok_test/s21_strtok_test.c tests/s21_to_lower_test/s21_to_lower_test.c tests/s21_to_upper_test/s21_to_upper_test.c
-F_C_T_9= tests/s21_trim_test/s21_trim_test.c tests/s21_strcspn_test/s21_strcspn_test.c
+F_C_T_1= tests/s21_insert_test/s21_insert_test.c     tests/s21_memcmp_test/s21_memcmp_test.c     tests/s21_memcpy_test/s21_memcpy_test.c
+F_C_T_2= tests/s21_memchr_test/s21_memchr_test.c     tests/s21_memmove_test/s21_memmove_test.c   tests/s21_memset_test/s21_memset_test.c
+F_C_T_3= tests/s21_sprintf_test/s21_sprintf_test.c   tests/s21_sscanf_test/s21_sscanf_test.c     tests/s21_strcat_test/s21_strcat_test.c
+F_C_T_4= tests/s21_strchr_test/s21_strchr_test.c     tests/s21_strcmp_test/s21_strcmp_test.c     tests/s21_strcpy_test/s21_strcpy_test.c
+F_C_T_5= tests/s21_strerror_test/s21_strerror_test.c tests/s21_strlen_test/s21_strlen_test.c     tests/s21_strncat_test/s21_strncat_test.c
+F_C_T_6= tests/s21_strncmp_test/s21_strncmp_test.c   tests/s21_strncpy_test/s21_strncpy_test.c   tests/s21_strpbrk_test/s21_strpbrk_test.c
+F_C_T_7= tests/s21_strrchr_test/s21_strrchr_test.c   tests/s21_strspn_test/s21_strspn_test.c     tests/s21_strstr_test/s21_strstr_test.c
+F_C_T_8= tests/s21_strtok_test/s21_strtok_test.c     tests/s21_to_lower_test/s21_to_lower_test.c tests/s21_to_upper_test/s21_to_upper_test.c
+F_C_T_9= tests/s21_trim_test/s21_trim_test.c         tests/s21_strcspn_test/s21_strcspn_test.c
 SOURCE_TESTS= -o test
 #======================================== ALL =========================================================================
 all: clean s21_string.a
-
-te: clean s21_string.a
-	${GCC_G} ${FLAGS} me.c s21_string.a -o me -lm
-	./me
-
-t: clean s21_string.a
-	${GCC_G} ${FLAGS} sprintfT.c s21_string.a -o me -lm
-	./me 
-
 #======================================== STATIC LIB ==================================================================
 s21_string.a: clean
 	${GCC_C} -g common/*.c
@@ -76,6 +66,10 @@ test: clean s21_string.a
 	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${LDFLAGS}
 	./run_test
 
+test2: clean s21_string.a
+	${GCC_G} tests/*/*.c tests/main.c s21_string.a  -o run_test ${LDFLAGS}
+	./run_test
+
 test1: clean s21_string.a
 	${GCC_G} ${FLAGS} OpsTests/*.c s21_string.a  -o st ${LDFLAGS}
 	./st
@@ -86,15 +80,14 @@ test.a:
 	ranlib tests/s21_string_tests.a
 	make clean.o
 #======================================== GCOV ========================================================================
-gcov_report: clean s21_string.a
-	${GCC_G} ${FLAGS} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a ${SOURCE_TESTS} ${TESTS_UBUNTU} ${GCOV_FLAGS}
+gcov_report: clean gs21_string.a
+	${GCC_G} ${FLAGS} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a ${SOURCE_TESTS} ${LDFLAGS} ${GCOV_FLAGS}
 	./test
-	gcov test_s21_*.gcda
-	gcovr -b
-	gcovr
+	rm -rf *test.gcda *test.gcno main.gc*
+	gcovr -p
 	mkdir report
-	gcovr --html-details -o report/report.html
-	rm -rf *.gcda *gcno
+	gcovr -p --html-details -o report/report.html
+	open report/report.html
 
 gcov_repo:  gs21_string.a
 	${GCC_G} ${FLAGS} OpsTests/*.c s21_string.a ${SOURCE_TESTS} ${LDFLAGS} ${GCOV_FLAGS}

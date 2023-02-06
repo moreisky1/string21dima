@@ -3,12 +3,14 @@
 START_TEST(s21_strspn_1) {
   const char *str1 = "Hello World";
   const char *str2 = "Hello";
+  ck_assert_int_eq(s21_strspn(str1, str2), strspn(str1, str2));
 }
 END_TEST
 
 START_TEST(s21_strspn_2) {
   const char *str1 = "Hello World";
   const char *str2 = "World";
+  ck_assert_int_eq(s21_strspn(str1, str2), strspn(str1, str2));
 }
 END_TEST
 
@@ -36,6 +38,7 @@ END_TEST
 START_TEST(s21_strspn_6) {
   const char *str1 = "Hello World";
   const char *str2 = "ello";
+  ck_assert_int_eq(s21_strspn(str1, str2), strspn(str1, str2));
 }
 END_TEST
 

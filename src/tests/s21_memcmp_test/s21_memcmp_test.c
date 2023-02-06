@@ -120,10 +120,10 @@ START_TEST(s21_memcmp_10) {
 }
 END_TEST
 
-Suite *test_memcmp(void) {
+Suite *s21_memcmp_create_suite(void) {
   Suite *s = suite_create("s21_memcmp");
-  TCase *tc = tcase_create("s21_memcmp_tc");
-
+  TCase *tc = tcase_create("Core of s21_memcmp");
+  /*Tests*/
   tcase_add_test(tc, s21_memcmp_1);
   tcase_add_test(tc, s21_memcmp_2);
   tcase_add_test(tc, s21_memcmp_3);
@@ -137,4 +137,16 @@ Suite *test_memcmp(void) {
 
   suite_add_tcase(s, tc);
   return s;
+}
+
+int s21_memcmp_run_test(void) {
+  Suite *suite = s21_memcmp_create_suite();
+  SRunner *srunner = srunner_create(suite);
+  srunner_run_all(srunner, CK_NORMAL);
+  int failed_count = srunner_ntests_failed(srunner);
+  srunner_free(srunner);
+  if (failed_count != 0) {
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }

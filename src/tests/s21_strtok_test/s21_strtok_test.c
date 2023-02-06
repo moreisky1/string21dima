@@ -72,6 +72,23 @@ START_TEST(s21_strtok_8) {
 }
 END_TEST
 
+START_TEST(s21_strtok_9) {
+  char s1[] = "Hello,      worllllllllllld! And lother people      ";
+  char s2[] = "Hello,      worllllllllllld! And lother people      ";
+  char s3[] = "Come here";
+  char s4[] = "Come here";
+  char s5[] = " l";
+
+  ck_assert_pstr_eq(strtok(s1, s5), s21_strtok(s2, s5));
+  for (int i = 0; i < 5; i++) {
+    ck_assert_pstr_eq(strtok(S21_NULL, s5), s21_strtok(S21_NULL, s5));
+  }
+  ck_assert_pstr_eq(strtok(s3, s5), s21_strtok(s4, s5));
+  ck_assert_pstr_eq(strtok(S21_NULL, s5), s21_strtok(S21_NULL, s5));
+  ck_assert_pstr_eq(strtok(S21_NULL, s5), s21_strtok(S21_NULL, s5));
+}
+END_TEST
+
 Suite *s21_strtok_create_suite(void) {
   Suite *s = suite_create("s21_strtok");
   TCase *tc = tcase_create("Core of s21_strtok");
@@ -84,6 +101,7 @@ Suite *s21_strtok_create_suite(void) {
   tcase_add_test(tc, s21_strtok_6);
   tcase_add_test(tc, s21_strtok_7);
   tcase_add_test(tc, s21_strtok_8);
+  tcase_add_test(tc, s21_strtok_9);
 
   suite_add_tcase(s, tc);
   return s;

@@ -1829,6 +1829,7 @@ Suite *s21_sprintf_create_suite(void) {
   tcase_add_test(tc, s21_sprintf_117);
   tcase_add_test(tc, s21_sprintf_118);
   tcase_add_test(tc, s21_sprintf_119);
+  tcase_add_test(tc, s21_sprintf_120);
   tcase_add_test(tc, s21_sprintf_121);
   tcase_add_test(tc, s21_sprintf_122);
   tcase_add_test(tc, s21_sprintf_123);

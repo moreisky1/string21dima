@@ -2608,7 +2608,7 @@ Suite *s21_sscanf_create_suite(void) {
   tcase_add_test(tc, s21_sscanf_97);
   tcase_add_test(tc, s21_sscanf_98);
   tcase_add_test(tc, s21_sscanf_99);
-  tcase_add_test(tc, s21_sscanf_80);
+  tcase_add_test(tc, s21_sscanf_100);
   tcase_add_test(tc, s21_sscanf_101);
   tcase_add_test(tc, s21_sscanf_102);
   tcase_add_test(tc, s21_sscanf_103);
