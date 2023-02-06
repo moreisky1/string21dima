@@ -87,14 +87,13 @@ int s21_sscanf(const char *str, const char *format, ...) {
       {
         int size = 0;
         sp.count = count;
+        while (isWhiteSpace(*str) && 'c' != sp.spec) {
+          str++;
+          countB++;
+        }
         if ('\0' == *str && 'n' != sp.spec && '%' != sp.spec) {
           sp.err = -1;
         } else {
-
-          while (isWhiteSpace(*str) && 'c' != sp.spec) {
-            str++;
-            countB++;
-          }
           if (sp.setWidth && !sp.width) {
             sp.width = 1;
           }

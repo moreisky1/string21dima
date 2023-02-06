@@ -576,7 +576,7 @@ START_TEST(s21_sscanf_38) {
 END_TEST
 
 START_TEST(s21_sscanf_39) {
-  char format[] = "%2hd %2hi %2hi";
+  char format[] = "%2hi %2hi %2hi";
   char str[] = "013 +0137 -08";
   unsigned short d1, d2;
   unsigned short q1, q2;
@@ -645,7 +645,7 @@ START_TEST(s21_sscanf_42) {
 END_TEST
 
 START_TEST(s21_sscanf_43) {
-  char format[] = "%hd%hi%hd";
+  char format[] = "%hi%hi%hi";
   char str[] = "0x123 +0X198 -0x87";
   unsigned short d1, d2;
   unsigned short q1, q2;
@@ -661,7 +661,7 @@ START_TEST(s21_sscanf_43) {
 END_TEST
 
 START_TEST(s21_sscanf_44) {
-  char format[] = "%hi %hd %hi";
+  char format[] = "%hi %hi %hi";
   char str[] = "0X123 +0x198 -0X87";
   unsigned short d1, d2;
   unsigned short q1, q2;

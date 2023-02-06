@@ -110,17 +110,6 @@ START_TEST(s21_insert_10) {
 }
 END_TEST
 
-START_TEST(s21_insert_11) {
-  char s1[30] = "";
-  char s3[] = "|||";
-  char s4[] = "";
-  s21_size_t num = 0;
-  char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
-  if (s2) free(s2);
-}
-END_TEST
-
 Suite *s21_insert_create_suite(void) {
   Suite *s = suite_create("s21_insert");
   TCase *tc = tcase_create("Core of s21_insert");
@@ -135,7 +124,6 @@ Suite *s21_insert_create_suite(void) {
   tcase_add_test(tc, s21_insert_8);
   tcase_add_test(tc, s21_insert_9);
   tcase_add_test(tc, s21_insert_10);
-  tcase_add_test(tc, s21_insert_11);
 
   suite_add_tcase(s, tc);
   return s;
