@@ -22,8 +22,7 @@ START_TEST(s21_strstr_3) {
 END_TEST
 
 START_TEST(s21_strstr_4) {
-  char s1[] =
-      "String project String project";
+  char s1[] = "String project String project";
   char s2[] = "world";
   ck_assert_pstr_eq(strstr(s1, s2), s21_strstr(s1, s2));
 }
@@ -61,7 +60,7 @@ Suite *s21_strstr_create_suite(void) {
   tcase_add_test(tc, s21_strstr_5);
   tcase_add_test(tc, s21_strstr_6);
   tcase_add_test(tc, s21_strstr_7);
-  
+
   suite_add_tcase(s, tc);
   return s;
 }

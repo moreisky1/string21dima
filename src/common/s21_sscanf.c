@@ -72,7 +72,8 @@ int s21_sscanf(const char *str, const char *format, ...) {
       flags = 1;
       format++;
       {
-        int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1;
+        int a = (long long int)s21_strpbrk(format, spec) -
+                (long long int)format + 1;
         char *buf = (char *)calloc(a, sizeof(char));
         s21_strncpy(buf, format, a);
         initStructS(buf, &sp);
@@ -182,7 +183,7 @@ int isWhiteSpace(char c) {
 
 int strToChar(const char *str, Specif *sp) {
   s21_size_t len = s21_strlen(str);
-  
+
   s21_size_t size = sp->setWidth ? (sp->width < len ? sp->width : len) : 1;
   char *pointer = malloc(size * sizeof(char));
   int spa = 0;

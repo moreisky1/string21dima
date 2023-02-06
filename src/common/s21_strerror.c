@@ -1,5 +1,6 @@
-#include "../s21_string.h"
 #include <string.h>
+
+#include "../s21_string.h"
 
 #if defined(__linux__)
 #define SYS 0

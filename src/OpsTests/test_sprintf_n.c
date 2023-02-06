@@ -1,7 +1,5 @@
 #include "test_me.h"
 
-
-
 // START_TEST(sprintf_3_n) {
 //   char str1[100] = "";
 //   char str2[100] = "";
@@ -38,7 +36,6 @@ Suite *test_sprintf_n(void) {
   Suite *s = suite_create("\033[45m-=S21_SPRINTF_N=-\033[0m");
   TCase *tc = tcase_create("sprintf_tc");
 
-  
   // tcase_add_test(tc, sprintf_3_n);
   // tcase_add_test(tc, sprintf_4_n);
 

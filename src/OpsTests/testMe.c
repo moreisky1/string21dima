@@ -44,7 +44,7 @@ int main(void) {
                               test_sscanf_o(),
                               test_sscanf_x(),
                               test_sscanf_p(),
-                              test_sscanf_real(),                              
+                              test_sscanf_real(),
                               test_to_upper(),
                               test_to_lower(),
                               test_insert(),

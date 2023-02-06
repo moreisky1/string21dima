@@ -99,7 +99,6 @@ START_TEST(s21_sprintf_45) {
 }
 END_TEST
 
-
 START_TEST(s21_sprintf_46) {
   char str1[400] = "";
   char str2[400] = "";

@@ -85,7 +85,7 @@ Suite *s21_strcpy_create_suite(void) {
   tcase_add_test(tc, s21_strcpy_7);
   tcase_add_test(tc, s21_strcpy_8);
   tcase_add_test(tc, s21_strcpy_9);
-  
+
   suite_add_tcase(s, tc);
   return s;
 }

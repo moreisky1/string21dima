@@ -293,7 +293,6 @@ START_TEST(s21_sscanf_21) {
 }
 END_TEST
 
-
 START_TEST(s21_sscanf_22) {
   char format[] = "%hhi %hhd %hhi %hhd";
   char str[] = "037777777777 +040000000000 -040000000000 -040000000001";
@@ -943,8 +942,6 @@ START_TEST(s21_sscanf_60) {
 }
 END_TEST
 
-
-
 START_TEST(s21_sscanf_61) {
   char format[] = "%3i %3i %3i";
   char str[] = "0x13 +0x137 -0x8";
@@ -1502,7 +1499,6 @@ START_TEST(s21_sscanf_94) {
   ck_assert_uint_eq(z1, z2);
 }
 END_TEST
-
 
 START_TEST(s21_sscanf_95) {
   char format[] = "%2x %2x %2x";

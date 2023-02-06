@@ -5,7 +5,7 @@ START_TEST(s21_strcat_1) {
   char str_dest_eq[100] = "Hello";
   const char str_src[] = " World";
   ck_assert_pstr_eq(s21_strcat(str_dest_as, str_src),
-                   strcat(str_dest_eq, str_src));
+                    strcat(str_dest_eq, str_src));
 }
 END_TEST
 
@@ -14,7 +14,7 @@ START_TEST(s21_strcat_2) {
   char str_dest_eq[100] = "\0";
   const char *str_src = "Hello";
   ck_assert_pstr_eq(s21_strcat(str_dest_as, str_src),
-                   strcat(str_dest_eq, str_src));
+                    strcat(str_dest_eq, str_src));
 }
 END_TEST
 
@@ -23,7 +23,7 @@ START_TEST(s21_strcat_3) {
   char str_dest_eq[100] = "Hello";
   const char str_src[] = " \0";
   ck_assert_pstr_eq(s21_strcat(str_dest_as, str_src),
-                   strcat(str_dest_eq, str_src));
+                    strcat(str_dest_eq, str_src));
 }
 END_TEST
 
@@ -32,7 +32,7 @@ START_TEST(s21_strcat_4) {
   char str_dest_eq[100] = "Hello";
   const char str_src[] = "\0";
   ck_assert_pstr_eq(s21_strcat(str_dest_as, str_src),
-                   strcat(str_dest_eq, str_src));
+                    strcat(str_dest_eq, str_src));
 }
 END_TEST
 
@@ -41,7 +41,7 @@ START_TEST(s21_strcat_5) {
   char str_dest_eq[100] = "\0";
   const char str_src[] = "\0";
   ck_assert_pstr_eq(s21_strcat(str_dest_as, str_src),
-                   strcat(str_dest_eq, str_src));
+                    strcat(str_dest_eq, str_src));
 }
 END_TEST
 
@@ -50,7 +50,7 @@ START_TEST(s21_strcat_6) {
   char str_dest_eq[100] = "\n\t\b\b\b\b\b\b\b\b\b\b\b";
   const char str_src[] = "\b\b\b\b\t\n World";
   ck_assert_pstr_eq(s21_strcat(str_dest_as, str_src),
-                   strcat(str_dest_eq, str_src));
+                    strcat(str_dest_eq, str_src));
 }
 END_TEST
 

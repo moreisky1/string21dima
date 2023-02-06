@@ -1,7 +1,5 @@
 #include "test_me.h"
 
-
-
 Suite *test_s21_sscanf_x(void) {
   Suite *s = suite_create("\033[45m-=S21_s21_SSCANF_X=-\033[0m");
   TCase *tc = tcase_create("s21_sscanf_tc");

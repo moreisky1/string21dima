@@ -156,7 +156,6 @@ START_TEST(sscanf_spec_hhd_15) {
 }
 END_TEST
 
-
 START_TEST(sscanf_spec_hhd_17) {
   char format[] = "%hhd";
   char str[] = "-2147483648";
@@ -192,7 +191,6 @@ START_TEST(sscanf_spec_hhd_19) {
   ck_assert_int_eq(d1, d2);
 }
 END_TEST
-
 
 START_TEST(sscanf_spec_hhd_21) {
   char format[] = "%hhd";
@@ -253,7 +251,6 @@ START_TEST(sscanf_spec_hd_5) {
   ck_assert_int_eq(d1, d2);
 }
 END_TEST
-
 
 START_TEST(sscanf_spec_hd_7) {
   char format[] = "%1hd";
@@ -363,7 +360,6 @@ START_TEST(sscanf_spec_hd_21) {
 }
 END_TEST
 
-
 START_TEST(sscanf_spec_hd_24) {
   char format[] = "%hd";
   char str[] = "9223372036854775808";
@@ -400,7 +396,6 @@ START_TEST(sscanf_spec_d_3) {
 }
 END_TEST
 
-
 START_TEST(sscanf_spec_d_6) {
   char format[] = "%10d";
   char str[] = "-123";
@@ -424,7 +419,6 @@ START_TEST(sscanf_spec_d_7) {
   ck_assert_int_eq(d1, d2);
 }
 END_TEST
-
 
 START_TEST(sscanf_spec_d_11) {
   char format[] = "%1d";
@@ -474,8 +468,6 @@ START_TEST(sscanf_spec_d_15) {
 }
 END_TEST
 
-
-
 START_TEST(sscanf_spec_d_17) {
   char format[] = "%d";
   char str[] = "-2147483648";
@@ -499,8 +491,6 @@ START_TEST(sscanf_spec_d_18) {
   ck_assert_int_eq(d1, d2);
 }
 END_TEST
-
-
 
 START_TEST(sscanf_spec_d_20) {
   char format[] = "%d";
@@ -538,8 +528,6 @@ START_TEST(sscanf_spec_d_22) {
 }
 END_TEST
 
-
-
 START_TEST(sscanf_spec_d_24) {
   char format[] = "%d";
   char str[] = "9223372036854775808";
@@ -575,7 +563,6 @@ START_TEST(sscanf_spec_ld_3) {
   ck_assert_int_eq(d1, d2);
 }
 END_TEST
-
 
 START_TEST(sscanf_spec_ld_6) {
   char format[] = "%10ld";
