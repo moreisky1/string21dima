@@ -88,6 +88,7 @@ gcov_report: clean gs21_string.a
 	mkdir report
 	gcovr -p --html-details -o report/report.html
 	open report/report.html
+	rm -rf *.gcda *gcno
 
 gcov_repo:  gs21_string.a
 	${GCC_G} ${FLAGS} OpsTests/*.c s21_string.a ${SOURCE_TESTS} ${LDFLAGS} ${GCOV_FLAGS}
