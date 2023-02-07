@@ -47,7 +47,9 @@ F_C_T_8= tests/s21_strtok_test/s21_strtok_test.c     tests/s21_to_lower_test/s21
 F_C_T_9= tests/s21_trim_test/s21_trim_test.c         tests/s21_strcspn_test/s21_strcspn_test.c
 SOURCE_TESTS= -o test
 #======================================== ALL =========================================================================
-all: clean s21_string.a
+
+all: clean s21_string.a test gcov_report
+
 #======================================== STATIC LIB ==================================================================
 s21_string.a: clean
 	${GCC_C} -g common/*.c
@@ -66,13 +68,6 @@ test: clean s21_string.a
 	${GCC_G} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9} tests/main.c s21_string.a  -o run_test ${LDFLAGS}
 	./run_test
 
-test2: clean s21_string.a
-	${GCC_G} tests/*/*.c tests/main.c s21_string.a  -o run_test ${LDFLAGS}
-	./run_test
-
-test1: clean s21_string.a
-	${GCC_G} ${FLAGS} OpsTests/*.c s21_string.a  -o st ${LDFLAGS}
-	./st
 
 test.a:
 	${GCC_C} ${F_C_T_1} ${F_C_T_2} ${F_C_T_3} ${F_C_T_4} ${F_C_T_5} ${F_C_T_6} ${F_C_T_7} ${F_C_T_8} ${F_C_T_9}
@@ -165,3 +160,4 @@ clean:
 	rm -rf *.html
 	rm -rf *.css
 	rm -rf report
+	rm -rf test
