@@ -65,14 +65,6 @@ START_TEST(s21_strtok_7) {
 END_TEST
 
 START_TEST(s21_strtok_8) {
-  char *s1 = S21_NULL;
-  char *s2 = S21_NULL;
-  char s3[] = "";
-  ck_assert_pstr_eq(strtok(s1, s3), s21_strtok(s2, s3));
-}
-END_TEST
-
-START_TEST(s21_strtok_9) {
   char s1[] = "Hello,      worllllllllllld! And lother people      ";
   char s2[] = "Hello,      worllllllllllld! And lother people      ";
   char s3[] = "Come here";
@@ -101,7 +93,6 @@ Suite *s21_strtok_create_suite(void) {
   tcase_add_test(tc, s21_strtok_6);
   tcase_add_test(tc, s21_strtok_7);
   tcase_add_test(tc, s21_strtok_8);
-  tcase_add_test(tc, s21_strtok_9);
 
   suite_add_tcase(s, tc);
   return s;

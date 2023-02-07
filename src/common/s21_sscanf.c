@@ -72,9 +72,8 @@ int s21_sscanf(const char *str, const char *format, ...) {
       flags = 1;
       format++;
       {
-        int a = (long long int)s21_strpbrk(format, spec) -
-                (long long int)format + 1;
-        char *buf = (char *)calloc(a, sizeof(char));
+        int a = (long long int)s21_strpbrk(format, spec) - (long long int)format + 1; // + 1
+        char *buf = (char *)calloc(a + 1, sizeof(char));
         s21_strncpy(buf, format, a);
         initStructS(buf, &sp);
         sp.countB = countB;

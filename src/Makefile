@@ -88,6 +88,7 @@ gcov_report: clean gs21_string.a
 	mkdir report
 	gcovr -p --html-details -o report/report.html
 	open report/report.html
+	rm -rf *.gcda *gcno
 
 gcov_repo:  gs21_string.a
 	${GCC_G} ${FLAGS} OpsTests/*.c s21_string.a ${SOURCE_TESTS} ${LDFLAGS} ${GCOV_FLAGS}
@@ -112,7 +113,7 @@ gi:
 #======================================== VALGRIND ====================================================================
 
 tests_valgrind: test1
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=res_leak.txt ./st
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=res_leak.txt ./run_test
 	grep -e ERROR res_leak.txt
 	rm -rf *.gcda
 

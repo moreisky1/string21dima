@@ -1,5 +1,7 @@
 #ifndef _S21_STRING_H_
 #define _S21_STRING_H_
+
+#define _GNU_SIURCE
 #include <stddef.h>
 #include <stdlib.h>
 

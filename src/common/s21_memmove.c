@@ -23,7 +23,7 @@
 void *s21_memmove(void *dest, const void *src, s21_size_t n) {
   char *d = (char *)dest;
   char *s = (char *)src;
-  if (src < dest) {
+  if (src < dest && n) {
     int i = n - 1;
     while (0 <= i) {
       d[i] = s[i];

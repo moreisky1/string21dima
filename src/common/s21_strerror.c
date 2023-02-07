@@ -261,20 +261,39 @@ void compil(char *buf, char *str, int errnum);
 int signedToStringE(char *str, int a);
 int getCiferE(char *str, int a);
 
+// char *s21_strerror(int errnum) {
+//   char *result;
+//   char *errors[] = ERRORS;
+//   char buf[1024] = "";
+//   if (errnum >= 0 && errnum < N)
+//     result = errors[errnum];
+//   else {
+//     int sys = SYS;
+//     if (sys == 0) {
+//       compil(buf, "Unknown error ", errnum);
+//     } else if (sys == 1) {
+//       compil(buf, "Unknown error: ", errnum);
+//     }
+//     result = buf;
+//   }
+//   return result;
+// }
+
 char *s21_strerror(int errnum) {
-  char *result;
+  char *result = S21_NULL;
   char *errors[] = ERRORS;
   char buf[1024] = "";
   if (errnum >= 0 && errnum < N)
     result = errors[errnum];
   else {
+    result = (char *)calloc(1024, sizeof(char));
     int sys = SYS;
     if (sys == 0) {
       compil(buf, "Unknown error ", errnum);
     } else if (sys == 1) {
       compil(buf, "Unknown error: ", errnum);
     }
-    result = buf;
+    s21_strcpy(result, buf);
   }
   return result;
 }

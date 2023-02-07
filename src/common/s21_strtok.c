@@ -44,7 +44,6 @@ char *s21_strtok(char *str, const char *delim) {
     } else if (delim == S21_NULL) {
       mem = S21_NULL;
     }
-
   } else if (str == S21_NULL) {  // либо вывод новых лексем, либо выход
     if (flag != 0) {  // новые лексемы
       if (delim != S21_NULL && *pointer != '\0') {
