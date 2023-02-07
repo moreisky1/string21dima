@@ -8,8 +8,8 @@
 #endif
 
 START_TEST(s21_strerror_1) {
-  char * p1 = S21_NULL;
-  char * p2 = S21_NULL;
+  char *p1 = S21_NULL;
+  char *p2 = S21_NULL;
   for (int i = 0; i < 150; i++) {
     p1 = s21_strerror(i);
     p2 = strerror(i);
@@ -24,8 +24,8 @@ END_TEST
 
 START_TEST(s21_strerror_2) {
   int n = -1;
-  char * p1 = S21_NULL;
-  char * p2 = S21_NULL;
+  char *p1 = S21_NULL;
+  char *p2 = S21_NULL;
   p1 = s21_strerror(n);
   p2 = strerror(n);
   ck_assert_str_eq(p1, p2);

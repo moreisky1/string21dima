@@ -1,5 +1,3 @@
-#include <string.h>
-
 #include "../s21_string.h"
 
 char *s21_strstr(const char *haystack, const char *needle) {
@@ -7,7 +5,7 @@ char *s21_strstr(const char *haystack, const char *needle) {
   int i = 0, j = 0;
   int marker = 0;
   if (haystack != S21_NULL && needle != S21_NULL) {
-    if (!strcmp(needle, "")) {
+    if (!s21_strcmp(needle, "")) {
       result = (char *)haystack;
     } else {
       while (haystack[i] != '\0') {

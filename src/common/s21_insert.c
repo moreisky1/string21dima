@@ -5,7 +5,7 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
   if (str && src) {
     s21_size_t src_len = s21_strlen(src);
     s21_size_t str_len = s21_strlen(str);
-    int size = src_len + str_len; // + 1
+    int size = src_len + str_len;  // + 1
     s21_size_t i = start_index;
     s21_size_t j = str_len;
     s21_size_t g = src_len - i;

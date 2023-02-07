@@ -1,5 +1,3 @@
-#include <string.h>
-
 #include "../s21_string.h"
 
 #if defined(__linux__)
@@ -299,10 +297,10 @@ char *s21_strerror(int errnum) {
 }
 
 void compil(char *buf, char *str, int errnum) {
-  strcpy(buf, str);
+  s21_strcpy(buf, str);
   char bus[1024] = "";
   signedToStringE(bus, errnum);
-  strcat(buf, bus);
+  s21_strcat(buf, bus);
 }
 
 int signedToStringE(char *str, int a) {
