@@ -1,7 +1,5 @@
 #include "test_me.h"
 
-
-
 Suite *test_sprintf_c(void) {
   Suite *s = suite_create("\033[45m-=S21_SPRINTF_C=-\033[0m");
   TCase *tc = tcase_create("sprintf_tc>");

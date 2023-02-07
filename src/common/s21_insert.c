@@ -21,7 +21,7 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
       //   s21_memmove(result, src, src_len);
       //   result[size] = '\0';
       // } else {
-        result = S21_NULL;
+      result = S21_NULL;
       // }
     }
   }

@@ -66,8 +66,6 @@ START_TEST(s21_strcmp_6) {
 }
 END_TEST
 
-
-
 Suite *test_strcmp(void) {
   Suite *s = suite_create("\033[45m-=S21_STRCMP=-\033[0m");
   TCase *tc = tcase_create("s21_strcmp_tc");

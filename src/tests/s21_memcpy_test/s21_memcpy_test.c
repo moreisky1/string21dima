@@ -54,8 +54,6 @@ START_TEST(s21_memcpy_6) {
 }
 END_TEST
 
-
-
 Suite *s21_memcpy_create_suite(void) {
   Suite *s = suite_create("s21_memcpy");
   TCase *tc = tcase_create("Core of s21_memcpy");
@@ -66,7 +64,7 @@ Suite *s21_memcpy_create_suite(void) {
   tcase_add_test(tc, s21_memcpy_4);
   tcase_add_test(tc, s21_memcpy_5);
   tcase_add_test(tc, s21_memcpy_6);
-  
+
   suite_add_tcase(s, tc);
   return s;
 }

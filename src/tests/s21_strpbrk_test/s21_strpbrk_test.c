@@ -24,7 +24,7 @@ END_TEST
 START_TEST(s21_strpbrk_4) {
   char *str1 = "Hello";
   char *str2 = "";
-ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
+  ck_assert_pstr_eq(s21_strpbrk(str1, str2), strpbrk(str1, str2));
 }
 END_TEST
 

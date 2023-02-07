@@ -1,51 +1,33 @@
 #include "test_me.h"
 
-START_TEST(test_insert_1) {
-  
-}
+START_TEST(test_insert_1) {}
 END_TEST
 
-START_TEST(test_insert_2) {
-  
-}
+START_TEST(test_insert_2) {}
 END_TEST
 
-START_TEST(test_insert_3) {
-  
-}
+START_TEST(test_insert_3) {}
 END_TEST
 
-START_TEST(test_insert_4) {
-  
-}
+START_TEST(test_insert_4) {}
 END_TEST
 
-START_TEST(test_insert_5) {
-  
-}
+START_TEST(test_insert_5) {}
 END_TEST
 
-START_TEST(test_insert_6) {
-  
-}
+START_TEST(test_insert_6) {}
 END_TEST
 
-START_TEST(test_insert_7) {
-  
-}
+START_TEST(test_insert_7) {}
 END_TEST
 
-START_TEST(test_insert_8) {
-  
-}
+START_TEST(test_insert_8) {}
 END_TEST
 
-START_TEST(test_insert_9) {
-}
+START_TEST(test_insert_9) {}
 END_TEST
 
-START_TEST(test_insert_10) {
-}
+START_TEST(test_insert_10) {}
 END_TEST
 
 Suite *test_insert(void) {

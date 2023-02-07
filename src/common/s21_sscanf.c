@@ -182,7 +182,7 @@ int isWhiteSpace(char c) {
 
 int strToChar(const char *str, Specif *sp) {
   s21_size_t len = s21_strlen(str);
-  
+
   s21_size_t size = sp->setWidth ? (sp->width < len ? sp->width : len) : 1;
   char *pointer = malloc(size * sizeof(char));
   int spa = 0;

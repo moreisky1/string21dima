@@ -51,8 +51,7 @@ START_TEST(s21_sscanf_4) {
 }
 END_TEST
 
-
-Suite *test_s21_sscanf_{
+Suite *test_s21_sscanf_ {
   Suite *s = suite_create("\033[45m-=S21_s21_SSCANF_0m");
   TCase *tc = tcase_create("s21_sscanf_ tcase_add_test(tc, s21_sscanf_);
   

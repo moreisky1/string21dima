@@ -6,8 +6,7 @@ START_TEST(s21_sprintf_1) {
   char *str3 = "<%c>|<%c>";
   int a = 9;
   int b = 10;
-  ck_assert_int_eq(sprintf(str1, str3, a, b),
-                   s21_sprintf(str2, str3, a, b));
+  ck_assert_int_eq(sprintf(str1, str3, a, b), s21_sprintf(str2, str3, a, b));
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
@@ -18,8 +17,7 @@ START_TEST(s21_sprintf_2) {
   char *str3 = "<%c>|<%c>";
   int a = -6;
   int b = -10;
-  ck_assert_int_eq(sprintf(str1, str3, a, b),
-                   s21_sprintf(str2, str3, a, b));
+  ck_assert_int_eq(sprintf(str1, str3, a, b), s21_sprintf(str2, str3, a, b));
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
@@ -30,20 +28,17 @@ START_TEST(s21_sprintf_3) {
   char *str3 = "<%c>|<%c>";
   int c = 1744;
   int d = 386;
-  ck_assert_int_eq(sprintf(str1, str3, c, d),
-                   s21_sprintf(str2, str3, c, d));
+  ck_assert_int_eq(sprintf(str1, str3, c, d), s21_sprintf(str2, str3, c, d));
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
-
 
 START_TEST(s21_sprintf_4) {
   char str1[100] = "";
   char str2[100] = "";
   char *str3 = "<%c>|<%c>";
   char a = 0;
-  ck_assert_int_eq(sprintf(str1, str3, a, a),
-                   s21_sprintf(str2, str3, a, a));
+  ck_assert_int_eq(sprintf(str1, str3, a, a), s21_sprintf(str2, str3, a, a));
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
@@ -560,7 +555,6 @@ START_TEST(s21_sprintf_45) {
 }
 END_TEST
 
-
 START_TEST(s21_sprintf_46) {
   char str1[400] = "";
   char str2[400] = "";
@@ -693,7 +687,6 @@ START_TEST(s21_sprintf_57) {
 }
 END_TEST
 
-
 START_TEST(s21_sprintf_58) {
   char str1[400] = "";
   char str2[400] = "";
@@ -781,7 +774,6 @@ START_TEST(s21_sprintf_65) {
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
-
 
 START_TEST(s21_sprintf_66) {
   char str1[400] = "";
@@ -1299,10 +1291,10 @@ END_TEST
 START_TEST(s21_sprintf_103) {
   char str1[100] = "";
   char str2[100] = "";
-  char* str3 = "<%p><%p><%p>";
-  char* val = "0p3015";
-  char* val2 = "0p712";
-  char* val3 = "0p99";
+  char *str3 = "<%p><%p><%p>";
+  char *val = "0p3015";
+  char *val2 = "0p712";
+  char *val3 = "0p99";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3),
                    s21_sprintf(str2, str3, val, val2, val3));
   ck_assert_pstr_eq(str1, str2);
@@ -1312,11 +1304,11 @@ END_TEST
 START_TEST(s21_sprintf_104) {
   char str1[100] = "";
   char str2[100] = "";
-  char* str3 = "<%p><%p><%p><%p>";
-  long int* val = (void*)3088675747373646;
-  long long int* val2 = (void*)33030030303;
-  unsigned short int* val3 = (void*)22600;
-  unsigned char* val4 = (void*)120;
+  char *str3 = "<%p><%p><%p><%p>";
+  long int *val = (void *)3088675747373646;
+  long long int *val2 = (void *)33030030303;
+  unsigned short int *val3 = (void *)22600;
+  unsigned char *val4 = (void *)120;
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4),
                    s21_sprintf(str2, str3, val, val2, val3, val4));
   ck_assert_pstr_eq(str1, str2);
@@ -1326,10 +1318,10 @@ END_TEST
 START_TEST(s21_sprintf_105) {
   char str1[100] = "";
   char str2[100] = "";
-  char* str3 = "<%3p><%5p><%12p>";
-  char* val = "3015";
-  char* val2 = "01234";
-  char* val3 = "99";
+  char *str3 = "<%3p><%5p><%12p>";
+  char *val = "3015";
+  char *val2 = "01234";
+  char *val3 = "99";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3),
                    s21_sprintf(str2, str3, val, val2, val3));
   ck_assert_pstr_eq(str1, str2);
@@ -1339,11 +1331,11 @@ END_TEST
 START_TEST(s21_sprintf_106) {
   char str1[200] = "";
   char str2[200] = "";
-  char* str3 = "<%6.5p><%.23p><%3.p><%.p>";
-  char* val = "3015";
-  char* val2 = "712";
-  char* val3 = "99";
-  char* val4 = "38";
+  char *str3 = "<%6.5p><%.23p><%3.p><%.p>";
+  char *val = "3015";
+  char *val2 = "712";
+  char *val3 = "99";
+  char *val4 = "38";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4),
                    s21_sprintf(str2, str3, val, val2, val3, val4));
   ck_assert_pstr_eq(str1, str2);
@@ -1353,12 +1345,12 @@ END_TEST
 START_TEST(s21_sprintf_107) {
   char str1[200] = "";
   char str2[200] = "";
-  char* str3 = "<%0p><%0.p><%0.0p><%0p><%.p>";
-  char* val = "3015";
-  char* val2 = "712";
-  char* val3 = "99";
-  char* val4 = "2939";
-  char* val5 = "0123";
+  char *str3 = "<%0p><%0.p><%0.0p><%0p><%.p>";
+  char *val = "3015";
+  char *val2 = "712";
+  char *val3 = "99";
+  char *val4 = "2939";
+  char *val5 = "0123";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4, val5),
                    s21_sprintf(str2, str3, val, val2, val3, val4, val5));
   ck_assert_pstr_eq(str1, str2);
@@ -1368,11 +1360,11 @@ END_TEST
 START_TEST(s21_sprintf_108) {
   char str1[200] = "";
   char str2[200] = "";
-  char* str3 = "<%+p><%+3.p><%+5.7p><%+10p>";
-  char* val = "3015";
-  char* val2 = "712";
-  char* val3 = "99";
-  char* val4 = "2939";
+  char *str3 = "<%+p><%+3.p><%+5.7p><%+10p>";
+  char *val = "3015";
+  char *val2 = "712";
+  char *val3 = "99";
+  char *val4 = "2939";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4),
                    s21_sprintf(str2, str3, val, val2, val3, val4));
   ck_assert_pstr_eq(str1, str2);
@@ -1382,12 +1374,12 @@ END_TEST
 START_TEST(s21_sprintf_109) {
   char str1[200] = "";
   char str2[200] = "";
-  char* str3 = "<% p><% 3.p><% 5.7p><% 10p><%.p>";
-  char* val = "32";
-  char* val2 = "8899";
-  char* val3 = "91918";
-  char* val4 = "32311";
-  char* val5 = "23";
+  char *str3 = "<% p><% 3.p><% 5.7p><% 10p><%.p>";
+  char *val = "32";
+  char *val2 = "8899";
+  char *val3 = "91918";
+  char *val4 = "32311";
+  char *val5 = "23";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4, val5),
                    s21_sprintf(str2, str3, val, val2, val3, val4, val5));
   ck_assert_pstr_eq(str1, str2);
@@ -1397,12 +1389,12 @@ END_TEST
 START_TEST(s21_sprintf_110) {
   char str1[200] = "";
   char str2[200] = "";
-  char* str3 = "<%#p><%#3p><%#5.7p><%#.7p Oof %#.p>";
-  char* val = "32";
-  char* val2 = "8899";
-  char* val3 = "91918";
-  char* val4 = "32311";
-  char* val5 = "8894";
+  char *str3 = "<%#p><%#3p><%#5.7p><%#.7p Oof %#.p>";
+  char *val = "32";
+  char *val2 = "8899";
+  char *val3 = "91918";
+  char *val4 = "32311";
+  char *val5 = "8894";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4, val5),
                    s21_sprintf(str2, str3, val, val2, val3, val4, val5));
   ck_assert_pstr_eq(str1, str2);
@@ -1412,12 +1404,12 @@ END_TEST
 START_TEST(s21_sprintf_111) {
   char str1[200] = "";
   char str2[200] = "";
-  char* str3 = "<%0p><%06p><%05.7p><%0.7p Oof %0.p>";
-  char* val = "32";
-  char* val2 = "8899";
-  char* val3 = "91918";
-  char* val4 = "32311";
-  char* val5 = "8894";
+  char *str3 = "<%0p><%06p><%05.7p><%0.7p Oof %0.p>";
+  char *val = "32";
+  char *val2 = "8899";
+  char *val3 = "91918";
+  char *val4 = "32311";
+  char *val5 = "8894";
   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4, val5),
                    s21_sprintf(str2, str3, val, val2, val3, val4, val5));
   ck_assert_pstr_eq(str1, str2);
@@ -1444,7 +1436,6 @@ START_TEST(s21_sprintf_113) {
   wchar_t *val = L"3wtf80";
   sprintf(str1, str3, val);
   s21_sprintf(str2, str3, val);
-
 
   ck_assert_pstr_eq(str1, str2);
 }
@@ -1824,7 +1815,7 @@ Suite *s21_sprintf_create_suite(void) {
   tcase_add_test(tc, s21_sprintf_112);
   tcase_add_test(tc, s21_sprintf_113);
   tcase_add_test(tc, s21_sprintf_114);
-  tcase_add_test(tc, s21_sprintf_115); 
+  tcase_add_test(tc, s21_sprintf_115);
   tcase_add_test(tc, s21_sprintf_116);
   tcase_add_test(tc, s21_sprintf_117);
   tcase_add_test(tc, s21_sprintf_118);

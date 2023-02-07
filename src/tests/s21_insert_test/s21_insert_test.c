@@ -23,7 +23,7 @@ START_TEST(s21_insert_2) {
 END_TEST
 
 START_TEST(s21_insert_3) {
-   char *s1 = S21_NULL;
+  char *s1 = S21_NULL;
   char s3[] = "";
   char *s4 = S21_NULL;
   s21_size_t num = 0;
@@ -34,7 +34,7 @@ START_TEST(s21_insert_3) {
 END_TEST
 
 START_TEST(s21_insert_4) {
-   char s1[30] = "It is text";
+  char s1[30] = "It is text";
   char s3[] = "\'test\'";
   char s4[] = "It \'test\'is text";
   s21_size_t num = 3;
@@ -45,7 +45,7 @@ START_TEST(s21_insert_4) {
 END_TEST
 
 START_TEST(s21_insert_5) {
-   char s1[30] = "das";
+  char s1[30] = "das";
   char s3[] = "fas";
   char *s4 = S21_NULL;
   s21_size_t num = 10;
@@ -56,7 +56,7 @@ START_TEST(s21_insert_5) {
 END_TEST
 
 START_TEST(s21_insert_6) {
-   char s1[30] = "String project";
+  char s1[30] = "String project";
   char s3[] = " GOOD";
   char *s4 = S21_NULL;
   s21_size_t num = -1;
@@ -67,7 +67,7 @@ START_TEST(s21_insert_6) {
 END_TEST
 
 START_TEST(s21_insert_7) {
-   char *s1 = S21_NULL;
+  char *s1 = S21_NULL;
   char *s3 = S21_NULL;
   char *s4 = S21_NULL;
   s21_size_t num = 0;

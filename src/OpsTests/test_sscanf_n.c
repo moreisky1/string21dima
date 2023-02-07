@@ -286,8 +286,6 @@ START_TEST(sscanf_158) {
 }
 END_TEST
 
-
-
 Suite *test_sscanf_n(void) {
   Suite *s = suite_create("\033[45m-=S21_SSCANF_N=-\033[0m");
   TCase *tc = tcase_create("sscanf_tc");
